@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         setPhoneNumber();
-
+        //for sign out
         btnSignOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
