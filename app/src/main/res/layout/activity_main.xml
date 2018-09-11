@@ -4,21 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.MainActivity">
+    tools:context=".activities.MainActivity"
+    android:background="#f2f3f4">
 
-    <TextView
-        android:id="@+id/tv_phone_number"
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+
+    <android.support.design.widget.BottomNavigationView
+        android:layout_alignParentBottom="true"
+        android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="20dp"/>
-    <Button
-        android:id="@+id/btn_sign_out"
-        android:layout_centerInParent="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="sign out"
-        android:background="@color/colorPrimary"
+        android:layout_gravity="start"
+        app:menu="@menu/bottom_nav_items"
+        />
 
-        android:layout_margin="20dp"/>
+
+
 </RelativeLayout>

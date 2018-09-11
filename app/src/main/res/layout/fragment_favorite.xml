@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragment.FavoriteFragment">
+
+    <include layout="@layout/tool_bar"
+        android:id="@+id/toolbar"/>
+
+
+    <!-- Menerapkan TabLayout dan ViewPager -->
+
+    <android.support.design.widget.TabLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tab_layout"
+        android:layout_below="@+id/toolbar"
+        android:elevation="6dp"
+
+        android:background="@color/colorPrimary"
+        app:tabTextColor="#FFFFFF"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="#FFFFFF">
+
+        <android.support.design.widget.TabItem
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/tab_kontak"
+            android:text="Favorite"
+
+            android:icon="@drawable/ic_favorite"/>
+
+        <android.support.design.widget.TabItem
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/tab_pesan"
+            android:text="Riwayat"
+
+            android:icon="@drawable/ic_wallet"/>
+
+    </android.support.design.widget.TabLayout>
+
+    <android.support.v4.view.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/pager"
+        android:layout_below="@id/tab_layout"
+        >
+
+    </android.support.v4.view.ViewPager>
+
+</RelativeLayout>
