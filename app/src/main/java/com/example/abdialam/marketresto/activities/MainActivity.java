@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.abdialam.marketresto.R;
+import com.example.abdialam.marketresto.fragment.AccountFragment;
 import com.example.abdialam.marketresto.fragment.FavoriteFragment;
 import com.example.abdialam.marketresto.fragment.RestoFragment;
 import com.example.abdialam.marketresto.fragment.SearchFragment;
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                         fragment = new WalletFragment();
                         break;
                     case R.id.action_account:
-                        fragment = new RestoFragment();
+                        fragment = new AccountFragment();
                         break;
                 }
 

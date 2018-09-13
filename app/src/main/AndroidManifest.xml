@@ -27,6 +27,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <!--sign in activity-->
         <activity android:name=".activities.SigninActivity"
@@ -37,6 +38,7 @@
         <activity android:name=".activities.VerifyActifity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".activities.SettingActivity" />
+        <activity android:name=".activities.RestoMenuActivity" />
 
 
         <!--service-->

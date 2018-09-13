@@ -1,6 +1,8 @@
 package com.example.abdialam.marketresto.rest;
 
 import com.example.abdialam.marketresto.responses.ResponseAuth;
+import com.example.abdialam.marketresto.responses.ResponseMenu;
+import com.example.abdialam.marketresto.responses.ResponseRestoran;
 import com.example.abdialam.marketresto.responses.ResponseViewKonsumen;
 
 import retrofit2.Call;
@@ -34,5 +36,11 @@ public interface ApiService {
     @GET("konsumen/{phone}")
     Call<ResponseViewKonsumen> viewKonsumen (@Path("phone") String phone);
 
+    //    get restoran
+    @GET("restorant/")
+    Call<ResponseRestoran> getRestoran ();
 
+    //    get restoran menu
+    @GET("menu/{id_restoran}")
+    Call<ResponseMenu> getRestoranMenuById (@Path("id_restoran") String id_restoran);
 }

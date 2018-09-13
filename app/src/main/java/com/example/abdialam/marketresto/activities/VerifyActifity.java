@@ -74,15 +74,15 @@ public class VerifyActifity extends AppCompatActivity {
 
         Toast.makeText(mContext,phone,Toast.LENGTH_SHORT).show();
 //      Memanggil method untuk mengirim code
-        sendVerificationCode(phone);
+        //sendVerificationCode(phone);
     }
 
     @OnClick (R.id.buttonSignIn) void signin (){
         progressDialog = ProgressDialog.show(mContext,null,getString(R.string.memuat),true,false);
 //        untuk melakukan verifikasi dari code OTP yang di inputkan
-        verifySignInCode();
+      //  verifySignInCode();
 //        jika menguji login tanpa menggunakan code OTP
- //       SessionUser();
+        SessionUser();
 
     }
 
@@ -187,5 +187,17 @@ public class VerifyActifity extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Toast.makeText(mContext, "on Pause",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Toast.makeText(mContext, "on Resume",Toast.LENGTH_SHORT).show();
     }
 }
