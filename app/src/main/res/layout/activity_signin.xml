@@ -29,7 +29,9 @@
         mask:allowed_chars="1234567890"
         mask:mask="+62-####-###-####"
         app:keep_hint="true"
-        android:layout_below="@+id/imageView" />
+        android:layout_below="@+id/imageView"
+
+         />
 
     <Button
         android:id="@+id/buttonGetVerificationCode"

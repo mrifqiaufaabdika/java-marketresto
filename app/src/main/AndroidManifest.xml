@@ -38,7 +38,9 @@
         <activity android:name=".activities.VerifyActifity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".activities.SettingActivity" />
-        <activity android:name=".activities.RestoMenuActivity" />
+       
+        <activity android:name=".activities.CartListActivity" />
+        <activity android:name=".activities.MenuActivity" />
 
 
         <!--service-->

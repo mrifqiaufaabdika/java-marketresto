@@ -46,6 +46,8 @@ dependencies {
     //recylerview
     implementation 'com.android.support:recyclerview-v7:26.1.0'
     implementation 'com.android.support:cardview-v7:26.1.0'
+    //dialog
+    implementation 'com.avast:android-styled-dialogs:2.2.0'
 
 
 }

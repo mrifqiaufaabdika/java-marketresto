@@ -12,11 +12,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.abdialam.marketresto.R;
-import com.example.abdialam.marketresto.activities.RestoMenuActivity;
+import com.example.abdialam.marketresto.activities.MenuActivity;
 import com.example.abdialam.marketresto.models.Restoran;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -34,7 +32,7 @@ public class RestorantAdapter extends RecyclerView.Adapter<RestorantAdapter.Rest
 
     @Override
     public RestoranViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_list_restoran,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_row_list_restoran,parent,false);
         RestoranViewHolder holder = new RestoranViewHolder(view);
         return holder;
     }
@@ -50,8 +48,7 @@ public class RestorantAdapter extends RecyclerView.Adapter<RestorantAdapter.Rest
             @Override
             public void onClick(View view) {
                 Toast.makeText(mContext,"Anda Memilih "+ data.getRestoranNama(),Toast.LENGTH_SHORT).show();
-
-                Intent intent = new Intent(mContext, RestoMenuActivity.class);
+                Intent intent = new Intent(mContext, MenuActivity.class);
                 intent.putExtra("Resto",  data);
                 mContext.startActivity(intent);
             }
