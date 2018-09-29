@@ -16,6 +16,7 @@ import com.example.abdialam.marketresto.R;
 import com.example.abdialam.marketresto.models.CartList;
 import com.example.abdialam.marketresto.models.Menu;
 import com.example.abdialam.marketresto.utils.DatabaseHelper;
+import com.squareup.picasso.Picasso;
 
 
 import java.util.List;
@@ -87,7 +88,13 @@ public class CartAdapter extends BaseAdapter {
 
 
         final CartList cart = (CartList)getItem(position);
-        viewHolder.imageView.setImageResource(R.drawable.shoppy_logo);
+
+        String path =view.getResources().getString(R.string.path)+"img-20180928-5badb28a1f2a8.png";
+        Picasso.with(mContext)
+                .load(path)
+                .into(viewHolder.imageView);
+
+       // viewHolder.imageView.setImageResource(R.drawable.shoppy_logo);
         viewHolder.title.setText(cart.getNama_menu());
         viewHolder.harga.setText(String.valueOf(cart.getHarga()));
         viewHolder.qty.setText(String .valueOf(cart.getQty()));
@@ -103,6 +110,8 @@ public class CartAdapter extends BaseAdapter {
                     dataList.set(position, cl);
                     viewHolder.qty.setText(String.valueOf(cl.getQty()));
                     CartAdapter.this.notifyDataSetChanged();
+                }else {
+                    Toast.makeText(mContext,"Opps, Pesanan sudah minimum",Toast.LENGTH_SHORT).show();
                 }
                 }
 

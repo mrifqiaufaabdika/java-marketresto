@@ -1,5 +1,6 @@
 package com.example.abdialam.marketresto.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import com.example.abdialam.marketresto.models.Menu;
 import com.example.abdialam.marketresto.models.Restoran;
 import com.example.abdialam.marketresto.responses.ResponseMenu;
 import com.example.abdialam.marketresto.rest.ApiService;
+import com.example.abdialam.marketresto.utils.SessionManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +39,9 @@ public class MenuActivity extends AppCompatActivity  {
     private ApiService mApiService;
     private List<Menu> menuList = new ArrayList<>();
     private List<Kategori> kategoriList = new ArrayList<>();
+    ProgressDialog progressDialog;
+    String oprasional;
+
 
 
     Context mContext;
@@ -49,14 +54,28 @@ public class MenuActivity extends AppCompatActivity  {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+
         mApiService = ServerConfig.getAPIService();
         viewPager = findViewById(R.id.viewpager);
         mTabLayout =  findViewById(R.id.tabs);
         viewPager.setOffscreenPageLimit(5);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
         mContext= this;
-        getIncomingIntent();
+
         initViews();
+
+        getIncomingIntent();
+
+        getSupportActionBar().setElevation(0);
+        getSupportActionBar().setTitle("Menu "+resto.getRestoranNama());
+
+
+
+
+
+        progressDialog = ProgressDialog.show(mContext,null,getString(R.string.memuat),true,false);
+        oprasional = resto.getRestoranOperasional().toString();
+
 
 
 
@@ -67,7 +86,7 @@ public class MenuActivity extends AppCompatActivity  {
 //                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
                 Intent intent = new Intent(mContext,CartListActivity.class);
-                intent.putExtra("Resto", resto);
+//                intent.putExtra("Resto", resto);
                 startActivity(intent);
             }
         });
@@ -77,8 +96,6 @@ public class MenuActivity extends AppCompatActivity  {
 
 
     private void initViews(){
-
-
         mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -110,7 +127,7 @@ public class MenuActivity extends AppCompatActivity  {
         }
 
 
-        KategoriDynamicFragmentAdapter mDynamicFragmentAdapter = new KategoriDynamicFragmentAdapter(getSupportFragmentManager(), mTabLayout.getTabCount(),resto.getIdRestoran().toString());
+        KategoriDynamicFragmentAdapter mDynamicFragmentAdapter = new KategoriDynamicFragmentAdapter(getSupportFragmentManager(), mTabLayout.getTabCount(),menuList,kategoriList,oprasional);
         viewPager.setAdapter(mDynamicFragmentAdapter);
         viewPager.setCurrentItem(0);
     }
@@ -141,7 +158,7 @@ public class MenuActivity extends AppCompatActivity  {
             public void onResponse(Call<ResponseMenu> call, Response<ResponseMenu> response) {
                 String value = response.body().getValue();
                 if(value.equals("1")){
-
+                    progressDialog.dismiss();
                     menuList = response.body().getData();
                     kategoriList = response.body().getKategori();
                     initViews();
@@ -153,6 +170,7 @@ public class MenuActivity extends AppCompatActivity  {
 
             @Override
             public void onFailure(Call<ResponseMenu> call, Throwable t) {
+                progressDialog.dismiss();
 
             }
         });

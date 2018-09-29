@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.abdialam.marketresto.R;
 import com.example.abdialam.marketresto.adapter.MenuAdapter;
@@ -36,8 +37,8 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnItemClickLis
     private List<Menu> menuListTemp = new ArrayList<>();
     private List<Kategori> kategoriList = new ArrayList<>();
     private MenuAdapter.OnItemClickListener listener;
-    TextView pos;
-    int position;
+//    TextView pos;
+    int position,oprasional;
 
     public static MenuFragment newInstance() {
         return new MenuFragment();
@@ -59,22 +60,21 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnItemClickLis
     private void initViews(View view) {
         mApiService = ServerConfig.getAPIService();
 
+        menuList =(List<Menu>) getArguments().getSerializable("menu");
+        kategoriList = (List<Kategori>) getArguments().getSerializable("kategori");
+        oprasional = getArguments().getInt("oprasinal");
+        position = getArguments().getInt("position");
         mRecylerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
         listener =this;
-        mAdapter = new MenuAdapter(getActivity(),menuList,listener);
+        setByKategori();
+        mAdapter = new MenuAdapter(getActivity(),menuListTemp,listener);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         mRecylerView.setLayoutManager(layoutManager);
         mRecylerView.setItemAnimator(new DefaultItemAnimator());
         mRecylerView.setAdapter(mAdapter);
-        pos = (TextView) view.findViewById(R.id.position);
+//        pos = (TextView) view.findViewById(R.id.position);
 
-        setValue(getArguments().getString("id_resto"));
-
-        position = getArguments().getInt("position");
-
-
-
-
+//        setValue(getArguments().getString("id_resto"));
     }
 
 
@@ -83,36 +83,18 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnItemClickLis
         Menu menuItem = menuListTemp.get(position);
         Bundle argument = new Bundle();
         argument.putSerializable("selectedItem",menuItem);
-        DialogPlaceOrderFragment placeOrderFragment = new DialogPlaceOrderFragment();
-        placeOrderFragment.setArguments(argument);
-        placeOrderFragment.show(getFragmentManager(), DialogPlaceOrderFragment.ARG_ITEM_ID);
-    }
-
-    private void setValue(String id_restorant){
-
-        mApiService.getRestoranMenuById(id_restorant).enqueue(new Callback<ResponseMenu>() {
-            @Override
-            public void onResponse(Call<ResponseMenu> call, Response<ResponseMenu> response) {
-                String value = response.body().getValue();
-                if(value.equals("1")){
-                    menuList = response.body().getData();
-                    kategoriList = response.body().getKategori();
-
-//                    mAdapter = new MenuAdapter(getActivity(),menuList,listener);
-//                    mRecylerView.setAdapter(mAdapter);
-//                    Toast.makeText(getContext(),"ok",Toast.LENGTH_SHORT).show();
-                    setByKategori();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseMenu> call, Throwable t) {
-
-            }
-        });
-
+        //oprasinal buka
+        if(oprasional == 1){
+            DialogPlaceOrderFragment placeOrderFragment = new DialogPlaceOrderFragment();
+            placeOrderFragment.setArguments(argument);
+            placeOrderFragment.show(getFragmentManager(), DialogPlaceOrderFragment.ARG_ITEM_ID);
+        //oprasional tutup
+        }else {
+            Toast.makeText(getActivity(),"TUTUP",Toast.LENGTH_SHORT).show();
+        }
 
     }
+
 
     public void setByKategori(){
 
@@ -126,15 +108,14 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnItemClickLis
                 }
             }
         }
-        if(position == 0){
-            pos.setText("satu");
-        }else if (position ==1){
-            pos.setText("dua");
-        }else {
-            pos.setText("tiga");
-        }
-        mAdapter = new MenuAdapter(getActivity(),menuListTemp,listener);
-        mRecylerView.setAdapter(mAdapter);
+//        if(position == 0){
+//            pos.setText("satu");
+//        }else if (position ==1){
+//            pos.setText("dua");
+//        }else {
+//            pos.setText("tiga");
+//        }
+
 
     }
 }

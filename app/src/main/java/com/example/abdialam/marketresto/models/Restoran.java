@@ -75,6 +75,9 @@ public class Restoran implements Serializable {
     @SerializedName("tipe")
     @Expose
     private String tipe;
+    @SerializedName("jumlah_pesan")
+    @Expose
+    private Integer jumlahPesan;
 
     public Integer getIdRestoran() {
         return idRestoran;
@@ -258,5 +261,14 @@ public class Restoran implements Serializable {
 
     public void setTipe(String tipe) {
         this.tipe = tipe;
+    }
+
+
+    public Integer getJumlahPesan() {
+        return jumlahPesan;
+    }
+
+    public void setJumlahPesan(Integer jumlahPesan) {
+        this.jumlahPesan = jumlahPesan;
     }
 }

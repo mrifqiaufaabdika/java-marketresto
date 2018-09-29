@@ -2,6 +2,7 @@ package com.example.abdialam.marketresto.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.widget.BottomNavigationView;
@@ -30,15 +31,9 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
-
-
     Context mContext;
     SessionManager sessionManager;
     BottomNavigationView bottomNavigationView;
-
-
-
-
 
 
     @Override
@@ -51,10 +46,19 @@ public class MainActivity extends AppCompatActivity {
         checkSessionLogin();
         bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.bottomNavigation);
-
+        getSupportActionBar().setElevation(0);
 
         //loading the default fragment
-        loadFragment(new RestoFragment());
+        Fragment f = new RestoFragment();
+
+        if (getIntent().hasExtra("aksi")){
+            String alamat = getIntent().getStringExtra("aksi");
+            Bundle b = new Bundle();
+            b.putString("aksi",alamat);
+            f.setArguments(b);
+        }
+
+        loadFragment(f);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -64,31 +68,35 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.action_resto:
                         fragment = new RestoFragment();
+                        getSupportActionBar().setTitle("Market Resto");
                         break;
 
                     case R.id.action_search:
                         fragment = new SearchFragment();
+                        getSupportActionBar().setTitle("Search");
                         break;
 
                     case R.id.action_favorite:
+                        getSupportActionBar().setTitle("Favorit");
                         fragment = new FavoriteFragment();
+
                         break;
 
                     case R.id.action_wallet:
                         fragment = new WalletFragment();
+                        getSupportActionBar().setTitle("Resto Pay");
                         break;
                     case R.id.action_account:
+                        getSupportActionBar().setTitle("Akun");
                         fragment = new AccountFragment();
+
+
                         break;
                 }
 
                 return loadFragment(fragment);
             }
         });
-
-
-
-
     }
 
 
@@ -103,34 +111,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return false;
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.my_option_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-
-
-        if(item.getItemId()==R.id.setting){
-            startActivity(new Intent(this, SettingActivity.class));
-
-        }else if (item.getItemId()==R.id.help){
-
-        }
-
-        return true;
-    }
-
-
-
-
 
 
     private void setPhoneNumber(){

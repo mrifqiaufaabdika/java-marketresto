@@ -144,6 +144,8 @@ public class SignUpActivity extends AppCompatActivity{
         ButterKnife.bind(this);
     }
 
+
+
     public String clearPhone (String phoneNumber){
         String hp = phoneNumber.replaceAll("-","");
         String clearPhone = hp.substring(1,hp.length());

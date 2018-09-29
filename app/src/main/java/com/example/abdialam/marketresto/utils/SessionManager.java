@@ -19,10 +19,14 @@ public class SessionManager {
     public static final String IS_LOGGED_IN = "isLoggedIn";
     public static final String ID_USER = "idUser";
     public static final String ID_PENGGUNA = "username";
-
     public static final String EMAIL = "email";
     public static final String NAMA_LENGKAP = "namaLengkap";
     public static final String NO_HP = "noHP";
+
+    public static final String ALAMAT = "alamat";
+    public static final String LATLANG = "latlang";
+
+
 
     public Context get_context() {
         return _context;
@@ -39,22 +43,34 @@ public class SessionManager {
         editor.putBoolean(IS_LOGGED_IN,true);
         editor.putString(ID_USER,String.valueOf(user.getIdKonsumen()));
         editor.putString(ID_PENGGUNA,String.valueOf(user.getIdPengguna()));
-
         editor.putString(NAMA_LENGKAP,user.getKonsumenNama());
         editor.putString(EMAIL,user.getKonsumenEmail());
         editor.putString(NO_HP,user.getKonsumenPhone());
         editor.commit();
     }
 
+
     public HashMap<String,String> getUserDetail(){
         HashMap<String,String> user = new HashMap<>();
         user.put(ID_USER,sharedPreferences.getString(ID_USER,null));
         user.put(ID_PENGGUNA, sharedPreferences.getString(ID_PENGGUNA,null));
-
         user.put(NAMA_LENGKAP, sharedPreferences.getString(NAMA_LENGKAP,null));
         user.put(EMAIL, sharedPreferences.getString(EMAIL,null));
         user.put(NO_HP, sharedPreferences.getString(NO_HP,null));
         return user;
+    }
+
+    public void setLocation (String alamat,String latlang){
+        editor.putString(ALAMAT,alamat);
+        editor.putString(LATLANG,latlang);
+        editor.commit();
+    }
+
+    public HashMap<String,String> getLocation() {
+        HashMap<String,String> location = new HashMap<>();
+        location.put(ALAMAT,sharedPreferences.getString(ALAMAT,null));
+        location.put(LATLANG,sharedPreferences.getString(LATLANG,null));
+        return location;
     }
 
     public void logoutUser(){

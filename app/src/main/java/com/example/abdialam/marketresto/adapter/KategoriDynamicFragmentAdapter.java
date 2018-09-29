@@ -6,17 +6,26 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.example.abdialam.marketresto.fragment.MenuFragment;
+import com.example.abdialam.marketresto.models.Kategori;
+import com.example.abdialam.marketresto.models.Menu;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class KategoriDynamicFragmentAdapter extends FragmentStatePagerAdapter {
     private int mNumOfTabs;
     private String id_resto;
-    //private List<Menu> menuList = new ArrayList<>();
-    //private List<Kategori> kategoriList = new ArrayList<>();
+    private List<Menu> menuList = new ArrayList<>();
+    private List<Kategori> kategoriList = new ArrayList<>();
+    private String oprasional;
 
-    public KategoriDynamicFragmentAdapter(FragmentManager fm, int NumOfTabs, String id_resto) {
+    public KategoriDynamicFragmentAdapter(FragmentManager fm, int NumOfTabs,List<Menu> menuList,List<Kategori> kategoriList,String operasional ) {
         super(fm);
         this.mNumOfTabs = NumOfTabs;
-        this.id_resto =id_resto;
+        this.menuList = menuList;
+        this.kategoriList = kategoriList;
+        this.oprasional =operasional;
 
     }
 
@@ -25,7 +34,9 @@ public class KategoriDynamicFragmentAdapter extends FragmentStatePagerAdapter {
 
         Bundle b = new Bundle();
         b.putInt("position", position);
-        b.putString("id_resto",id_resto);
+        b.putSerializable("menu", (Serializable) menuList);
+        b.putSerializable("kategori", (Serializable) kategoriList);
+        b.putInt("oprasinal",Integer.valueOf(oprasional));
         Fragment frag = MenuFragment.newInstance();
         frag.setArguments(b);
         return frag;

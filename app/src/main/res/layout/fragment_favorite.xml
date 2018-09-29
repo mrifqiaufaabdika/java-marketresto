@@ -6,8 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragment.FavoriteFragment">
 
-    <include layout="@layout/tool_bar"
-        android:id="@+id/toolbar"/>
+
 
 
     <!-- Menerapkan TabLayout dan ViewPager -->
@@ -16,9 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tab_layout"
-        android:layout_below="@+id/toolbar"
         android:elevation="2dp"
-
         android:background="@color/colorPrimary"
         app:tabTextColor="#FFFFFF"
         app:tabMode="fixed"
@@ -29,15 +26,15 @@
             android:layout_height="match_parent"
             android:id="@+id/tab_kontak"
             android:text="Favorite"
-
-            android:icon="@drawable/ic_favorite"/>
+            android:icon="@drawable/ic_favorite"
+            android:layout_gravity="center"/>
 
         <android.support.design.widget.TabItem
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/tab_pesan"
             android:text="Riwayat"
-
+            android:layout_gravity="center"
             android:icon="@drawable/ic_wallet"/>
 
     </android.support.design.widget.TabLayout>

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Market Resto</string>
     <string name="lostconnection">Gagal terhubung ke server</string>
-    <string name="memuat">Memuat ...</string>
+    <string name="memuat">Memuat...</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -11,5 +11,9 @@
     <string name="update">Update</string>
     <string name="totalpayable">Total</string>
     <string name="totalpayableamount">Rp. 50.000</string>
+    <string name="error">Terjadi kesalahan, Kami Akan Segera Meperbaikinya</string>
+    <string name="msg">Mohon Diterima Semua Permision</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="path">https://marketresto.000webhostapp.com/public/upload/</string>
 
 </resources>

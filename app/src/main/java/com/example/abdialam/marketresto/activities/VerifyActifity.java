@@ -77,6 +77,8 @@ public class VerifyActifity extends AppCompatActivity {
         //sendVerificationCode(phone);
     }
 
+
+//    On click sign in button
     @OnClick (R.id.buttonSignIn) void signin (){
         progressDialog = ProgressDialog.show(mContext,null,getString(R.string.memuat),true,false);
 //        untuk melakukan verifikasi dari code OTP yang di inputkan
@@ -94,6 +96,7 @@ public class VerifyActifity extends AppCompatActivity {
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(codeSent, code);
         signInWithPhoneAuthCredential(credential);
     }
+
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
         mAuth.signInWithCredential(credential)

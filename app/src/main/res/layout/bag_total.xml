@@ -234,6 +234,7 @@
                 android:textColor="@color/green"
                 android:background="#0000"
                 android:paddingLeft="16dp"
+                android:paddingRight="16dp"
                 android:paddingTop="5dp"
                 android:paddingBottom="16dp"
                 android:gravity="left"

@@ -6,8 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragment.SearchFragment">
 
-    <include layout="@layout/tool_bar"
-        android:id="@+id/toolbar"/>
+
 
     <RelativeLayout
         android:id="@+id/search_layout"
