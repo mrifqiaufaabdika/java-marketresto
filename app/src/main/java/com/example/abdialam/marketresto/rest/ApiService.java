@@ -1,10 +1,12 @@
 package com.example.abdialam.marketresto.rest;
 
 import com.example.abdialam.marketresto.responses.ResponseAuth;
+import com.example.abdialam.marketresto.responses.ResponseFavorit;
 import com.example.abdialam.marketresto.responses.ResponseMenu;
+import com.example.abdialam.marketresto.responses.ResponsePesan;
 import com.example.abdialam.marketresto.responses.ResponseRestoran;
 import com.example.abdialam.marketresto.responses.ResponseSend;
-import com.example.abdialam.marketresto.responses.ResponseViewKonsumen;
+import com.example.abdialam.marketresto.responses.ResponseValue;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -12,7 +14,9 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface ApiService {
 
@@ -34,9 +38,6 @@ public interface ApiService {
     @GET("auth/signin/{phone}")
     Call<ResponseAuth> signinRequest(@Path("phone") String phone);
 
-//    get konsumen by phone
-    @GET("konsumen/{phone}")
-    Call<ResponseViewKonsumen> viewKonsumen (@Path("phone") String phone);
 
     //    get restoran
     @GET("restoran/")
@@ -48,7 +49,8 @@ public interface ApiService {
 
     //    get restoran menu
     @GET("menu/{id_restoran}")
-    Call<ResponseMenu> getRestoranMenuById (@Path("id_restoran") String id_restoran);
+    Call<ResponseMenu> getRestoranMenuById (@Path("id_restoran") String id_restoran,
+                                            @Query("id_konsumen") String id_konsumen);
 
 
     // OrderPesanan
@@ -74,5 +76,27 @@ public interface ApiService {
                                        @Field("harga") String harga,
                                        @Field("qty") String qty,
                                        @Field("catatan") String catatan);
+
+
+    //gerOrderIn proces
+    @GET("order/konsumen/{id_konsumen}")
+    Call<ResponsePesan> getOrderProces (@Path ("id_konsumen") String id_konsumen);
+
+    //update token
+    @FormUrlEncoded
+    @PUT("auth/token/{id_pengguna}")
+    Call<ResponseAuth> updateToken (@Path("id_pengguna") String id_pengguna,
+                                            @Field("token") String token);
+
+    //setFavorit
+    @FormUrlEncoded
+    @POST("menu/favorit/")
+    Call<ResponseValue> setFavorit (@Field("id_konsumen") String id_konsumen,
+                                    @Field("id_menu") String id_menu);
+
+    //gerOrderIn proces
+    @GET("menu/favorit/{id_konsumen}")
+    Call<ResponseFavorit> getFavorit (@Path ("id_konsumen") String id_konsumen);
+
 
 }

@@ -19,7 +19,9 @@ import com.example.abdialam.marketresto.utils.DatabaseHelper;
 import com.squareup.picasso.Picasso;
 
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class CartAdapter extends BaseAdapter {
 
@@ -96,7 +98,7 @@ public class CartAdapter extends BaseAdapter {
 
        // viewHolder.imageView.setImageResource(R.drawable.shoppy_logo);
         viewHolder.title.setText(cart.getNama_menu());
-        viewHolder.harga.setText(String.valueOf(cart.getHarga()));
+        viewHolder.harga.setText(kursIndonesia(Double.parseDouble(cart.getHarga())));
         viewHolder.qty.setText(String .valueOf(cart.getQty()));
 
         viewHolder.min.setOnClickListener(new View.OnClickListener() {
@@ -168,6 +170,16 @@ public class CartAdapter extends BaseAdapter {
         public void itemMin (View view,int position);
 
     }
+
+    public String kursIndonesia(double nominal){
+        Locale localeID = new Locale("in","ID");
+        NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);
+        String idnNominal = formatRupiah.format(nominal);
+        return idnNominal;
+
+
+    }
+
 
 
 }

@@ -51,6 +51,9 @@ dependencies {
     implementation 'com.avast:android-styled-dialogs:2.2.0'
     //picaso
     implementation 'com.squareup.picasso:picasso:2.5.2'
+    //pretty time
+    implementation 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
+
 
 
 }

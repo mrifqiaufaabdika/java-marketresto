@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="6dp"
+        android:layout_margin="5dp"
         android:orientation="horizontal"
         android:background="@android:color/white">
 
@@ -66,8 +67,9 @@
 
     <!-- TODO: Update blank fragment layout -->
     <android.support.v7.widget.RecyclerView
-        android:layout_below="@+id/tvLocation"
+
         android:id="@+id/recycler_view"
+        android:layout_below="@id/tvLocation"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

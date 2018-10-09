@@ -17,6 +17,9 @@ import com.example.abdialam.marketresto.R;
 import com.example.abdialam.marketresto.models.Menu;
 import com.example.abdialam.marketresto.utils.DatabaseHelper;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 public class DialogPlaceOrderFragment extends DialogFragment{
 
     public static final String ARG_ITEM_ID = "custom_dialog_fragment";
@@ -46,8 +49,8 @@ public class DialogPlaceOrderFragment extends DialogFragment{
 //        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         item_title = (TextView)  dialog.findViewById(R.id.item_title);
-        mDeskripsi = (TextView) dialog.findViewById(R.id.description_title);
-        mHarga =(TextView) dialog.findViewById(R.id.item_description);
+        mDeskripsi = (TextView) dialog.findViewById(R.id.item_description);
+        mHarga =(TextView) dialog.findViewById(R.id.item_price);
         mJumlah = (TextView) dialog.findViewById(R.id.tvQty);
         mMin = (TextView) dialog.findViewById(R.id.tvMin);
         mUp = (TextView) dialog.findViewById(R.id.tvUp);
@@ -58,7 +61,7 @@ public class DialogPlaceOrderFragment extends DialogFragment{
         setData();
 
         mJumlah.setText(String.valueOf(qty));
-        mTotal.setText(String.valueOf(total_harga));
+        mTotal.setText(kursIndonesia(total_harga));
 
 
 
@@ -68,7 +71,7 @@ public class DialogPlaceOrderFragment extends DialogFragment{
                 qty++;
                 total_harga += Double.valueOf(menuItems.getMenuHarga());
                 mJumlah.setText(String.valueOf(qty));
-                mTotal.setText(String.valueOf(total_harga));
+                mTotal.setText(kursIndonesia(total_harga));
 
 
             }
@@ -77,10 +80,12 @@ public class DialogPlaceOrderFragment extends DialogFragment{
         mMin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                qty--;
-                total_harga -=  Double.valueOf(menuItems.getMenuHarga());
+                if (qty > 1){
+                    qty--;
+                total_harga -= Double.valueOf(menuItems.getMenuHarga());
                 mJumlah.setText(String.valueOf(qty));
-                mTotal.setText(String.valueOf(total_harga));
+                mTotal.setText(kursIndonesia(total_harga));
+            }
             }
         });
 
@@ -143,7 +148,7 @@ public class DialogPlaceOrderFragment extends DialogFragment{
 
         item_title.setText(menuItems.getMenuNama().toString());
         mDeskripsi.setText(menuItems.getMenuDeskripsi().toString());
-        mHarga.setText(menuItems.getMenuHarga().toString());
+        mHarga.setText(kursIndonesia(Double.parseDouble(menuItems.getMenuHarga().toString())));
     }
 
     public void insertData(){
@@ -155,6 +160,15 @@ public class DialogPlaceOrderFragment extends DialogFragment{
             Toast.makeText(getActivity(), "Data not Inserted", Toast.LENGTH_LONG).show();
         }
         dismiss();
+    }
+
+    public String kursIndonesia(double nominal){
+        Locale localeID = new Locale("in","ID");
+        NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);
+        String idnNominal = formatRupiah.format(nominal);
+        return idnNominal;
+
+
     }
 
 

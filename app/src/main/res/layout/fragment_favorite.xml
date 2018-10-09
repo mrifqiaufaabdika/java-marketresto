@@ -35,7 +35,7 @@
             android:id="@+id/tab_pesan"
             android:text="Riwayat"
             android:layout_gravity="center"
-            android:icon="@drawable/ic_wallet"/>
+            android:icon="@drawable/ic_history"/>
 
     </android.support.design.widget.TabLayout>
 

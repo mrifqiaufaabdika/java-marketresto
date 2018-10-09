@@ -9,13 +9,13 @@ public class CartList {
     private Integer id;
     private String id_resto;
     private String id_menu;
-    private double harga;
+    private String harga;
     private Integer qty;
     private String catatan;
     private String nama_menu;
 
 
-    public CartList(int id, String id_resto, String id_menu,double harga,Integer qty, String catatan,String nama_menu) {
+    public CartList(int id, String id_resto, String id_menu,String harga,Integer qty, String catatan,String nama_menu) {
        this.id = id;
        this.id_resto = id_resto;
        this.id_menu = id_menu;
@@ -63,11 +63,11 @@ public class CartList {
         this.id_menu = id_menu;
     }
 
-    public double getHarga() {
+    public String getHarga() {
         return harga;
     }
 
-    public void setHarga(double harga) {
+    public void setHarga(String harga) {
         this.harga = harga;
     }
 

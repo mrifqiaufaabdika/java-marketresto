@@ -19,6 +19,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,8 +37,11 @@ import com.example.abdialam.marketresto.utils.DatabaseHelper;
 import com.example.abdialam.marketresto.utils.NonScrollListView;
 import com.example.abdialam.marketresto.utils.SessionManager;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,12 +75,15 @@ public class CartListActivity extends AppCompatActivity implements CartAdapter.C
     @BindView(R.id.tvNamaKonsumen) TextView mNamaKonsumen;
     @BindView(R.id.tvPhoneKonsumen) TextView mPhoneKonsumen;
     @BindView(R.id.tvAlamatAntar) TextView mAlamatAntar;
-    @BindView(R.id.etCatatanAlamat)
-    EditText mCatatanAlamat;
+    @BindView(R.id.etCatatanAlamat) EditText mCatatanAlamat;
     @BindView(R.id.btnOrder) TextView btnOrder;
+    @BindView(R.id.rgMetodeBayar) RadioGroup mMetodeBayar;
+    RadioButton metodebayarButton ;
     double SubTotal,Total ;
     HashMap<String,String> user,location;
     String konsumen_id, konsumen_nama,konsumen_phone,id_resto, tempMsgTarifAntar;
+    Float hargaFloat ;
+
 
 
 
@@ -96,6 +104,7 @@ public class CartListActivity extends AppCompatActivity implements CartAdapter.C
 
 
 
+
         setListViewHeightBasedOnChildren(list);
         cartList = new ArrayList<CartList>();
         listener =this;
@@ -108,7 +117,7 @@ public class CartListActivity extends AppCompatActivity implements CartAdapter.C
 
 
     }
-
+//get data cart from sqlite
     private void getData (){
         //Mengambil data dari Sqlite
         Cursor res = myDb.getAllCart();
@@ -126,12 +135,14 @@ public class CartListActivity extends AppCompatActivity implements CartAdapter.C
                 Integer id = Integer.valueOf(res.getString(0));
                 id_resto = res.getString(1);
                 String id_menu = res.getString(2);
-                double harga = Double.valueOf(res.getString(3));
+                String harga = (res.getString(3));
                 Integer qty = Integer.valueOf(res.getString(4));
                 String catatan =res.getString(5);
                 String nama_resto = res.getString(6);
+                hargaFloat = Float.parseFloat(harga);
 
-                SubTotal += (harga * qty);
+
+                SubTotal += (hargaFloat * qty);
 
 
                 CartList temp = new CartList(id,id_resto,id_menu,harga,qty,catatan,nama_resto);
@@ -145,30 +156,12 @@ public class CartListActivity extends AppCompatActivity implements CartAdapter.C
         }
     }
 
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            // pre-condition
-            return;
-        }
 
-        int totalHeight = 0;
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
-        listView.requestLayout();
-    }
 
     @Override
     public void itemDeleted(View view, int position) {
         CartList cart = (CartList) cartList.get(position);
-        SubTotal = SubTotal - (cart.getHarga() * cart.getQty());
+        SubTotal = SubTotal - (Float.parseFloat(cart.getHarga()) * cart.getQty());
         SetData();
         int msg = myDb.deleteCart(cart.getId());
         adapter.removeAt(position);
@@ -193,7 +186,7 @@ public class CartListActivity extends AppCompatActivity implements CartAdapter.C
             qty -= 1;
             boolean updete = myDb.UpdateCart(qty, id_menu);
             if (updete) {
-                SubTotal -= cart.getHarga();
+                SubTotal -= Float.parseFloat(cart.getHarga());
                 SetData();
             }
         }
@@ -208,7 +201,7 @@ public class CartListActivity extends AppCompatActivity implements CartAdapter.C
         qty += 1;
         boolean updete = myDb.UpdateCart(qty,id_menu);
         if(updete){
-            SubTotal += cart.getHarga();
+            SubTotal += Float.parseFloat(cart.getHarga());
             SetData();
         }
 
@@ -229,26 +222,27 @@ public class CartListActivity extends AppCompatActivity implements CartAdapter.C
             tempMsgTarifAntar = resto.getRestoranDelivery().toString();
             return 0;
         }else {
-            tempMsgTarifAntar = resto.getRestoranDelivery() +" Rp."+resto.getTarifDelivery();
+            tempMsgTarifAntar = resto.getRestoranDelivery() +" "+kursIndonesia(Double.parseDouble(resto.getTarifDelivery()));
             return Double.valueOf(resto.getTarifDelivery());
         }
     }
 
+//set data
     private void SetData(){
         Total = getBiayaAntar()+SubTotal;
         konsumen_id = user.get(SessionManager.ID_USER).toString();
         konsumen_nama =String.valueOf(user.get(SessionManager.NAMA_LENGKAP).toUpperCase());
         konsumen_phone = String.valueOf(user.get(SessionManager.NO_HP));
-        mSubTotal.setText("Rp. "+String.valueOf(SubTotal));
+        mSubTotal.setText(kursIndonesia(SubTotal));
         mBiayaAntar.setText(tempMsgTarifAntar);
         mNamaKonsumen.setText(konsumen_nama);
         mPhoneKonsumen.setText("+"+konsumen_phone);
-        mTotal.setText("Rp"+String.valueOf(Total));
+        mTotal.setText(kursIndonesia(Total));
         mAlamatAntar.setText(location.get(SessionManager.ALAMAT));
 
     }
 
-
+//get restoran by id
     public void get_restoran (){
        mApiService.getRestoranByID(id_resto).enqueue(new Callback<ResponseRestoran>() {
            @Override
@@ -274,7 +268,7 @@ public class CartListActivity extends AppCompatActivity implements CartAdapter.C
 
 
 
-
+//Button order click
     @OnClick(R.id.btnOrder) void order (){
         Toast.makeText(mContext,"Sub total ="+String.valueOf(SubTotal)+"Total = "+String.valueOf(Total),Toast.LENGTH_SHORT).show();
 
@@ -312,20 +306,30 @@ public class CartListActivity extends AppCompatActivity implements CartAdapter.C
 
     }
 
+//send order to restoran and insert database
     private void sendOrder() {
+        int selectId = mMetodeBayar.getCheckedRadioButtonId();
+        metodebayarButton = (RadioButton) findViewById(selectId);
+        String metBayar = metodebayarButton.getText().toString();
+
 
         String title = konsumen_nama;
-        String message = "";
+        String message = all_order();
         String restoran_phone = resto.getRestoranPemilikPhone().toString();
         String konsumen_id =user.get(SessionManager.ID_USER).toString();
         final String restoran_id = id_resto;
         String pesan_lokasi = location.get(SessionManager.LATLANG);
-        String pesan_alamat = "Jl. Srikandi Perumahan Wadya Graha 1 Pekanbaru";
+        String pesan_alamat = location.get(SessionManager.ALAMAT);
         String pesan_catatan = mCatatanAlamat.getText().toString();
         String jarak_antar ="200 km";
         String pesan_biaya_antar =Double.toString(getBiayaAntar());
         String pesan_status="proses";
-        String pesan_metode_bayar ="cash";
+        String pesan_metode_bayar ;
+        if(metBayar.equals("Resto - Pay ")){
+            pesan_metode_bayar="epay";
+        }else {
+            pesan_metode_bayar ="cash";
+        }
 
         mApiService.order(title,message,restoran_phone,konsumen_id,restoran_id,
                 pesan_lokasi,pesan_alamat,pesan_catatan,jarak_antar,
@@ -334,14 +338,14 @@ public class CartListActivity extends AppCompatActivity implements CartAdapter.C
             public void onResponse(Call<ResponseSend> call, Response<ResponseSend> response) {
                 progressOrder.dismiss();
                 if(response.isSuccessful()){
-                    String success = response.body().getMessage().getSuccess().toString();
+                    int success = response.body().getMessage().getSuccess();
                     String id = response.body().getId();
 
-                    if(success.equals("1")){
+                    if(success > 0){
                         Toast.makeText(mContext,"Berhasil Mengirim Pesanan " + id,Toast.LENGTH_SHORT).show();
 
                         setDetailPesanan(id);
-                    }else if (success.equals("0")){
+                    }else if (success ==0 ){
                         Toast.makeText(mContext,(R.string.error), Toast.LENGTH_SHORT).show();
                     }
                 }else {
@@ -358,6 +362,7 @@ public class CartListActivity extends AppCompatActivity implements CartAdapter.C
         });
     }
 
+//insert into db detelail by order
     private void setDetailPesanan(String id) {
         for (int i = 0; i < cartList.size(); i++) {
             String menu_id =cartList.get(i).getId_menu().toString();
@@ -384,6 +389,51 @@ public class CartListActivity extends AppCompatActivity implements CartAdapter.C
         myDb.deleteAll();
 
     }
+
+
+//    untuk membuat list view anti scroll view
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            // pre-condition
+            return;
+        }
+
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+    }
+
+
+//set mata unag format rupiah
+    public String kursIndonesia(double nominal){
+        Locale localeID = new Locale("in","ID");
+        NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);
+        String idnNominal = formatRupiah.format(nominal);
+        return idnNominal;
+    }
+
+
+    public String all_order (){
+        String pesanan = "";
+        String sperase = "," ;
+        for (int i = 0; i < cartList.size() ; i++) {
+            if (i == cartList.size()-1){
+                sperase =".";
+            }
+            pesanan += cartList.get(i).getNama_menu()+" "+cartList.get(i).getQty()+sperase;
+        }
+        return pesanan;
+    }
+
 
 
 }

@@ -35,25 +35,40 @@
 
         <TextView
             android:id="@+id/description_title"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:layout_marginLeft="@dimen/layoutDialogMargin"
+            android:layout_marginRight="10dp"
             android:layout_marginTop="@dimen/layoutDialogMargin"
-            android:text="..."
+            android:text="Deskripsi Menu : "
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/textSubtitleStyle" />
 
 
         <TextView
             android:id="@+id/item_description"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:layout_margin="@dimen/layoutDialogMargin"
-            android:lineSpacingExtra="6dp"
-            android:text="..."
-            android:textColor="@color/colorPrimary"
+            android:layout_marginLeft="@dimen/layoutDialogMargin"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="@dimen/layoutDialogMargin"
+
+            android:lineSpacingExtra="1dp"
+            android:text="Ikan grami dengan bubu khas masakan Melayu"
+            android:textColor="@color/colortext"
+            android:textSize="@dimen/textSubtitleStyle" />
+
+        <TextView
+            android:id="@+id/item_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="@dimen/layoutDialogMargin"
+            android:layout_marginRight="@dimen/layoutDialogMargin"
+            android:text="Rp.5000"
+            android:textColor="@color/textSub"
             android:textSize="@dimen/textSubtitleStyle" />
 
         <LinearLayout
@@ -96,6 +111,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="0"
+                android:textColor="@color/Tex"
                 android:textSize="35sp" />
 
             <TextView
@@ -133,6 +149,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="00"
+                android:textColor="@color/Tex"
                 android:textSize="15sp" />
 
 

@@ -13,9 +13,10 @@ import android.widget.Toast;
 import com.example.abdialam.marketresto.config.ServerConfig;
 import com.example.abdialam.marketresto.R;
 import com.example.abdialam.marketresto.models.User;
-import com.example.abdialam.marketresto.responses.ResponseViewKonsumen;
+import com.example.abdialam.marketresto.responses.ResponseAuth;
 import com.example.abdialam.marketresto.rest.ApiService;
 import com.example.abdialam.marketresto.utils.SessionManager;
+import com.example.abdialam.marketresto.utils.SharedPrefManager;
 import com.github.irvingryan.VerifyCodeView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -48,7 +49,8 @@ public class VerifyActifity extends AppCompatActivity {
 
     Context mContext;
     FirebaseAuth mAuth;
-    String codeSent,phone;
+    String codeSent;
+    User user;
     ProgressDialog progressDialog;
     SessionManager sessionManager;
 
@@ -62,7 +64,7 @@ public class VerifyActifity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify);
         mContext = this;
-        phone = getIntent().getStringExtra("phone");
+        user = (User) getIntent().getSerializableExtra("user");
 
 
         mApiService = ServerConfig.getAPIService();
@@ -72,9 +74,9 @@ public class VerifyActifity extends AppCompatActivity {
 
 
 
-        Toast.makeText(mContext,phone,Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext,user.getKonsumenPhone(),Toast.LENGTH_SHORT).show();
 //      Memanggil method untuk mengirim code
-        //sendVerificationCode(phone);
+       // sendVerificationCode(user.getKonsumenPhone());
     }
 
 
@@ -82,9 +84,9 @@ public class VerifyActifity extends AppCompatActivity {
     @OnClick (R.id.buttonSignIn) void signin (){
         progressDialog = ProgressDialog.show(mContext,null,getString(R.string.memuat),true,false);
 //        untuk melakukan verifikasi dari code OTP yang di inputkan
-      //  verifySignInCode();
+      // verifySignInCode();
 //        jika menguji login tanpa menggunakan code OTP
-        SessionUser();
+       SessionUser();
 
 
     }
@@ -168,28 +170,35 @@ public class VerifyActifity extends AppCompatActivity {
 
 
 
-
-
     //sessionLogin
     private void  SessionUser(){
-        mApiService.viewKonsumen(phone).enqueue(new Callback<ResponseViewKonsumen>() {
-            @Override
-            public void onResponse(Call<ResponseViewKonsumen> call, Response<ResponseViewKonsumen> response) {
-                User userlogin = response.body().getUser();
-                sessionManager.createLoginSession(userlogin);
+                sessionManager.createLoginSession(user);
+                updateToken();
                 Intent intent = new Intent(mContext, MainActivity.class);
                 Toast.makeText(mContext, "Berhasil Login", Toast.LENGTH_SHORT).show();
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(intent);
                 finish();
+
+    }
+
+
+
+    private void updateToken (){
+        String Token = SharedPrefManager.getInstance(this).getDeviceToken();
+        mApiService.updateToken(user.getIdPengguna().toString(),Token).enqueue(new Callback<ResponseAuth>() {
+            @Override
+            public void onResponse(Call<ResponseAuth> call, Response<ResponseAuth> response) {
+                if(response.isSuccessful()){
+
+                }
             }
 
             @Override
-            public void onFailure(Call<ResponseViewKonsumen> call, Throwable t) {
+            public void onFailure(Call<ResponseAuth> call, Throwable t) {
 
             }
         });
-
 
     }
 
@@ -203,5 +212,11 @@ public class VerifyActifity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Toast.makeText(mContext, "on Resume",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Toast.makeText(mContext, "on stop",Toast.LENGTH_SHORT).show();
     }
 }

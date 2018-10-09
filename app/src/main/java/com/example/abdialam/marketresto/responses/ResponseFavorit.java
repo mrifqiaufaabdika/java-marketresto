@@ -1,19 +1,21 @@
 package com.example.abdialam.marketresto.responses;
 
-import com.example.abdialam.marketresto.models.User;
+import com.example.abdialam.marketresto.models.Favorit;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ResponseViewKonsumen {
+import java.util.List;
+
+public class ResponseFavorit {
     @SerializedName("value")
     @Expose
     private String value;
     @SerializedName("message")
     @Expose
     private String message;
-    @SerializedName("user")
+    @SerializedName("favorit")
     @Expose
-    private User user;
+    private List<Favorit> favorit = null;
 
     public String getValue() {
         return value;
@@ -31,11 +33,11 @@ public class ResponseViewKonsumen {
         this.message = message;
     }
 
-    public User getUser() {
-        return user;
+    public List<Favorit> getFavorit() {
+        return favorit;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setFavorit(List<Favorit> favorit) {
+        this.favorit = favorit;
     }
 }

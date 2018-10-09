@@ -6,16 +6,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.TextView;
 
 
 import com.example.abdialam.marketresto.R;
-import com.example.abdialam.marketresto.adapter.KategoriDynamicFragmentAdapter;
+import com.example.abdialam.marketresto.adapter.PagerAdapterTabKategoriMenuDynamic;
 import com.example.abdialam.marketresto.config.ServerConfig;
 import com.example.abdialam.marketresto.models.Kategori;
 import com.example.abdialam.marketresto.models.Menu;
@@ -25,6 +23,7 @@ import com.example.abdialam.marketresto.rest.ApiService;
 import com.example.abdialam.marketresto.utils.SessionManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -41,6 +40,8 @@ public class MenuActivity extends AppCompatActivity  {
     private List<Kategori> kategoriList = new ArrayList<>();
     ProgressDialog progressDialog;
     String oprasional;
+    SessionManager sessionManager;
+    HashMap<String,String > user;
 
 
 
@@ -54,13 +55,16 @@ public class MenuActivity extends AppCompatActivity  {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-
+        mContext= this;
         mApiService = ServerConfig.getAPIService();
+        sessionManager = new SessionManager(mContext);
+        user = sessionManager.getUserDetail();
+
         viewPager = findViewById(R.id.viewpager);
         mTabLayout =  findViewById(R.id.tabs);
         viewPager.setOffscreenPageLimit(5);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
-        mContext= this;
+
 
         initViews();
 
@@ -127,7 +131,7 @@ public class MenuActivity extends AppCompatActivity  {
         }
 
 
-        KategoriDynamicFragmentAdapter mDynamicFragmentAdapter = new KategoriDynamicFragmentAdapter(getSupportFragmentManager(), mTabLayout.getTabCount(),menuList,kategoriList,oprasional);
+        PagerAdapterTabKategoriMenuDynamic mDynamicFragmentAdapter = new PagerAdapterTabKategoriMenuDynamic(getSupportFragmentManager(), mTabLayout.getTabCount(),menuList,kategoriList,oprasional);
         viewPager.setAdapter(mDynamicFragmentAdapter);
         viewPager.setCurrentItem(0);
     }
@@ -139,7 +143,8 @@ public class MenuActivity extends AppCompatActivity  {
 
             resto = (Restoran)getIntent().getSerializableExtra("Resto");
             String id_restoran = resto.getIdRestoran().toString();
-            setValue(id_restoran);
+            String id_konsuemn = user.get(SessionManager.ID_USER);
+            setValue(id_restoran,id_konsuemn);
 
 //            Bundle bundle = new Bundle();
 //            String id_resto = resto.getIdRestoran().toString();
@@ -151,9 +156,9 @@ public class MenuActivity extends AppCompatActivity  {
     }
 
 
-    private void setValue(String id_restorant){
+    private void setValue(String id_restorant,String id_konsumen){
 
-        mApiService.getRestoranMenuById(id_restorant).enqueue(new Callback<ResponseMenu>() {
+        mApiService.getRestoranMenuById(id_restorant,id_konsumen).enqueue(new Callback<ResponseMenu>() {
             @Override
             public void onResponse(Call<ResponseMenu> call, Response<ResponseMenu> response) {
                 String value = response.body().getValue();

@@ -8,8 +8,8 @@
         />
     <item
         android:id="@+id/action_search"
-        android:title="Search"
-        android:icon="@drawable/ic_search"
+        android:title="Order"
+        android:icon="@drawable/ic_motor"
         />
 
     <item
@@ -17,10 +17,7 @@
         android:title="Favorite"
         android:icon="@drawable/ic_favorite" />
 
-    <item
-        android:id="@+id/action_wallet"
-        android:title="Resto Pay"
-        android:icon="@drawable/ic_wallet" />
+
 
     <item
         android:id="@+id/action_account"

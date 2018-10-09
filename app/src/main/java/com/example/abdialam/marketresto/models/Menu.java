@@ -45,6 +45,9 @@ public class Menu implements Serializable {
     @SerializedName("kategori_deskripsi")
     @Expose
     private String kategoriDeskripsi;
+    @SerializedName("Favorit")
+    @Expose
+    private Integer favorit;
 
     public Integer getIdMenu() {
         return idMenu;
@@ -140,6 +143,13 @@ public class Menu implements Serializable {
 
     public void setKategoriDeskripsi(String kategoriDeskripsi) {
         this.kategoriDeskripsi = kategoriDeskripsi;
+    }
+    public Integer getFavorit() {
+        return favorit;
+    }
+
+    public void setFavorit(Integer favorit) {
+        this.favorit = favorit;
     }
 
 }

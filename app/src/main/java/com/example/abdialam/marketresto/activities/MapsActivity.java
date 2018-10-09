@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -51,7 +52,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         sessionManager = new SessionManager(mContext);
         LatLng defaut = new LatLng(0.513790, 101.443923);
 
-
+        //jika dapat lokasi dari resto fragment
         if(getIntent().hasExtra("location")){
             String loc = getIntent().getStringExtra("location");
             String[] latlong = loc.split(",");
@@ -65,6 +66,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         alamat = getAddressLine(mContext);
 
         Button SetLocation = (Button) findViewById(R.id.btnSetLocation);
+
+        //Click set Lokasi
         SetLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,7 +75,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 sessionManager.setLocation(alamat,strLatlng);
                 Intent intent = new Intent(MapsActivity.this,MainActivity.class);
                 intent.putExtra("aksi",alamat);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(intent);
             }
         });
@@ -97,9 +99,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         marker = mMap.addMarker(new MarkerOptions().position(location).title("Lokasi : ").snippet(alamat).draggable(true));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location,18),5000,null);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location,17),5000,null);
         mMap.setMyLocationEnabled(true);
         marker.showInfoWindow();
+
+
+
+        mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                Location currentLoc = mMap.getMyLocation();
+                LatLng temp = new LatLng(currentLoc.getLatitude(),currentLoc.getLongitude());
+                Toast.makeText(mContext,"Loc "+location,Toast.LENGTH_SHORT).show();
+                location = temp;
+                marker.setPosition(location);
+                alamat = getAddressLine(mContext).toString();
+                marker.setSnippet(alamat);
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location,17),5000,null);
+                marker.showInfoWindow();
+                return true;
+            }
+        });
+
+
+
 
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
 
@@ -123,6 +146,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
     }
+
+
 
 
 

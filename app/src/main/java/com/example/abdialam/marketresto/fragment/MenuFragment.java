@@ -1,5 +1,6 @@
 package com.example.abdialam.marketresto.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,9 +21,13 @@ import com.example.abdialam.marketresto.config.ServerConfig;
 import com.example.abdialam.marketresto.models.Kategori;
 import com.example.abdialam.marketresto.models.Menu;
 import com.example.abdialam.marketresto.responses.ResponseMenu;
+import com.example.abdialam.marketresto.responses.ResponseValue;
 import com.example.abdialam.marketresto.rest.ApiService;
+import com.example.abdialam.marketresto.utils.SessionManager;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -30,16 +36,18 @@ import retrofit2.Response;
 
 public class MenuFragment extends Fragment implements MenuAdapter.OnItemClickListener {
 
-    ApiService mApiService;
+
     private RecyclerView mRecylerView;
     private MenuAdapter mAdapter;
     private List<Menu> menuList = new ArrayList<>();
     private List<Menu> menuListTemp = new ArrayList<>();
     private List<Kategori> kategoriList = new ArrayList<>();
     private MenuAdapter.OnItemClickListener listener;
+    ApiService mApiService;
 //    TextView pos;
     int position,oprasional;
-
+    SessionManager sessionManager;
+    HashMap<String,String> user ;
     public static MenuFragment newInstance() {
         return new MenuFragment();
     }
@@ -58,8 +66,10 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnItemClickLis
     }
 
     private void initViews(View view) {
-        mApiService = ServerConfig.getAPIService();
 
+        sessionManager = new SessionManager(getActivity());
+        user = sessionManager.getUserDetail();
+        mApiService = ServerConfig.getAPIService();
         menuList =(List<Menu>) getArguments().getSerializable("menu");
         kategoriList = (List<Kategori>) getArguments().getSerializable("kategori");
         oprasional = getArguments().getInt("oprasinal");
@@ -78,22 +88,7 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnItemClickLis
     }
 
 
-    @Override
-    public void onItemCliked(View v, int position) {
-        Menu menuItem = menuListTemp.get(position);
-        Bundle argument = new Bundle();
-        argument.putSerializable("selectedItem",menuItem);
-        //oprasinal buka
-        if(oprasional == 1){
-            DialogPlaceOrderFragment placeOrderFragment = new DialogPlaceOrderFragment();
-            placeOrderFragment.setArguments(argument);
-            placeOrderFragment.show(getFragmentManager(), DialogPlaceOrderFragment.ARG_ITEM_ID);
-        //oprasional tutup
-        }else {
-            Toast.makeText(getActivity(),"TUTUP",Toast.LENGTH_SHORT).show();
-        }
 
-    }
 
 
     public void setByKategori(){
@@ -117,6 +112,50 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnItemClickLis
 //        }
 
 
+    }
+
+    @Override
+    public void onItemCliked(final View v, int position, boolean isLongClick) {
+        Menu menuItem = menuListTemp.get(position);
+        String id_konsumen = user.get(SessionManager.ID_USER).toString();
+        if(isLongClick){
+         //set favorit
+            mApiService.setFavorit(id_konsumen,menuItem.getIdMenu().toString()).enqueue(new Callback<ResponseValue>() {
+                @Override
+                public void onResponse(Call<ResponseValue> call, Response<ResponseValue> response) {
+                    if(response.isSuccessful()){
+                        String value = response.body().getValue();
+                        String message = response.body().getMessage();
+                        if(value.equals("1")){
+                            ImageView heart = (ImageView) v.findViewById(R.id.imgLove);
+                            heart.setImageResource(R.drawable.f4);
+                            Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
+                        }else {
+                            Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseValue> call, Throwable t) {
+                        Toast.makeText(getActivity(),R.string.lostconnection,Toast.LENGTH_SHORT).show();
+                }
+            });
+
+
+        }else {
+            Bundle argument = new Bundle();
+            argument.putSerializable("selectedItem", menuItem);
+            //oprasinal buka
+            if (oprasional == 1) {
+                DialogPlaceOrderFragment placeOrderFragment = new DialogPlaceOrderFragment();
+                placeOrderFragment.setArguments(argument);
+                placeOrderFragment.show(getFragmentManager(), DialogPlaceOrderFragment.ARG_ITEM_ID);
+                //oprasional tutup
+            } else {
+                Toast.makeText(getActivity(), "TUTUP", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
 

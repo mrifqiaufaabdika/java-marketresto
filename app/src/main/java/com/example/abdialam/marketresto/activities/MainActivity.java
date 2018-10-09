@@ -2,32 +2,22 @@ package com.example.abdialam.marketresto.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.support.annotation.NonNull;
-import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.abdialam.marketresto.R;
 import com.example.abdialam.marketresto.fragment.AccountFragment;
 import com.example.abdialam.marketresto.fragment.FavoriteFragment;
 import com.example.abdialam.marketresto.fragment.RestoFragment;
-import com.example.abdialam.marketresto.fragment.SearchFragment;
-import com.example.abdialam.marketresto.fragment.WalletFragment;
+import com.example.abdialam.marketresto.fragment.OrderFragment;
 import com.example.abdialam.marketresto.utils.SessionManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -72,25 +62,18 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case R.id.action_search:
-                        fragment = new SearchFragment();
-                        getSupportActionBar().setTitle("Search");
+                        fragment = new OrderFragment();
+                        getSupportActionBar().setTitle("Pesanan");
                         break;
 
                     case R.id.action_favorite:
                         getSupportActionBar().setTitle("Favorit");
                         fragment = new FavoriteFragment();
-
                         break;
 
-                    case R.id.action_wallet:
-                        fragment = new WalletFragment();
-                        getSupportActionBar().setTitle("Resto Pay");
-                        break;
                     case R.id.action_account:
                         getSupportActionBar().setTitle("Akun");
                         fragment = new AccountFragment();
-
-
                         break;
                 }
 

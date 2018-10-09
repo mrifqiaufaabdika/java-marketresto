@@ -9,7 +9,7 @@ public class ServerConfig {
     //192.168.43.210
     //https://marketresto.000webhostapp.com/public/
 
-    private static final String BASE_URL_API = "http://192.168.100.5/marketresto/public/";
+    private static final String BASE_URL_API = "http://192.168.43.210/marketresto/public/";
     // Mendeklarasikan Interface BaseApiService
     public static ApiService getAPIService(){
         return ClientService.getClient(BASE_URL_API).create(ApiService.class);

@@ -3,7 +3,9 @@ package com.example.abdialam.marketresto.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable{
     @SerializedName("id_konsumen")
     @Expose
     private Integer idKonsumen;

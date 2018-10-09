@@ -9,9 +9,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_mr"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_mr"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -22,7 +22,7 @@
         <activity
             android:name=".activities.SplashActivity"
             android:noHistory="true"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoAll">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,14 +32,14 @@
         <!-- sign in activity -->
         <activity
             android:name=".activities.SigninActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoAll" />
         <!-- Sign up aktivity -->
         <activity
             android:name=".activities.SignUpActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoAll" />
         <activity
             android:name=".activities.VerifyActifity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoAll" />
         <activity android:name=".activities.SettingActivity" />
         <activity android:name=".activities.CartListActivity"
             android:theme="@style/AppTheme.NoActionBar"/>

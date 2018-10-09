@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.abdialam.marketresto.config.ServerConfig;
 import com.example.abdialam.marketresto.R;
+import com.example.abdialam.marketresto.models.User;
 import com.example.abdialam.marketresto.responses.ResponseAuth;
 import com.example.abdialam.marketresto.rest.ApiService;
 import com.example.abdialam.marketresto.utils.SessionManager;
@@ -84,17 +85,16 @@ public class SigninActivity extends AppCompatActivity {
 
                     value = response.body().getValue();
                     message = response.body().getMessage();
+                    //phone terdaftar
                     if(value.equals("1")){
                         Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+                        User user = response.body().getUser();
                         Intent intent = new Intent(SigninActivity.this, VerifyActifity.class);
-                        intent.putExtra("phone",phone);
+                        intent.putExtra("user",user);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
                         startActivity(intent);
                         finish();
-
-
-
-                        //sendVerificationCode();
+                     //nomor phone tidak terdaftar
                     }else {
                         Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
                     }

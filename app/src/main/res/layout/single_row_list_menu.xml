@@ -111,20 +111,18 @@
             android:layout_marginRight="16dp"
             >
         <ImageView
-
-            android:id="@+id/fav1"
+            android:id="@+id/imgLove"
             android:layout_width="20dp"
             android:layout_height="20dp"
 
-            android:background="@drawable/f0"
             />
-        <ImageView
-            android:visibility="gone"
-            android:id="@+id/fav2"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@drawable/f4"
-            />
+        <!--<ImageView-->
+            <!--android:visibility="gone"-->
+            <!--android:id="@+id/fav2"-->
+            <!--android:layout_width="20dp"-->
+            <!--android:layout_height="20dp"-->
+            <!--android:background="@drawable/f4"-->
+            <!--/>-->
         </RelativeLayout>
 
     </LinearLayout>

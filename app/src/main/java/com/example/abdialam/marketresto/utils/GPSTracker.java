@@ -176,6 +176,7 @@ public class GPSTracker extends AbsRunTimePermission implements LocationListener
 
         // Setting Dialog Title
         alertDialog.setTitle("GPS is settings");
+        alertDialog.setCancelable(false);
 
         // Setting Dialog Message
         alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");

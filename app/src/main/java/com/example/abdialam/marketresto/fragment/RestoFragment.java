@@ -58,6 +58,7 @@ public class RestoFragment extends Fragment {
     ImageView mError;
     String addressLine,latlng;
     SessionManager sessionManager;
+    HashMap<String,String> locationSession;
 
 
     @Override
@@ -78,33 +79,22 @@ public class RestoFragment extends Fragment {
         openmap = (ImageButton) view.findViewById(R.id.openmap);
         mError = (ImageView) view.findViewById(R.id.error);
 
+        locationSession = sessionManager.getLocation();
 
 
-
-//        Location A= new Location("pointA");
-//        double latA = 0.488307;
-//        double langA = 101.405899;
-//                A.setLatitude(latA);
-//                A.setLongitude(langA);
-//
-//        Location B= new Location("pointA");
-//        double latB = 0.499821;
-//        double langB = 101.417246;
-//        A.setLatitude(latB);
-//        A.setLongitude(langB);
-//       float distance = A.distanceTo(B)/1000;
-//
-//       double c = distance(latA,langA,latB,langB);
-//
-//        textview.setText(String.valueOf(distance+" ,"+c));
 
 
         openmap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mContext, MapsActivity.class);
-                intent.putExtra("location",latlng);
-                startActivity(intent);
+                if(latlng == null){
+                  //  gpsTracker.showSettingsAlert();
+                    Toast.makeText(mContext, "error", Toast.LENGTH_SHORT).show();
+                }else {
+                    Intent intent = new Intent(mContext, MapsActivity.class);
+                    intent.putExtra("location", latlng);
+                    startActivity(intent);
+                }
             }
         });
         return view;
@@ -114,6 +104,7 @@ public class RestoFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        Toast.makeText(mContext,"on resume",Toast.LENGTH_SHORT).show();
         gpsTracker = new GPSTracker(mContext);
         if(gpsTracker.canGetLocation()){
             //Gone Error
@@ -122,6 +113,7 @@ public class RestoFragment extends Fragment {
             Bundle arguments = getArguments();
             if(arguments != null && arguments.containsKey("aksi")){
                 textview.setText(  arguments.getString("aksi"));
+                latlng = locationSession.get(SessionManager.LATLANG);
             }else {
 
                 //ambil line address
@@ -172,6 +164,8 @@ public class RestoFragment extends Fragment {
         inflater.inflate(R.menu.menu_cart, menu);
     }
 
+
+//Cart Menu
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -181,7 +175,6 @@ public class RestoFragment extends Fragment {
 
         if(item.getItemId()==R.id.cart){
             Intent intent = new Intent(mContext,CartListActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
 
         }
