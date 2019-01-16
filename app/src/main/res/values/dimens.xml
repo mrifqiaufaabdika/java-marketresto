@@ -9,4 +9,5 @@
     <dimen name="buttonCloseDialogMargin">40dp</dimen>
     <dimen name="text">15dp</dimen>
     <dimen name="textsub">14dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

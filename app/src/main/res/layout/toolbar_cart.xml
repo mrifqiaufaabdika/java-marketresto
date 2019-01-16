@@ -28,7 +28,7 @@
 
 
     <ImageView
-
+        android:id="@+id/btnBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/back"
@@ -42,13 +42,25 @@
 
     <customfonts.MyTextView
 
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CART"
+        android:text="CHECKOUT"
         android:textColor="@color/Tex"
         android:textSize="@dimen/text"
         android:gravity="center"
-        android:layout_marginRight="45dp"
+        android:layout_gravity="center"
+
+        />
+
+
+    <ImageView
+        android:id="@+id/btnResto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_restaurant_black"
+        android:layout_gravity="right"
+        android:padding="16dp"
+
 
         />
 

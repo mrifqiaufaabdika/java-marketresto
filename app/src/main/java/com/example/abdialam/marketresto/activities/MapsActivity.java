@@ -1,17 +1,28 @@
 package com.example.abdialam.marketresto.activities;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.location.Address;
+import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.abdialam.marketresto.R;
@@ -25,6 +36,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -32,49 +44,62 @@ import java.util.Map;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    LatLng location ;
-    private int geocoderMaxResult = 1;
+    LatLng location;
+    private int geocoderMaxResult = 100;
     Context mContext;
-    Marker marker;
-    String alamat ;
+
+    String alamat;
     SessionManager sessionManager;
+    Button SetLocation;
+    TextView mLocation;
+    LatLng midLatLng;
+    HashMap<String, String> sessionLocation;
 
 
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         mContext = this;
+        Typeface type = Typeface.createFromAsset(getAssets(), "fonts/MavenPro-Regular.ttf");
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        SetLocation = (Button) findViewById(R.id.btnSetLocation);
+        SetLocation.setTypeface(type);
+        mLocation = (TextView) findViewById(R.id.tvLocation);
         sessionManager = new SessionManager(mContext);
-        LatLng defaut = new LatLng(0.513790, 101.443923);
-
-        //jika dapat lokasi dari resto fragment
-        if(getIntent().hasExtra("location")){
-            String loc = getIntent().getStringExtra("location");
-            String[] latlong = loc.split(",");
-            double lat = Double.parseDouble(latlong[0]);
-            double lng = Double.parseDouble(latlong[1]);
-            LatLng a = new LatLng(lat,lng);
-            location = a;
-        }else {
-            location = defaut;
-        }
         alamat = getAddressLine(mContext);
+        String lat = null;
+        String lang = null;
 
-        Button SetLocation = (Button) findViewById(R.id.btnSetLocation);
+        sessionLocation = sessionManager.getLocation();
+        if (sessionManager.isGetLocation()) {
+            lat = sessionLocation.get(SessionManager.LAT);
+            lang = sessionLocation.get(SessionManager.LANG);
+        }
+
+        //cek lokasi awal
+        if (lat == null || lang == null) {
+            location = new LatLng(0.513790, 101.443923);
+        } else {
+            location = new LatLng(Double.parseDouble(lat), Double.parseDouble(lang));
+        }
+
 
         //Click set Lokasi
         SetLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String strLatlng = String.valueOf(location.latitude)+","+String.valueOf(location.longitude);
-                sessionManager.setLocation(alamat,strLatlng);
-                Intent intent = new Intent(MapsActivity.this,MainActivity.class);
-                intent.putExtra("aksi",alamat);
+                String strLat = String.valueOf(midLatLng.latitude);
+                String strLang = String.valueOf(midLatLng.longitude);
+                Toast.makeText(mContext, alamat + " lat " + strLat + " lang " + strLang, Toast.LENGTH_SHORT).show();
+                sessionManager.setLocation(alamat, strLat, strLang);
+
+                Intent intent = new Intent(MapsActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
         });
@@ -90,61 +115,73 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
-    @SuppressLint("MissingPermission")
+
+
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 17), 5000, null);
 
 
-        marker = mMap.addMarker(new MarkerOptions().position(location).title("Lokasi : ").snippet(alamat).draggable(true));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location,17),5000,null);
-        mMap.setMyLocationEnabled(true);
-        marker.showInfoWindow();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(true);
 
+        } else {
+            Toast.makeText(MapsActivity.this, "You have to accept to enjoy all app's services!", Toast.LENGTH_LONG).show();
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                mMap.setMyLocationEnabled(true);
+            }
+        }
+
+
+       // mMap.setMyLocationEnabled(true);
+
+
+
+
+        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                midLatLng = mMap.getCameraPosition().target;
+                location = midLatLng;
+                alamat =getAddressLine(mContext).toString();
+                mLocation.setText(alamat);
+            }
+        });
+
+        mMap.getUiSettings().setZoomControlsEnabled(true);
 
 
         mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
             @Override
             public boolean onMyLocationButtonClick() {
-                Location currentLoc = mMap.getMyLocation();
-                LatLng temp = new LatLng(currentLoc.getLatitude(),currentLoc.getLongitude());
-                Toast.makeText(mContext,"Loc "+location,Toast.LENGTH_SHORT).show();
-                location = temp;
-                marker.setPosition(location);
-                alamat = getAddressLine(mContext).toString();
-                marker.setSnippet(alamat);
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location,17),5000,null);
-                marker.showInfoWindow();
+                LocationManager mgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+                if (!mgr.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    showSettingsAlert();
+                }else {
+                    Criteria criteria = new Criteria();
+                    String provider = mgr.getBestProvider(criteria, false);
+                   // Location locationn = mgr.getLastKnownLocation(provider);
+
+                    Location currentLoc = mMap.getMyLocation();
+                    LatLng temp = new LatLng(currentLoc.getLatitude(), currentLoc.getLongitude());
+                    Toast.makeText(mContext, "Loc " + location, Toast.LENGTH_SHORT).show();
+                    location = temp;
+                    //  marker.setPosition(location);
+                    alamat = getAddressLine(mContext).toString();
+                    // marker.setSnippet(alamat);
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 17), 5000, null);
+                    // marker.showInfoWindow();
+                }
                 return true;
             }
         });
 
-
-
-
-        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-
-            @Override
-            public void onMarkerDragStart(Marker marker) {
-
-            }
-
-            @Override
-            public void onMarkerDrag(Marker marke) {
-
-            }
-
-            @Override
-            public void onMarkerDragEnd(Marker marke) {
-                location = marke.getPosition();
-                alamat = getAddressLine(mContext).toString();
-                marker.setSnippet(alamat);
-                marker.showInfoWindow();
-
-            }
-        });
     }
 
 
@@ -173,9 +210,48 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             String addresLine = address.getAddressLine(0);
             return addresLine;
         }else {
-            return "not faoud" ;
+            return "Alamat Tidak Ditemukan" ;
         }
     }
+
+
+    public void showSettingsAlert(){
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+
+        // Setting Dialog Title
+        alertDialog.setTitle("Atur Layanan GPS Anda");
+        alertDialog.setCancelable(false);
+
+        // Setting Dialog Message
+        alertDialog.setMessage("Layanan GPS Tidak Aktif. Apakah Anda ingin masuk ke menu pengaturan?");
+
+        // On pressing Settings button
+        alertDialog.setPositiveButton("Pengaturan", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog,int which) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                mContext.startActivity(intent);
+            }
+        });
+
+        // on pressing cancel button
+        alertDialog.setNegativeButton("Batal", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        // Showing Alert Message
+        final AlertDialog alert = alertDialog.create();
+        alert.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(mContext,R.color.colorPrimary));
+                alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(mContext,R.color.colorPrimary));
+            }
+        });
+        alert.show();
+    }
+
 
 
 }

@@ -5,11 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.CollapsibleActionView;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.example.abdialam.marketresto.R;
@@ -21,6 +27,7 @@ import com.example.abdialam.marketresto.models.Restoran;
 import com.example.abdialam.marketresto.responses.ResponseMenu;
 import com.example.abdialam.marketresto.rest.ApiService;
 import com.example.abdialam.marketresto.utils.SessionManager;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +49,8 @@ public class MenuActivity extends AppCompatActivity  {
     String oprasional;
     SessionManager sessionManager;
     HashMap<String,String > user;
+    CollapsingToolbarLayout collapsingToolbar;
+    Toolbar toolbar;
 
 
 
@@ -61,24 +70,47 @@ public class MenuActivity extends AppCompatActivity  {
         user = sessionManager.getUserDetail();
 
         viewPager = findViewById(R.id.viewpager);
+
+
         mTabLayout =  findViewById(R.id.tabs);
         viewPager.setOffscreenPageLimit(5);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
-
-
+        toolbar = (Toolbar) findViewById(R.id.htab_toolbar);
+        collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.htab_collapse_toolbar);
+        ImageView imgResto = (ImageView) findViewById(R.id.imageRestoran);
+        TextView mAlamat = (TextView) findViewById(R.id.tvAlamat);
+        TextView mOperasional = (TextView) findViewById(R.id.tvOprasional);
+        setSupportActionBar(toolbar);
         initViews();
 
         getIncomingIntent();
-
-        getSupportActionBar().setElevation(0);
-        getSupportActionBar().setTitle("Menu "+resto.getRestoranNama());
-
-
-
-
-
         progressDialog = ProgressDialog.show(mContext,null,getString(R.string.memuat),true,false);
-        oprasional = resto.getRestoranOperasional().toString();
+
+        //set alamat restoran
+        mAlamat.setText(resto.getRestoranAlamat());
+        //set operasional restoran
+        if(resto.getRestoranOprasional() ==  1){
+            mOperasional.setText("BUKA");
+            mOperasional.setBackgroundResource(R.drawable.rounded_corner_green);
+        }else {
+            mOperasional.setText("TUTUP");
+            mOperasional.setBackgroundResource(R.drawable.rounded_corner_red);
+        }
+
+        //set title toolbar
+        collapsingToolbar.setTitle(resto.getRestoranNama());
+
+
+        //set image background
+        Picasso.get()
+                .load(getResources().getString(R.string.path_restoran)+resto.getRestoranFoto())
+                .into(imgResto);
+
+
+        //get operasional restoran
+        oprasional = resto.getRestoranOprasional().toString();
+
+
 
 
 
@@ -87,7 +119,7 @@ public class MenuActivity extends AppCompatActivity  {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
+//                Snackbar.make(PagerAdapterTabFavoritview, "Here's a Snackbar", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
                 Intent intent = new Intent(mContext,CartListActivity.class);
 //                intent.putExtra("Resto", resto);
@@ -127,7 +159,7 @@ public class MenuActivity extends AppCompatActivity  {
 
         for (int i = 0; i < jmlKate; i++) {
 
-            mTabLayout.addTab(mTabLayout.newTab().setText(kategoriList.get(i).getKategoriNama()));
+            mTabLayout.addTab(mTabLayout.newTab().setText(kategoriList.get(i).getKategoriNama()+" ("+kategoriList.get(i).getTotalMenu()+")"));
         }
 
 
@@ -142,7 +174,7 @@ public class MenuActivity extends AppCompatActivity  {
         if(getIntent().hasExtra("Resto")){
 
             resto = (Restoran)getIntent().getSerializableExtra("Resto");
-            String id_restoran = resto.getIdRestoran().toString();
+            String id_restoran = resto.getId().toString();
             String id_konsuemn = user.get(SessionManager.ID_USER);
             setValue(id_restoran,id_konsuemn);
 
@@ -153,23 +185,32 @@ public class MenuActivity extends AppCompatActivity  {
 //            restoMenuFragment.setArguments(bundle);
 //            loadFragment(restoMenuFragment);
         }
+
+
     }
 
 
     private void setValue(String id_restorant,String id_konsumen){
 
-        mApiService.getRestoranMenuById(id_restorant,id_konsumen).enqueue(new Callback<ResponseMenu>() {
+        mApiService.getRestoranMenu(id_restorant,id_konsumen).enqueue(new Callback<ResponseMenu>() {
             @Override
             public void onResponse(Call<ResponseMenu> call, Response<ResponseMenu> response) {
+                progressDialog.dismiss();
+                if(response.isSuccessful()){
                 String value = response.body().getValue();
-                if(value.equals("1")){
-                    progressDialog.dismiss();
-                    menuList = response.body().getData();
-                    kategoriList = response.body().getKategori();
-                    initViews();
+                String message = response.body().getMessage();
+                    if(value.equals("1")) {
+                        menuList = response.body().getRestoranMenu();
+                        kategoriList = response.body().getRestoranKategori();
+                        initViews();
 //                    mAdapter = new MenuAdapter(getActivity(),data,listener);
 //                    mRecylerView.setAdapter(mAdapter);
 //                    Toast.makeText(getContext(),"ok",Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(mContext,message,Toast.LENGTH_SHORT).show();
+                    }
+                }else {
+                    Toast.makeText(mContext,"gagal",Toast.LENGTH_SHORT).show();
                 }
             }
 

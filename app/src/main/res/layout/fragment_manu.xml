@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-
-
-
+    <include layout="@layout/messages"
+        android:id="@id/error"
+        android:visibility="gone"/>
 </RelativeLayout>

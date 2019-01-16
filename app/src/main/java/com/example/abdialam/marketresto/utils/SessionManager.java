@@ -23,8 +23,10 @@ public class SessionManager {
     public static final String NAMA_LENGKAP = "namaLengkap";
     public static final String NO_HP = "noHP";
 
+    public static final String IS_GET_LOCATION = "isLogged";
     public static final String ALAMAT = "alamat";
-    public static final String LATLANG = "latlang";
+    public static final String LAT = "lat";
+    public static final String LANG = "lang";
 
 
 
@@ -41,8 +43,7 @@ public class SessionManager {
 
     public void createLoginSession(User user){
         editor.putBoolean(IS_LOGGED_IN,true);
-        editor.putString(ID_USER,String.valueOf(user.getIdKonsumen()));
-        editor.putString(ID_PENGGUNA,String.valueOf(user.getIdPengguna()));
+        editor.putString(ID_USER,String.valueOf(user.getId()));
         editor.putString(NAMA_LENGKAP,user.getKonsumenNama());
         editor.putString(EMAIL,user.getKonsumenEmail());
         editor.putString(NO_HP,user.getKonsumenPhone());
@@ -60,16 +61,19 @@ public class SessionManager {
         return user;
     }
 
-    public void setLocation (String alamat,String latlang){
+    public void setLocation (String alamat,String lat,String lang){
+        editor.putBoolean(IS_GET_LOCATION,true);
         editor.putString(ALAMAT,alamat);
-        editor.putString(LATLANG,latlang);
+        editor.putString(LAT,lat);
+        editor.putString(LANG,lang);
         editor.commit();
     }
 
     public HashMap<String,String> getLocation() {
         HashMap<String,String> location = new HashMap<>();
         location.put(ALAMAT,sharedPreferences.getString(ALAMAT,null));
-        location.put(LATLANG,sharedPreferences.getString(LATLANG,null));
+        location.put(LAT,sharedPreferences.getString(LAT,null));
+        location.put(LANG,sharedPreferences.getString(LANG,null));
         return location;
     }
 
@@ -81,5 +85,9 @@ public class SessionManager {
 
     public boolean isLoggedIn() {
         return sharedPreferences.getBoolean(IS_LOGGED_IN,false);
+    }
+
+    public boolean isGetLocation() {
+        return sharedPreferences.getBoolean(IS_GET_LOCATION,false);
     }
 }

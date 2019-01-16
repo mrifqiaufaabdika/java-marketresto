@@ -97,36 +97,32 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnItemClickLis
         for (int i = 0; i < kategoriList.size() ; i++) {
             if(position == i){
                 for (int j = 0; j < menuList.size(); j++) {
-                    if (menuList.get(j).getMenuKategoriId().toString().equals(kategoriList.get(i).getMenuKategoriId().toString())){
+                    if (menuList.get(j).getIdKategori().toString().equals(kategoriList.get(i).getId().toString())){
                         menuListTemp.add(menuList.get(j));
                     }
                 }
             }
         }
-//        if(position == 0){
-//            pos.setText("satu");
-//        }else if (position ==1){
-//            pos.setText("dua");
-//        }else {
-//            pos.setText("tiga");
-//        }
-
-
     }
 
     @Override
-    public void onItemCliked(final View v, int position, boolean isLongClick) {
-        Menu menuItem = menuListTemp.get(position);
+    public void onItemCliked(final View v, final int position, boolean isLongClick) {
+        final Menu menuItem = menuListTemp.get(position);
         String id_konsumen = user.get(SessionManager.ID_USER).toString();
         if(isLongClick){
-         //set favorit
-            mApiService.setFavorit(id_konsumen,menuItem.getIdMenu().toString()).enqueue(new Callback<ResponseValue>() {
+            if(menuItem.getMenuFavorit() > 0){
+                Toast.makeText(getActivity(),"Menu Sudah Jadi Favorit",Toast.LENGTH_SHORT).show();
+            }else {
+                //set favorit
+            mApiService.setFavorit(id_konsumen,menuItem.getId().toString()).enqueue(new Callback<ResponseValue>() {
                 @Override
                 public void onResponse(Call<ResponseValue> call, Response<ResponseValue> response) {
                     if(response.isSuccessful()){
                         String value = response.body().getValue();
                         String message = response.body().getMessage();
                         if(value.equals("1")){
+                            mAdapter.favoritAt(v,position);
+                            menuItem.setMenuFavorit(1);
                             ImageView heart = (ImageView) v.findViewById(R.id.imgLove);
                             heart.setImageResource(R.drawable.f4);
                             Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
@@ -141,6 +137,8 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnItemClickLis
                         Toast.makeText(getActivity(),R.string.lostconnection,Toast.LENGTH_SHORT).show();
                 }
             });
+            }
+
 
 
         }else {

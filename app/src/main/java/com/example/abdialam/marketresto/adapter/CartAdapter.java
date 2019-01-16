@@ -3,12 +3,15 @@ package com.example.abdialam.marketresto.adapter;
 import android.app.Activity;
 import android.content.Context;
 
+import android.graphics.Paint;
 import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -77,6 +80,11 @@ public class CartAdapter extends BaseAdapter {
             viewHolder.min = (ImageView) view.findViewById(R.id.min);
             viewHolder.plus = (ImageView) view.findViewById(R.id.plus);
             viewHolder.cross =(ImageView) view.findViewById(R.id.clear);
+            viewHolder.layoutDiscount = (LinearLayout) view.findViewById(R.id.layoutDiscount);
+            viewHolder.mHargaCoret = (TextView)view.findViewById(R.id.tvHargaCoret);
+            viewHolder.mDiscount = (TextView)view.findViewById(R.id.tvDiscount);
+            viewHolder.mCatatanMenu = (EditText) view.findViewById(R.id.catatanMenu);
+            viewHolder.mKetersedian = (TextView) view.findViewById(R.id.tvMenuKetersedian);
 
 
 
@@ -89,17 +97,46 @@ public class CartAdapter extends BaseAdapter {
         }
 
 
-        final CartList cart = (CartList)getItem(position);
+         CartList cart = (CartList)dataList.get(position);
 
-        String path =view.getResources().getString(R.string.path)+"img-20180928-5badb28a1f2a8.png";
-        Picasso.with(mContext)
+        String path =view.getResources().getString(R.string.path)+cart.getMenu_foto();
+        Picasso.get()
                 .load(path)
+                .resize(500, 500)
+                .centerCrop()
                 .into(viewHolder.imageView);
 
        // viewHolder.imageView.setImageResource(R.drawable.shoppy_logo);
         viewHolder.title.setText(cart.getNama_menu());
-        viewHolder.harga.setText(kursIndonesia(Double.parseDouble(cart.getHarga())));
-        viewHolder.qty.setText(String .valueOf(cart.getQty()));
+
+
+
+
+        if(cart.getDiscount() > 0){
+            //kondisi menu tidak discount
+            viewHolder.layoutDiscount.setVisibility(View.VISIBLE);
+
+            viewHolder.mDiscount.setText("-"+cart.getDiscount()+"%");
+            viewHolder.mHargaCoret.setText(kursIndonesia(Double.parseDouble(cart.getHarga())));
+            viewHolder.mHargaCoret.setPaintFlags(viewHolder.mHargaCoret.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            viewHolder.harga.setText(kursIndonesia(HitungDiscount(Double.parseDouble(cart.getHarga()),cart.getDiscount())));
+
+
+        }else if (cart.getDiscount() == 0){
+            viewHolder.layoutDiscount.setVisibility(View.INVISIBLE);
+            viewHolder.harga.setText(kursIndonesia(Double.parseDouble(cart.getHarga())));
+        }
+
+
+        viewHolder.qty.setText(String.valueOf(cart.getQty()));
+        viewHolder.mCatatanMenu.setText(cart.getCatatan().toString());
+
+        if(cart.getKetersediaan() == 0){
+            viewHolder.mKetersedian.setVisibility(View.VISIBLE);
+        }else {
+            viewHolder.mKetersedian.setVisibility(View.GONE);
+        }
+
 
         viewHolder.min.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,6 +183,7 @@ public class CartAdapter extends BaseAdapter {
         return view;
 
 
+
     }
 
     private class ViewHolder{
@@ -156,6 +194,11 @@ public class CartAdapter extends BaseAdapter {
         ImageView min;
         ImageView plus;
         ImageView cross;
+        LinearLayout layoutDiscount;
+        TextView mHargaCoret;
+        TextView mDiscount;
+        EditText mCatatanMenu;
+        TextView mKetersedian;
 
     }
 
@@ -176,9 +219,13 @@ public class CartAdapter extends BaseAdapter {
         NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);
         String idnNominal = formatRupiah.format(nominal);
         return idnNominal;
-
-
     }
+
+    public Double HitungDiscount (Double Harga,Integer Discount){
+        double harga_potongan = ((Discount/100.00)*Harga);
+        return Harga-harga_potongan;
+    }
+
 
 
 

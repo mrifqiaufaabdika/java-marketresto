@@ -3,13 +3,19 @@ package com.example.abdialam.marketresto.fragment;
 import android.app.Dialog;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,9 +30,11 @@ public class DialogPlaceOrderFragment extends DialogFragment{
 
     public static final String ARG_ITEM_ID = "custom_dialog_fragment";
     Menu menuItems;
-    TextView item_title,mDeskripsi,mJumlah,mTotal,mMin,mUp,mHarga;
+    TextView item_title,mDeskripsi,mJumlah,mTotal,mHarga,mTvHargaCoret,mDiscount;
+    EditText mCatatanMenu;
     int qty;
-    double harga,total_harga;
+    LinearLayout mLayoutDiscount;
+    double harga,total_harga,harga_item;
     String id_restoran, id_menu,catatan,nama_menu;
     DatabaseHelper myDb;
 
@@ -52,11 +60,24 @@ public class DialogPlaceOrderFragment extends DialogFragment{
         mDeskripsi = (TextView) dialog.findViewById(R.id.item_description);
         mHarga =(TextView) dialog.findViewById(R.id.item_price);
         mJumlah = (TextView) dialog.findViewById(R.id.tvQty);
-        mMin = (TextView) dialog.findViewById(R.id.tvMin);
-        mUp = (TextView) dialog.findViewById(R.id.tvUp);
         mTotal = (TextView) dialog.findViewById(R.id.total_price);
+        mCatatanMenu = (EditText) dialog.findViewById(R.id.catatanMenu);
+        mTvHargaCoret =(TextView) dialog.findViewById(R.id.tvHargaCoret);
+        mDiscount = (TextView) dialog.findViewById(R.id.tvDiscount);
+        mLayoutDiscount =(LinearLayout) dialog.findViewById(R.id.layoutDiscount);
 
-        qty = 1; total_harga = Double.valueOf(menuItems.getMenuHarga());
+
+        qty = 1;
+
+        if(menuItems.getMenuDiscount().toString().isEmpty()||menuItems.getMenuDiscount() == 0||menuItems.getMenuDiscount() == null){
+            //kondisi menu tidak discount
+            total_harga = Double.valueOf(menuItems.getMenuHarga());
+            harga_item = Double.valueOf(menuItems.getMenuHarga());
+        }else {
+
+            total_harga =HitungDiscount(Double.parseDouble(menuItems.getMenuHarga()),menuItems.getMenuDiscount());
+            harga_item =total_harga;
+        }
 
         setData();
 
@@ -65,29 +86,35 @@ public class DialogPlaceOrderFragment extends DialogFragment{
 
 
 
-        mUp.setOnClickListener(new View.OnClickListener() {
+
+
+
+
+
+        dialog.findViewById(R.id.tvUp).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 qty++;
-                total_harga += Double.valueOf(menuItems.getMenuHarga());
+                total_harga += harga_item;
                 mJumlah.setText(String.valueOf(qty));
                 mTotal.setText(kursIndonesia(total_harga));
-
-
             }
         });
 
-        mMin.setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.tvMin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (qty > 1){
                     qty--;
-                total_harga -= Double.valueOf(menuItems.getMenuHarga());
-                mJumlah.setText(String.valueOf(qty));
-                mTotal.setText(kursIndonesia(total_harga));
-            }
+                    total_harga -= harga_item;
+                    mJumlah.setText(String.valueOf(qty));
+                    mTotal.setText(kursIndonesia(total_harga));
+                }
             }
         });
+
+
+
 
         dialog.findViewById(R.id.order_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,11 +153,21 @@ public class DialogPlaceOrderFragment extends DialogFragment{
                         }
                     //Jika beda restoran
                     }else {
-                        Toast.makeText(getActivity(),"Opps, Keranjang Hanya untuk satu restoran",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),"Opps, Keranjang Hanya untuk satu restoran"+id_restoran,Toast.LENGTH_SHORT).show();
                         dismiss();
                     }
                 }
             }
+        });
+
+        dialog.findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // User cancelled the dialog
+                dismiss();
+            }
+
         });
 
 
@@ -139,23 +176,38 @@ public class DialogPlaceOrderFragment extends DialogFragment{
     }
 
     private void setData(){
-        id_restoran = menuItems.getMenuRestoranId().toString();
-        id_menu = menuItems.getIdMenu().toString();
-        catatan = "a";
+        id_restoran = menuItems.getIdRestoran().toString();
+        id_menu = menuItems.getId().toString();
+
         harga = Double.valueOf(menuItems.getMenuHarga());
         nama_menu = menuItems.getMenuNama().toString();
 
 
         item_title.setText(menuItems.getMenuNama().toString());
         mDeskripsi.setText(menuItems.getMenuDeskripsi().toString());
-        mHarga.setText(kursIndonesia(Double.parseDouble(menuItems.getMenuHarga().toString())));
+
+        // harga dan discount
+        if(menuItems.getMenuDiscount().toString().isEmpty()||menuItems.getMenuDiscount() == 0||menuItems.getMenuDiscount() == null){
+            //kondisi menu tidak discount
+            mHarga.setText(kursIndonesia(Double.parseDouble(menuItems.getMenuHarga().toString())));
+        }else {
+            mLayoutDiscount.setVisibility(View.VISIBLE);
+            mDiscount.setText("Discount "+menuItems.getMenuDiscount()+"%");
+            mTvHargaCoret.setText(kursIndonesia(Double.parseDouble(menuItems.getMenuHarga())));
+            mTvHargaCoret.setPaintFlags(mTvHargaCoret.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            mHarga.setText(kursIndonesia(HitungDiscount(Double.parseDouble(menuItems.getMenuHarga()),menuItems.getMenuDiscount())));
+
+        }
+
+
+        mDeskripsi.setMovementMethod(new ScrollingMovementMethod());
     }
 
     public void insertData(){
-        boolean isInserted = myDb.insertDataCart(id_restoran, id_menu, total_harga, qty, catatan, nama_menu);
+        catatan = mCatatanMenu.getText().toString();
+        boolean isInserted = myDb.insertDataCart(id_restoran, id_menu, harga, qty, catatan, nama_menu);
         if (isInserted = true) {
             Toast.makeText(getActivity(), "Data Inserted", Toast.LENGTH_LONG).show();
-
         } else {
             Toast.makeText(getActivity(), "Data not Inserted", Toast.LENGTH_LONG).show();
         }
@@ -167,8 +219,12 @@ public class DialogPlaceOrderFragment extends DialogFragment{
         NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);
         String idnNominal = formatRupiah.format(nominal);
         return idnNominal;
+    }
 
-
+    public Double HitungDiscount (Double Harga,Integer Discount){
+        int discount = Discount/100;
+        double harga_potongan = ((Discount/100.00)*Harga);
+        return Harga-harga_potongan;
     }
 
 

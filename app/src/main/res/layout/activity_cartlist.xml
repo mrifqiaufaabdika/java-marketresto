@@ -5,18 +5,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#f8f8f8"
+
     >
 
     <include layout="@layout/toolbar_cart"
         android:id="@+id/toolbar"/>
 
-    <ImageView
-        android:id="@+id/imgEmptyCart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        android:background="@drawable/error_cart"/>
+    <include layout="@layout/messages"
+        android:id="@id/error"
+        android:visibility="gone"/>
 
     <ScrollView
         android:id="@+id/scCart"

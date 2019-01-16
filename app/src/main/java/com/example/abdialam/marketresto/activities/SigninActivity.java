@@ -6,7 +6,11 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -30,7 +34,9 @@ public class SigninActivity extends AppCompatActivity {
 
     @BindView(R.id.editTextPhone) EditText editTextPhone;
     @BindView(R.id.buttonGetVerificationCode) Button btnGVC;
-    @BindView(R.id.textSignUp) TextView textSignUp ;
+    @BindView(R.id.textSignUp) TextView textSignUp;
+    @BindView(R.id.coordinatorLayout)
+    CoordinatorLayout coordinatorLayout;
 
 
 
@@ -54,11 +60,17 @@ public class SigninActivity extends AppCompatActivity {
 
         Typeface type = Typeface.createFromAsset(getAssets(),"fonts/MavenPro-Regular.ttf");
         editTextPhone.setTypeface(type);
+        btnGVC.setTypeface(type);
 
     }
 
 
     @OnClick(R.id.buttonGetVerificationCode) void getCode (){
+        //hidden keyboard
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(coordinatorLayout.getWindowToken(), 0);
+
+        //progress dialog
         progressDialog = ProgressDialog.show(mContext,null,getString(R.string.memuat),true,false);
 
         final String phone = clearPhone(editTextPhone.getText().toString());
@@ -87,30 +99,38 @@ public class SigninActivity extends AppCompatActivity {
                     message = response.body().getMessage();
                     //phone terdaftar
                     if(value.equals("1")){
-                        Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
-                        User user = response.body().getUser();
+                        //Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+                        User user = response.body().getData();
                         Intent intent = new Intent(SigninActivity.this, VerifyActifity.class);
                         intent.putExtra("user",user);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
                      //nomor phone tidak terdaftar
                     }else {
-                        Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+                        Snackbar.make(coordinatorLayout,message, Snackbar.LENGTH_INDEFINITE).setAction("Daftar", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String hp =phone.substring(2,phone.length());
+                                Intent intent = new Intent(mContext, SignUpActivity.class);
+                                intent.putExtra("phone",hp);
+                                startActivity(intent);
+                            }
+                        }).show();
                     }
                 }
             }
             @Override
             public void onFailure(Call<ResponseAuth> call, Throwable t) {
                 progressDialog.dismiss();
-                Toast.makeText(mContext, R.string.lostconnection, Toast.LENGTH_SHORT).show();
+                Snackbar.make(coordinatorLayout,R.string.lostconnection, Snackbar.LENGTH_LONG).show();
             }
         });
     }
 
-    @OnClick(R.id.textSignUp) void toSign (){
+    @OnClick(R.id.textSignUp) void toSignUp (){
         Intent intent = new Intent(mContext, SignUpActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
+
         startActivity(intent);
 
     }

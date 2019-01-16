@@ -6,25 +6,25 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class Kategori implements Serializable {
-    @SerializedName("menu_kategori_id")
+    @SerializedName("id")
     @Expose
-    private Integer menuKategoriId;
+    private Integer id;
     @SerializedName("kategori_nama")
     @Expose
     private String kategoriNama;
     @SerializedName("kategori_deskripsi")
     @Expose
     private String kategoriDeskripsi;
-    @SerializedName("jumlah_menu")
+    @SerializedName("total_menu")
     @Expose
-    private Integer jumlahMenu;
+    private Integer totalMenu;
 
-    public Integer getMenuKategoriId() {
-        return menuKategoriId;
+    public Integer getId() {
+        return id;
     }
 
-    public void setMenuKategoriId(Integer menuKategoriId) {
-        this.menuKategoriId = menuKategoriId;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getKategoriNama() {
@@ -43,11 +43,11 @@ public class Kategori implements Serializable {
         this.kategoriDeskripsi = kategoriDeskripsi;
     }
 
-    public Integer getJumlahMenu() {
-        return jumlahMenu;
+    public Integer getTotalMenu() {
+        return totalMenu;
     }
 
-    public void setJumlahMenu(Integer jumlahMenu) {
-        this.jumlahMenu = jumlahMenu;
+    public void setTotalMenu(Integer totalMenu) {
+        this.totalMenu = totalMenu;
     }
 }

@@ -80,14 +80,14 @@ public class GPSTracker extends AbsRunTimePermission implements LocationListener
 
             } else {
                 this.canGetLocation = true;
-            if (isNetworkEnabled) {
+            if (isNetworkEnabled){
                 this.canGetLocation = true;
                 provider_info = LocationManager.NETWORK_PROVIDER;
-                Toast.makeText(mContext, "use Network PRoV", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "use GPS PRoV", Toast.LENGTH_SHORT).show();
             } else if (isGPSEnabled) {
                 this.canGetLocation = true;
                 provider_info = LocationManager.GPS_PROVIDER;
-                Toast.makeText(mContext, "use GPS PRoV", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "use NETWORK PRoV", Toast.LENGTH_SHORT).show();
             }
 
             if (!provider_info.isEmpty()) {
@@ -167,7 +167,7 @@ public class GPSTracker extends AbsRunTimePermission implements LocationListener
             String addresLine = address.getAddressLine(0);
             return addresLine;
         }else {
-            return "not faoud" ;
+            return "Lokasi Tidak Ditemukan" ;
         }
     }
 
@@ -175,14 +175,14 @@ public class GPSTracker extends AbsRunTimePermission implements LocationListener
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
 
         // Setting Dialog Title
-        alertDialog.setTitle("GPS is settings");
+        alertDialog.setTitle("Atur Layanan GPS Anda");
         alertDialog.setCancelable(false);
 
         // Setting Dialog Message
-        alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
+        alertDialog.setMessage("Layanan GPS Tidak Aktif. Apakah Anda ingin masuk ke menu pengaturan?");
 
         // On pressing Settings button
-        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton("Pengaturan", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int which) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 mContext.startActivity(intent);
@@ -190,7 +190,7 @@ public class GPSTracker extends AbsRunTimePermission implements LocationListener
         });
 
         // on pressing cancel button
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton("Batal", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }

@@ -40,4 +40,5 @@ public class ResponseFavorit {
     public void setFavorit(List<Favorit> favorit) {
         this.favorit = favorit;
     }
+
 }

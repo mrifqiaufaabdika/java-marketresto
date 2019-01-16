@@ -15,6 +15,7 @@ import com.example.abdialam.marketresto.fragment.AccountFragment;
 import com.example.abdialam.marketresto.fragment.FavoriteFragment;
 import com.example.abdialam.marketresto.fragment.RestoFragment;
 import com.example.abdialam.marketresto.fragment.OrderFragment;
+import com.example.abdialam.marketresto.fragment.SearchFragment;
 import com.example.abdialam.marketresto.utils.SessionManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,19 +35,17 @@ public class MainActivity extends AppCompatActivity {
         mContext =this;
         sessionManager = new SessionManager(this);
         checkSessionLogin();
-        bottomNavigationView = (BottomNavigationView)
-                findViewById(R.id.bottomNavigation);
-        getSupportActionBar().setElevation(0);
+
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigation);
+//        getSupportActionBar().setElevation(0);
+
+
+
 
         //loading the default fragment
         Fragment f = new RestoFragment();
 
-        if (getIntent().hasExtra("aksi")){
-            String alamat = getIntent().getStringExtra("aksi");
-            Bundle b = new Bundle();
-            b.putString("aksi",alamat);
-            f.setArguments(b);
-        }
+
 
         loadFragment(f);
 
@@ -58,21 +57,24 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.action_resto:
                         fragment = new RestoFragment();
-                        getSupportActionBar().setTitle("Market Resto");
+                 //       getSupportActionBar().setTitle("Market Resto");
                         break;
 
-                    case R.id.action_search:
+                    case R.id.action_order:
                         fragment = new OrderFragment();
-                        getSupportActionBar().setTitle("Pesanan");
+                  //      getSupportActionBar().setTitle("Pesanan");
+                        break;
+                    case  R.id.action_search:
+                        fragment = new SearchFragment();
                         break;
 
                     case R.id.action_favorite:
-                        getSupportActionBar().setTitle("Favorit");
+                //        getSupportActionBar().setTitle("Favorit");
                         fragment = new FavoriteFragment();
                         break;
 
                     case R.id.action_account:
-                        getSupportActionBar().setTitle("Akun");
+//                        getSupportActionBar().setTitle("Akun");
                         fragment = new AccountFragment();
                         break;
                 }
@@ -108,9 +110,18 @@ public class MainActivity extends AppCompatActivity {
     private void checkSessionLogin (){
         if(!sessionManager.isLoggedIn()) {
             Intent intent = new Intent(mContext ,SigninActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-            finish();
+            MainActivity.this.finish();
+        }else {
+            if(!sessionManager.isGetLocation()) {
+                Intent intent = new Intent(mContext ,MapsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                MainActivity.this.finish();
+            }
         }
-    }
+
+        }
+
 }

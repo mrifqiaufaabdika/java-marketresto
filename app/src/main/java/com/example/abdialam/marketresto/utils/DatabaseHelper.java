@@ -20,6 +20,7 @@ public class DatabaseHelper  extends SQLiteOpenHelper {
     public static final String col_6 = "catatan";
     public static final String col_7 = "nama_menu";
 
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
     }

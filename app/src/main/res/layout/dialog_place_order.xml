@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Custom Dialog"
+        android:text="Rendang Daging"
         android:id="@+id/item_title"
         android:gravity="center"
         android:textSize="@dimen/textTitleStyle"
@@ -23,6 +23,20 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
+
+    <ImageView
+        android:id="@+id/close"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_alignBottom="@+id/view"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/cross"
+        android:layout_gravity="center"
+
+       />
+
     <LinearLayout
         android:id="@+id/top_layout"
         android:layout_width="match_parent"
@@ -30,7 +44,7 @@
         android:layout_below="@+id/view"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/buttomDialogPadding">
+        android:padding="10dp">
 
 
         <TextView
@@ -38,11 +52,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:layout_marginLeft="@dimen/layoutDialogMargin"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="@dimen/layoutDialogMargin"
             android:text="Deskripsi Menu : "
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/textSub"
             android:textSize="@dimen/textSubtitleStyle" />
 
 
@@ -51,37 +62,58 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:layout_marginLeft="@dimen/layoutDialogMargin"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="@dimen/layoutDialogMargin"
-
+            android:layout_marginBottom="2dp"
+            android:maxLines="3"
             android:lineSpacingExtra="1dp"
             android:text="Ikan grami dengan bubu khas masakan Melayu"
-            android:textColor="@color/colortext"
+            android:textColor="@color/Tex"
+            android:scrollbars = "vertical"
             android:textSize="@dimen/textSubtitleStyle" />
+
+        <LinearLayout
+            android:id="@+id/layoutDiscount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:gravity="center|left">
+
+            <TextView
+                android:id="@+id/tvHargaCoret"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rp.4000"
+                />
+
+            <TextView
+                android:id="@+id/tvDiscount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-30%"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_marginLeft="15dp"/>
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/item_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:layout_marginLeft="@dimen/layoutDialogMargin"
-            android:layout_marginRight="@dimen/layoutDialogMargin"
             android:text="Rp.5000"
-            android:textColor="@color/textSub"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/textSubtitleStyle" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/layoutDialogMargin"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/layoutDialogMargin"
                 android:layout_weight="1"
                 android:gravity="left"
                 android:text="@string/quantity" />
@@ -102,7 +134,7 @@
                 android:layout_weight="1"
                 android:gravity="right"
                 android:text="-"
-                android:textSize="35sp" />
+                android:textSize="30sp" />
 
             <TextView
                 android:id="@+id/tvQty"
@@ -112,7 +144,7 @@
                 android:gravity="center"
                 android:text="0"
                 android:textColor="@color/Tex"
-                android:textSize="35sp" />
+                android:textSize="30sp" />
 
             <TextView
                 android:id="@+id/tvUp"
@@ -121,7 +153,7 @@
                 android:layout_weight="1"
                 android:gravity="left"
                 android:text="+"
-                android:textSize="35sp" />
+                android:textSize="30sp" />
 
 
         </LinearLayout>
@@ -130,7 +162,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="20dp">
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
 
             <TextView
 
@@ -152,16 +187,25 @@
                 android:textColor="@color/Tex"
                 android:textSize="15sp" />
 
-
         </LinearLayout>
+
+        <EditText
+            android:id="@+id/catatanMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:hint="Catatan Menu"
+            />
+
 
 
         <Button
             android:id="@+id/order_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add"
-
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="Tambah"
+            android:theme="@style/ButtonPrimary"
+            android:textColor="@color/White"
             />
 
         <!--<Button-->

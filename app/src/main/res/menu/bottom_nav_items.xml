@@ -9,7 +9,13 @@
     <item
         android:id="@+id/action_search"
         android:title="Order"
-        android:icon="@drawable/ic_motor"
+        android:icon="@drawable/ic_search"
+        />
+
+    <item
+        android:id="@+id/action_order"
+        android:title="Order"
+        android:icon="@drawable/ic_motor_white"
         />
 
     <item

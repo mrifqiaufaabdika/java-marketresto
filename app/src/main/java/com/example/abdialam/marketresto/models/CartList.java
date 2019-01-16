@@ -12,10 +12,13 @@ public class CartList {
     private String harga;
     private Integer qty;
     private String catatan;
+    private Integer discount ;
     private String nama_menu;
+    private String menu_foto;
+    private int ketersediaan;
 
 
-    public CartList(int id, String id_resto, String id_menu,String harga,Integer qty, String catatan,String nama_menu) {
+    public CartList(int id, String id_resto, String id_menu,String harga,Integer qty, String catatan,String nama_menu,Integer discount,String menu_foto,int ketersediaan) {
        this.id = id;
        this.id_resto = id_resto;
        this.id_menu = id_menu;
@@ -23,6 +26,9 @@ public class CartList {
        this.qty = qty;
        this.catatan = catatan;
        this.nama_menu = nama_menu;
+       this.discount = discount;
+       this.menu_foto =menu_foto;
+       this.ketersediaan = ketersediaan;
     }
 
 //    public int getImage() {
@@ -93,5 +99,29 @@ public class CartList {
 
     public void setNama_menu(String nama_resto) {
         this.nama_menu = nama_resto;
+    }
+
+    public Integer getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Integer discount) {
+        this.discount = discount;
+    }
+
+    public String getMenu_foto() {
+        return menu_foto;
+    }
+
+    public void setMenu_foto(String menu_foto) {
+        this.menu_foto = menu_foto;
+    }
+
+    public int getKetersediaan() {
+        return ketersediaan;
+    }
+
+    public void setKetersediaan(int ketersediaan) {
+        this.ketersediaan = ketersediaan;
     }
 }

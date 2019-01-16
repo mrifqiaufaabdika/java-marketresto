@@ -50,7 +50,7 @@
 
                     android:id="@+id/tvNoOrder"
                     android:maxLines="1"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Order : 53277364357"
@@ -58,7 +58,7 @@
                     android:textColor="@color/red"
                     />
 
-                <TextView
+                <customfonts.MyTextView
                     android:layout_weight="2"
                     android:id="@+id/tvWaktu"
                     android:layout_width="match_parent"
@@ -91,7 +91,7 @@
                     android:textColor="@color/red"
                     />
 
-                <TextView
+                <customfonts.MyTextView
                     android:id="@+id/tvStatus"
                     android:textSize="@dimen/textsub"
                     android:maxLines="1"
@@ -104,10 +104,6 @@
                     android:textColor="@color/textSub"
                     />
 
-
-
-
-
             </LinearLayout>
 
             <LinearLayout
@@ -117,7 +113,8 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginBottom="16dp">
 
-                <TextView
+                <customfonts.MyTextView
+                    android:layout_gravity="center"
                     android:id="@+id/tvTotal"
                     android:maxLines="1"
                     android:layout_weight="1"
@@ -125,7 +122,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-
+                <ImageView
+                    android:id="@+id/opendelivery"
+                    android:visibility="invisible"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_motor_red"/>
 
 
             </LinearLayout>

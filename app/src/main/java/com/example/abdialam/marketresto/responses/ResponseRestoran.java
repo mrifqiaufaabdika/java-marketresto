@@ -7,20 +7,15 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class ResponseRestoran {
-    @SerializedName("status")
-    @Expose
-    private String status;
     @SerializedName("data")
     @Expose
     private List<Restoran> data = null;
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
+    @SerializedName("value")
+    @Expose
+    private String value;
+    @SerializedName("message")
+    @Expose
+    private String message;
 
     public List<Restoran> getData() {
         return data;
@@ -28,6 +23,22 @@ public class ResponseRestoran {
 
     public void setData(List<Restoran> data) {
         this.data = data;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
 }

@@ -3,16 +3,22 @@ package com.example.abdialam.marketresto.activities;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.abdialam.marketresto.R;
 import com.example.abdialam.marketresto.responses.ResponseAuth;
+import com.example.abdialam.marketresto.responses.ResponseValue;
 import com.example.abdialam.marketresto.rest.ApiService;
 import com.example.abdialam.marketresto.config.ServerConfig;
 import com.example.abdialam.marketresto.utils.SharedPrefManager;
@@ -29,6 +35,7 @@ public class SignUpActivity extends AppCompatActivity{
     private Context mContext;
     private ProgressDialog progressDialog;
     private static final String TAG = "SignUpActivity";
+    ApiService mApiSerivce;
 
     @BindView(R.id.editTextNama)
     EditText etNama;
@@ -36,21 +43,29 @@ public class SignUpActivity extends AppCompatActivity{
     EditText etPhone;
     @BindView(R.id.editTextEmail)
     EditText etEmail;
+    @BindView(R.id.buttonSignUp)
+    Button btnSignUp;
+    @BindView(R.id.coordinatorLayout)
+    CoordinatorLayout coordinatorLayout;
 
-    ApiService mApiSerivce;
-    String value,message;
+
+
 
     @OnClick(R.id.buttonSignUp) void signup (){
+        //hilangkan keyboard
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(coordinatorLayout.getWindowToken(), 0);
 
         //create progres dialog
         progressDialog = ProgressDialog.show(mContext,null,getString(R.string.memuat),true,false);
+
 
         //mengambil nilai inputan ke string
         String strNama = etNama.getText().toString();
         String strPhone = clearPhone(etPhone.getText().toString());
         String strEmail = etEmail.getText().toString();
         String token = SharedPrefManager.getInstance(mContext).getDeviceToken();
-        String tipe = "konsumen";
+
 
          if(strNama.isEmpty()||strNama.equals(null)) {
              progressDialog.dismiss();
@@ -91,32 +106,35 @@ public class SignUpActivity extends AppCompatActivity{
 
 
 
-            mApiSerivce.signupRequest(strNama,strPhone,strEmail,token,tipe).enqueue(new Callback<ResponseAuth>() {
+            mApiSerivce.signupRequest(strNama,strPhone,strEmail,token).enqueue(new Callback<ResponseValue>() {
                 @Override
-                public void onResponse(Call<ResponseAuth> call, Response<ResponseAuth> response) {
+                public void onResponse(Call<ResponseValue> call, Response<ResponseValue> response) {
                     progressDialog.dismiss();
+                    String value,message;
                     if(response.isSuccessful()){
                         value = response.body().getValue();
                         message = response.body().getMessage();
                         if(value.equals("1")){
-                        Toast.makeText(mContext,message,Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(mContext,SigninActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
-                        startActivity(intent);
+                            //snack bar success
+                            Snackbar.make(coordinatorLayout,message, Snackbar.LENGTH_LONG).show();
+
+//                            Intent intent = new Intent(mContext,SigninActivity.class);
+//                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
+//                            startActivity(intent);
 
                         }else {
-                        Toast.makeText(mContext,message,Toast.LENGTH_SHORT).show();
+                            Snackbar.make(coordinatorLayout,message, Snackbar.LENGTH_LONG).show();
                         }
                     }else{
-                        Toast.makeText(mContext, "gagal", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "Gagal Registrasi", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
-                public void onFailure(Call<ResponseAuth> call, Throwable t) {
+                public void onFailure(Call<ResponseValue> call, Throwable t) {
                     Log.e(TAG, "onFailure: "+t.getLocalizedMessage() );
                     progressDialog.dismiss();
-                    Toast.makeText(mContext, R.string.lostconnection, Toast.LENGTH_SHORT).show();
+                    Snackbar.make(coordinatorLayout,R.string.lostconnection, Snackbar.LENGTH_LONG).show();
                 }
             });
          }
@@ -127,12 +145,12 @@ public class SignUpActivity extends AppCompatActivity{
 
 
 
-    @OnClick(R.id.textSignIn) void signin (){
+    @OnClick(R.id.textSignIn) void toSignUp (){
         Intent intent = new Intent(mContext, SigninActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK );
         startActivity(intent);
-        finish();
     }
+
 
 
     @Override
@@ -142,6 +160,13 @@ public class SignUpActivity extends AppCompatActivity{
         mContext = this;
         mApiSerivce = ServerConfig.getAPIService();
         ButterKnife.bind(this);
+        Typeface type = Typeface.createFromAsset(getAssets(),"fonts/MavenPro-Regular.ttf");
+        btnSignUp.setTypeface(type);
+
+        //if get intent
+        if(getIntent().hasExtra("phone")){
+            etPhone.setText(getIntent().getStringExtra("phone").toString());
+        }
     }
 
 

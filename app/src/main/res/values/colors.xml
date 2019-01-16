@@ -2,7 +2,8 @@
 <resources>
     <color name="colorPrimary">#E74C3C</color>
     <color name="colorPrimaryDark">#C0392B</color>
-    <color name="colorAccent">#ecf0f1</color>
+    <color name="colorAccent">#ff5254</color>
+    <!--<color name="colorAccent">#ecf0f1</color>-->
     <color name="colorCloud">#ecf0f1</color>
 
     <color name="iconcolor">#8b959e</color>

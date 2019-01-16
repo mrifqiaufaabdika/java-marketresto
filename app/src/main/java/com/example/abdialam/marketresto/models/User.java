@@ -6,57 +6,34 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class User implements Serializable{
-    @SerializedName("id_konsumen")
+    @SerializedName("id")
     @Expose
-    private Integer idKonsumen;
-    @SerializedName("konsumen_phone")
-    @Expose
-    private String konsumenPhone;
+    private Integer id;
     @SerializedName("konsumen_nama")
     @Expose
     private String konsumenNama;
     @SerializedName("konsumen_email")
     @Expose
     private String konsumenEmail;
-    @SerializedName("konsumen_credit_balance")
+    @SerializedName("konsumen_phone")
     @Expose
-    private Integer konsumenCreditBalance;
-    @SerializedName("konsumen_baru")
+    private String konsumenPhone;
+    @SerializedName("konsumen_balance")
     @Expose
-    private Integer konsumenBaru;
-    @SerializedName("blacklist")
+    private String konsumenBalance;
+    @SerializedName("konsumen_blacklist")
     @Expose
-    private Integer blacklist;
-    @SerializedName("konsumen_create")
-    @Expose
-    private String konsumenCreate;
-    @SerializedName("id_pengguna")
-    @Expose
-    private Integer idPengguna;
-    @SerializedName("phone")
-    @Expose
-    private String phone;
+    private Integer konsumenBlacklist;
     @SerializedName("token")
     @Expose
     private String token;
-    @SerializedName("tipe")
-    @Expose
-    private String tipe;
 
-    public Integer getIdKonsumen() {
-        return idKonsumen;
+    public Integer getId() {
+        return id;
     }
 
-    public void setIdKonsumen(Integer idKonsumen) {
-        this.idKonsumen = idKonsumen;
-    }
-
-    public String getKonsumenPhone() {
-        return konsumenPhone;
-    }
-
-    public void setKonsumenPhone(String konsumenPhone) {
-        this.konsumenPhone = konsumenPhone;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getKonsumenNama() {
@@ -75,54 +52,29 @@ public class User implements Serializable{
         this.konsumenEmail = konsumenEmail;
     }
 
-    public Integer getKonsumenCreditBalance() {
-        return konsumenCreditBalance;
+    public String getKonsumenPhone() {
+        return konsumenPhone;
     }
 
-    public void setKonsumenCreditBalance(Integer konsumenCreditBalance) {
-        this.konsumenCreditBalance = konsumenCreditBalance;
+    public void setKonsumenPhone(String konsumenPhone) {
+        this.konsumenPhone = konsumenPhone;
     }
 
-    public Integer getKonsumenBaru() {
-        return konsumenBaru;
+    public String getKonsumenBalance() {
+        return konsumenBalance;
     }
 
-    public void setKonsumenBaru(Integer konsumenBaru) {
-        this.konsumenBaru = konsumenBaru;
+    public void setKonsumenBalance(String konsumenBalance) {
+        this.konsumenBalance = konsumenBalance;
     }
 
-    public Integer getBlacklist() {
-        return blacklist;
+    public Integer getKonsumenBlacklist() {
+        return konsumenBlacklist;
     }
 
-    public void setBlacklist(Integer blacklist) {
-        this.blacklist = blacklist;
+    public void setKonsumenBlacklist(Integer konsumenBlacklist) {
+        this.konsumenBlacklist = konsumenBlacklist;
     }
-
-    public String getKonsumenCreate() {
-        return konsumenCreate;
-    }
-
-    public void setKonsumenCreate(String konsumenCreate) {
-        this.konsumenCreate = konsumenCreate;
-    }
-
-    public Integer getIdPengguna() {
-        return idPengguna;
-    }
-
-    public void setIdPengguna(Integer idPengguna) {
-        this.idPengguna = idPengguna;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     public String getToken() {
         return token;
     }
@@ -131,11 +83,4 @@ public class User implements Serializable{
         this.token = token;
     }
 
-    public String getTipe() {
-        return tipe;
-    }
-
-    public void setTipe(String tipe) {
-        this.tipe = tipe;
-    }
 }

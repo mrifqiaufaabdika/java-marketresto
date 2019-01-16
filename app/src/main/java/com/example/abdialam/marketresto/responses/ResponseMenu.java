@@ -13,12 +13,15 @@ public class ResponseMenu {
     @SerializedName("value")
     @Expose
     private String value;
-    @SerializedName("kategori")
+    @SerializedName("message")
     @Expose
-    private List<Kategori> kategori = null;
-    @SerializedName("data")
+    private String message;
+    @SerializedName("restoran_menu")
     @Expose
-    private List<Menu> data = null;
+    private List<Menu> restoranMenu = null;
+    @SerializedName("restoran_kategori")
+    @Expose
+    private List<Kategori> restoranKategori = null;
 
     public String getValue() {
         return value;
@@ -28,20 +31,28 @@ public class ResponseMenu {
         this.value = value;
     }
 
-    public List<Kategori> getKategori() {
-        return kategori;
+    public String getMessage() {
+        return message;
     }
 
-    public void setKategori(List<Kategori> kategori) {
-        this.kategori = kategori;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public List<Menu> getData() {
-        return data;
+    public List<Menu> getRestoranMenu() {
+        return restoranMenu;
     }
 
-    public void setData(List<Menu> data) {
-        this.data = data;
+    public void setRestoranMenu(List<Menu> restoranMenu) {
+        this.restoranMenu = restoranMenu;
     }
 
+    public List<Kategori> getRestoranKategori() {
+        return restoranKategori;
+    }
+
+    public void setRestoranKategori(List<Kategori> restoranKategori) {
+        this.restoranKategori = restoranKategori;
+
+    }
 }

@@ -1,25 +1,29 @@
 package com.example.abdialam.marketresto.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.abdialam.marketresto.R;
-import com.example.abdialam.marketresto.models.Detailpesan;
-import com.example.abdialam.marketresto.models.Pesan;
+import com.example.abdialam.marketresto.activities.DetailOrderActivity;
+import com.example.abdialam.marketresto.activities.MapsDeliveryActivity;
+import com.example.abdialam.marketresto.models.DetailOrder;
+import com.example.abdialam.marketresto.models.Menu;
+import com.example.abdialam.marketresto.models.Order;
 import com.example.abdialam.marketresto.utils.DateHelper;
 
-import java.text.DateFormat;
+import java.io.Serializable;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
 
@@ -29,10 +33,10 @@ import butterknife.ButterKnife;
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHolder> {
 
     private Context mContext;
-    private List<Pesan> pesanList;
-    private List<Detailpesan> detailpesanList;
+    private List<Order> pesanList;
+    private List<Menu> detailpesanList;
 
-    public OrderAdapter(Context ctx, List<Pesan> pesanList){
+    public OrderAdapter(Context ctx, List<Order> pesanList){
         this.pesanList = pesanList;
         this.mContext = ctx;
     }
@@ -47,26 +51,47 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
     @Override
     public void onBindViewHolder(OrderViewHolder holder, int position) {
-        final Pesan pesan = pesanList.get(position);
-        holder.mNoOrder.setText("Order :"+" #"+pesan.getIdPesan());
-        holder.mNamaResto.setText(pesan.getRestoranNama());
-        String status = pesan.getPesanStatus().substring(0,1).toUpperCase() + pesan.getPesanStatus().substring(1).toLowerCase();
-        holder.mStatus.setText(status);
-        holder.mTanggal.setText(DateHelper.getGridDate(mContext,timeStringToMilis(pesan.getPesanWaktu())));
-        detailpesanList = pesan.getDetailpesan();
-        double total = 0;
-        for (int i = 0; i < detailpesanList.size() ; i++) {
-            total += Double.parseDouble(detailpesanList.get(i).getHarga()) * detailpesanList.get(i).getQty();
+        final Order pesan = pesanList.get(position);
+        holder.mNoOrder.setText("Order :"+" #"+pesan.getId());
+        holder.mNamaResto.setText(pesan.getOrderRestoran());
+       // String status = pesan.getPesanStatus().substring(0,1).toUpperCase() + pesan.getPesanStatus().substring(1).toLowerCase();
+        holder.mStatus.setText(pesan.getOrderStatus());
+        holder.mTanggal.setText(DateHelper.getGridDate(mContext,timeStringToMilis(pesan.getCreatedAt())));
+
+        if (pesan.getOrderStatus().equalsIgnoreCase("proeses")){
+            holder.mapDelivery.setVisibility(View.INVISIBLE);
+        }else if(pesan.getOrderStatus().equalsIgnoreCase("pengantaran")){
+            holder.mapDelivery.setVisibility(View.VISIBLE);
+            holder.mapDelivery.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mContext, MapsDeliveryActivity.class);
+                    intent.putExtra("pesan", (Serializable) pesan);
+                    mContext.startActivity(intent);
+                }
+            });
         }
 
-        holder.mTotal.setText(kursIndonesia(total+pesan.getPesanBiayaAntar()));
+        detailpesanList = pesan.getDetailOrder();
+        double total = 0;
+        for (int i = 0; i < detailpesanList.size() ; i++) {
+            total += Double.parseDouble(detailpesanList.get(i).getPivot().getHarga()) * detailpesanList.get(i).getPivot().getQty();
+        }
+
+        holder.mTotal.setText(kursIndonesia(total+Double.parseDouble(pesan.getOrderBiayaAnatar())));
 
         holder.mParentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(mContext,"Anda memilih "+pesan.getOrderKonsumen(),Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext, DetailOrderActivity.class);
+                intent.putExtra("pesan", (Serializable) pesan);
 
+                mContext.startActivity(intent);
             }
         });
+
+
     }
 
     @Override
@@ -88,6 +113,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
        TextView mTotal;
        @BindView(R.id.tvNoOrder)
        TextView mNoOrder;
+       @BindView(R.id.opendelivery)
+        ImageView mapDelivery;
+
 
         public OrderViewHolder(View itemView) {
             super(itemView);
@@ -98,7 +126,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     //convert time string to milis date
     public long timeStringToMilis (String strDate ){
 
-        SimpleDateFormat tgl = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat tgl = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         long milliseconds = 0;
         Date date = null;
         try {
@@ -115,7 +143,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);
         String idnNominal = formatRupiah.format(nominal);
         return idnNominal;
-
-
     }
+
+
 }

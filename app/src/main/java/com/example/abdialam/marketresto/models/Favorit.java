@@ -4,70 +4,60 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Favorit {
-    @SerializedName("id_favorite")
+    @SerializedName("id")
     @Expose
-    private Integer idFavorite;
-    @SerializedName("konsumen_id")
+    private Integer id;
+    @SerializedName("id_konsumen")
     @Expose
-    private Integer konsumenId;
-    @SerializedName("menu_id")
+    private Integer idKonsumen;
+    @SerializedName("id_menu")
     @Expose
-    private Integer menuId;
-    @SerializedName("menu_nama")
+    private Integer idMenu;
+    @SerializedName("favorit_menu")
     @Expose
-    private String menuNama;
-    @SerializedName("menu_harga")
+    private Menu favoritMenu;
+    @SerializedName("favorit_restoran")
     @Expose
-    private String menuHarga;
-    @SerializedName("restoran_nama")
-    @Expose
-    private String restoranNama;
+    private Restoran favoritRestoran;
 
-    public Integer getIdFavorite() {
-        return idFavorite;
+    public Integer getId() {
+        return id;
     }
 
-    public void setIdFavorite(Integer idFavorite) {
-        this.idFavorite = idFavorite;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public Integer getKonsumenId() {
-        return konsumenId;
+    public Integer getIdKonsumen() {
+        return idKonsumen;
     }
 
-    public void setKonsumenId(Integer konsumenId) {
-        this.konsumenId = konsumenId;
+    public void setIdKonsumen(Integer idKonsumen) {
+        this.idKonsumen = idKonsumen;
     }
 
-    public Integer getMenuId() {
-        return menuId;
+    public Integer getIdMenu() {
+        return idMenu;
     }
 
-    public void setMenuId(Integer menuId) {
-        this.menuId = menuId;
+    public void setIdMenu(Integer idMenu) {
+        this.idMenu = idMenu;
     }
 
-    public String getMenuNama() {
-        return menuNama;
+    public Menu getFavoritMenu() {
+        return favoritMenu;
     }
 
-    public void setMenuNama(String menuNama) {
-        this.menuNama = menuNama;
+    public void setFavoritMenu(Menu favoritMenu) {
+        this.favoritMenu = favoritMenu;
     }
 
-    public String getMenuHarga() {
-        return menuHarga;
+    public Restoran getFavoritRestoran() {
+        return favoritRestoran;
     }
 
-    public void setMenuHarga(String menuHarga) {
-        this.menuHarga = menuHarga;
+    public void setFavoritRestoran(Restoran favoritRestoran) {
+        this.favoritRestoran = favoritRestoran;
     }
 
-    public String getRestoranNama() {
-        return restoranNama;
-    }
-
-    public void setRestoranNama(String restoranNama) {
-        this.restoranNama = restoranNama;
-    }
 }

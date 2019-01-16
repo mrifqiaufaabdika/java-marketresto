@@ -23,7 +23,7 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
-    implementation 'com.google.firebase:firebase-messaging:11.6.0'
+
     implementation 'com.android.support:support-v4:26.1.0'
     implementation 'com.google.android.gms:play-services-maps:11.6.0'
     testImplementation 'junit:junit:4.12'
@@ -32,6 +32,8 @@ dependencies {
     //firebase phone notification
     implementation 'com.google.firebase:firebase-core:11.6.0'
     implementation 'com.google.firebase:firebase-auth:11.6.0'
+    implementation 'com.google.firebase:firebase-messaging:11.6.0'
+    implementation 'com.google.firebase:firebase-database:11.6.0'
     //input code
     implementation 'com.github.irvingryan:verifycodeview:1.1.0'
     //phone number edittext
@@ -50,10 +52,11 @@ dependencies {
     //dialog
     implementation 'com.avast:android-styled-dialogs:2.2.0'
     //picaso
-    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.squareup.picasso:picasso:2.71828'
     //pretty time
     implementation 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
-
+    //photo
+    implementation 'com.github.chrisbanes:PhotoView:2.1.3'
 
 
 }

@@ -6,15 +6,23 @@ import com.google.gson.annotations.SerializedName;
 
 public class ResponseAuth {
 
+    @SerializedName("data")
+    @Expose
+    private User data;
     @SerializedName("value")
     @Expose
     private String value;
     @SerializedName("message")
     @Expose
     private String message;
-    @SerializedName("user")
-    @Expose
-    private User user;
+
+    public User getData() {
+        return data;
+    }
+
+    public void setData(User data) {
+        this.data = data;
+    }
 
     public String getValue() {
         return value;
@@ -32,11 +40,4 @@ public class ResponseAuth {
         this.message = message;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 }

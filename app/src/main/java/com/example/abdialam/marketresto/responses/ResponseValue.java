@@ -11,6 +11,9 @@ public class ResponseValue {
     @Expose
     private String message;
 
+    @SerializedName("id")
+    @Expose
+    private String id;
     public String getValue() {
         return value;
     }
@@ -27,4 +30,11 @@ public class ResponseValue {
         this.message = message;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }
