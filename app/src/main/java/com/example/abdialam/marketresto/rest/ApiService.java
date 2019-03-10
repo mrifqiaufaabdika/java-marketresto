@@ -88,6 +88,7 @@ public interface ApiService {
                                      @Field("order_metode_bayar") String order_metode_bayar,
                                      @Field("order_jarak_antar") String order_jarak_antar,
                                      @Field("order_biaya_anatar") String order_biaya_anatar,
+                                      @Field("order_pajak_pb_satu") Integer order_pajak_pb_satu,
                                      @Field("menu[]") ArrayList<String> menu,
                                      @Field("qty[]") ArrayList<String> qty,
                                      @Field("harga[]") ArrayList<String> harga,

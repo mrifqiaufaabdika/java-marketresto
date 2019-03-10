@@ -87,6 +87,12 @@ public class DetailOrderActivity extends AppCompatActivity {
     @BindView(R.id.tvStatusProses)
     TextView statusProses;
 
+    @BindView(R.id.viewpb1) View viewpb1;
+    @BindView(R.id.lyt_pb1)
+    LinearLayout lyt_pb1;
+    @BindView(R.id.pajak_pb1) TextView pajak_pb1;
+    @BindView(R.id.tvPajakPB1) TextView tvPajakPB1;
+
     SessionManager sessionManager;
 
     ProgressDialog progressDialog,progressSendEmail;
@@ -140,6 +146,20 @@ public class DetailOrderActivity extends AppCompatActivity {
         mSubTotal.setText(kursIndonesia(subtotal));
         mBiayaAntar.setText(kursIndonesia(Double.parseDouble(pesan.getOrderBiayaAnatar())));
         double total = subtotal+ Double.parseDouble(pesan.getOrderBiayaAnatar());
+
+        //cek pajak
+        if (pesan.getOrder_pajak_pb_satu() == 0){
+            viewpb1.setVisibility(View.GONE);
+            lyt_pb1.setVisibility(View.GONE);
+        }else{
+            viewpb1.setVisibility(View.VISIBLE);
+            lyt_pb1.setVisibility(View.VISIBLE);
+            pajak_pb1.setText("PB1 ("+pesan.getOrder_pajak_pb_satu()+"%)");
+            double pb1 = (pesan.getOrder_pajak_pb_satu()/100.0)*total;
+            tvPajakPB1.setText(kursIndonesia(pb1));
+            total = total + pb1;
+        }
+
         mTotal.setText(kursIndonesia(total));
         mMetodeBayar.setText(pesan.getOrderMetodeBayar());
         //catatan

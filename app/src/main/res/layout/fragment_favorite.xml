@@ -24,9 +24,7 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:titleTextColor="#FFFFFF"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:title="Favorit dan Riwayat"
-            >
-
+            app:title="Favorit dan Riwayat">
 
                  <ImageButton
                      android:id="@+id/cart"
@@ -37,10 +35,6 @@
                      android:gravity="center"
                      android:layout_gravity="end"
                      />
-
-
-
-
 
         </android.support.v7.widget.Toolbar>
 
@@ -87,9 +81,6 @@
         >
 
     </android.support.v4.view.ViewPager>
-
-
-
 
 </android.support.design.widget.CoordinatorLayout>
 

@@ -189,13 +189,13 @@ public class DialogPlaceOrderFragment extends DialogFragment{
         // harga dan discount
         if(menuItems.getMenuDiscount().toString().isEmpty()||menuItems.getMenuDiscount() == 0||menuItems.getMenuDiscount() == null){
             //kondisi menu tidak discount
-            mHarga.setText(kursIndonesia(Double.parseDouble(menuItems.getMenuHarga().toString())));
+            mHarga.setText(kursIndonesia(Double.parseDouble(menuItems.getMenuHarga().toString()))+" /"+menuItems.getMenuSatuan());
         }else {
             mLayoutDiscount.setVisibility(View.VISIBLE);
             mDiscount.setText("Discount "+menuItems.getMenuDiscount()+"%");
             mTvHargaCoret.setText(kursIndonesia(Double.parseDouble(menuItems.getMenuHarga())));
             mTvHargaCoret.setPaintFlags(mTvHargaCoret.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            mHarga.setText(kursIndonesia(HitungDiscount(Double.parseDouble(menuItems.getMenuHarga()),menuItems.getMenuDiscount())));
+            mHarga.setText(kursIndonesia(HitungDiscount(Double.parseDouble(menuItems.getMenuHarga()),menuItems.getMenuDiscount()))+" /"+menuItems.getMenuSatuan());
 
         }
 

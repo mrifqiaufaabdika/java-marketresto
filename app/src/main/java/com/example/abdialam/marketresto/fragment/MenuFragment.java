@@ -1,6 +1,5 @@
 package com.example.abdialam.marketresto.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.abdialam.marketresto.R;
@@ -20,12 +18,10 @@ import com.example.abdialam.marketresto.adapter.MenuAdapter;
 import com.example.abdialam.marketresto.config.ServerConfig;
 import com.example.abdialam.marketresto.models.Kategori;
 import com.example.abdialam.marketresto.models.Menu;
-import com.example.abdialam.marketresto.responses.ResponseMenu;
 import com.example.abdialam.marketresto.responses.ResponseValue;
 import com.example.abdialam.marketresto.rest.ApiService;
 import com.example.abdialam.marketresto.utils.SessionManager;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,7 +56,7 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnItemClickLis
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_manu, container, false);
+        View view = inflater.inflate(R.layout.fragment_menu, container, false);
         initViews(view);
         return view;
     }

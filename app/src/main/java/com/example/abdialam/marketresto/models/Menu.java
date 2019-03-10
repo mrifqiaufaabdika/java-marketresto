@@ -21,6 +21,9 @@ public class Menu implements Serializable {
     @SerializedName("menu_nama")
     @Expose
     private String menuNama;
+    @SerializedName("menu_satuan")
+    @Expose
+    private String menuSatuan;
     @SerializedName("menu_foto")
     @Expose
     private String menuFoto;
@@ -141,5 +144,13 @@ public class Menu implements Serializable {
 
     public void setPivot(DetailOrder pivot) {
         this.pivot = pivot;
+    }
+
+    public String getMenuSatuan() {
+        return menuSatuan;
+    }
+
+    public void setMenuSatuan(String menuSatuan) {
+        this.menuSatuan = menuSatuan;
     }
 }

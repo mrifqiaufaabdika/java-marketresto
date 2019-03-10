@@ -4,9 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#f8f8f8"
-
-    >
+    android:background="#f8f8f8">
 
     <include layout="@layout/toolbar_cart"
         android:id="@+id/toolbar"/>
@@ -25,10 +23,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
-
-
+            android:layout_height="wrap_content">
 
             <com.example.abdialam.marketresto.utils.NonScrollListView
 
@@ -43,16 +38,8 @@
                 android:id="@+id/bag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/listview"
-                />
-
-
+                android:layout_below="@id/listview" />
 
         </RelativeLayout>
-
-
     </ScrollView>
-
-
-
 </RelativeLayout>

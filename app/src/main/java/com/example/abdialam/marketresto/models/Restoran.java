@@ -55,6 +55,9 @@ public class Restoran implements Serializable {
     @SerializedName("restoran_delivery_jarak")
     @Expose
     private Integer restoranDeliveryJarak;
+    @SerializedName("restoran_pajak_pb_satu")
+    @Expose
+    private Integer restoran_pajak_pb_satu;
     @SerializedName("restoran_delivery_minimum")
     @Expose
     private String restoranDeliveryMinimum;
@@ -239,4 +242,11 @@ public class Restoran implements Serializable {
         this.restoranToken = restoranToken;
     }
 
+    public Integer getRestoran_pajak_pb_satu() {
+        return restoran_pajak_pb_satu;
+    }
+
+    public void setRestoran_pajak_pb_satu(Integer restoran_pajak_pb_satu) {
+        this.restoran_pajak_pb_satu = restoran_pajak_pb_satu;
+    }
 }

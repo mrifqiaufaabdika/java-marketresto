@@ -128,7 +128,7 @@ public class MapsDeliveryActivity extends FragmentActivity implements OnMapReady
         //ukuran marker
         BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.msg_order);
         Bitmap b=bitmapdraw.getBitmap();
-        Bitmap smallMarker = Bitmap.createScaledBitmap(b, 100, 100, false);
+        Bitmap smallMarker = Bitmap.createScaledBitmap(b, 65, 65, false);
 
         deliverMarker.setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
 

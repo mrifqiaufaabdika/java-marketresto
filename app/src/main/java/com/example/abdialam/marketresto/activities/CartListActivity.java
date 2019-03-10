@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -92,6 +93,12 @@ public class CartListActivity extends AppCompatActivity implements CartAdapter.C
     @BindView(R.id.sub_title_msg) TextView sub_title_msg;
     @BindView(R.id.btnBack) ImageView btnBack;
     @BindView(R.id.btnResto) ImageView btnResto;
+    @BindView(R.id.viewpb1) View viewpb1;
+    @BindView(R.id.lyt_pb1)
+    LinearLayout lyt_pb1;
+    @BindView(R.id.pajak_pb1) TextView pajak_pb1;
+    @BindView(R.id.tvPajakPB1) TextView tvPajakPB1;
+
 
     double SubTotal,Total ;
     HashMap<String,String> user,location;
@@ -374,6 +381,20 @@ public class CartListActivity extends AppCompatActivity implements CartAdapter.C
         mBiayaAntar.setText(tempMsgTarifAntar);
         mNamaKonsumen.setText(konsumen_nama);
         mPhoneKonsumen.setText("+"+konsumen_phone);
+
+        //cek pajak
+        if (resto.getRestoran_pajak_pb_satu() == 0){
+            viewpb1.setVisibility(View.GONE);
+            lyt_pb1.setVisibility(View.GONE);
+        }else{
+            viewpb1.setVisibility(View.VISIBLE);
+            lyt_pb1.setVisibility(View.VISIBLE);
+            pajak_pb1.setText("PB1 ("+resto.getRestoran_pajak_pb_satu()+"%)");
+            double pb1 = (resto.getRestoran_pajak_pb_satu()/100.0)*Total;
+            tvPajakPB1.setText(kursIndonesia(pb1));
+            Total = Total + pb1;
+        }
+
         mTotal.setText(kursIndonesia(Total));
         mAlamatAntar.setText(location.get(SessionManager.ALAMAT));
 
@@ -425,12 +446,15 @@ public class CartListActivity extends AppCompatActivity implements CartAdapter.C
         String pesan_catatan = mCatatanAlamat.getText().toString();
         String jarak_antar =resto.getRestoranDistace().toString();
         String pesan_biaya_antar =Double.toString(getBiayaAntar());
+        int pajakPb1 = resto.getRestoran_pajak_pb_satu();
         String pesan_metode_bayar ;
         if(metBayar.equals("Resto - Pay ")){
             pesan_metode_bayar="epay";
         }else {
             pesan_metode_bayar ="cash";
         }
+
+
 
         ArrayList<String> menu = new ArrayList<String>();
         ArrayList<String> harga = new ArrayList<String>();
@@ -446,7 +470,7 @@ public class CartListActivity extends AppCompatActivity implements CartAdapter.C
             catatan.add(cartList.get(i).getCatatan());
         }
 
-        mApiService.createOrder(title,message,id_konsumen,id_restoran,pesan_lat,pesan_long,pesan_alamat,pesan_catatan,pesan_metode_bayar,jarak_antar,pesan_biaya_antar,menu,qty,harga,discount,catatan).enqueue(new Callback<ResponseValue>() {
+        mApiService.createOrder(title,message,id_konsumen,id_restoran,pesan_lat,pesan_long,pesan_alamat,pesan_catatan,pesan_metode_bayar,jarak_antar,pesan_biaya_antar,pajakPb1,menu,qty,harga,discount,catatan).enqueue(new Callback<ResponseValue>() {
             @Override
             public void onResponse(Call<ResponseValue> call, Response<ResponseValue> response) {
                 progressOrder.dismiss();

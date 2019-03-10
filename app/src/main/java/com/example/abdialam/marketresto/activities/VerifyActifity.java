@@ -86,7 +86,7 @@ public class VerifyActifity extends AppCompatActivity {
 
         Toast.makeText(mContext,user.getKonsumenPhone(),Toast.LENGTH_SHORT).show();
 //      Memanggil method untuk mengirim code
-        //sendVerificationCode(user.getKonsumenPhone());
+       // sendVerificationCode(user.getKonsumenPhone());
     }
 
 

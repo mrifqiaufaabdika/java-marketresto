@@ -11,20 +11,15 @@
         android:title="Order"
         android:icon="@drawable/ic_search"
         />
-
     <item
         android:id="@+id/action_order"
         android:title="Order"
         android:icon="@drawable/ic_motor_white"
         />
-
     <item
         android:id="@+id/action_favorite"
         android:title="Favorite"
         android:icon="@drawable/ic_favorite" />
-
-
-
     <item
         android:id="@+id/action_account"
         android:title="Account"
