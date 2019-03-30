@@ -40,10 +40,11 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnItemClickLis
     private List<Kategori> kategoriList = new ArrayList<>();
     private MenuAdapter.OnItemClickListener listener;
     ApiService mApiService;
-//    TextView pos;
-    int position,oprasional;
+    //    TextView pos;
+    int position, oprasional;
     SessionManager sessionManager;
-    HashMap<String,String> user ;
+    HashMap<String, String> user;
+
     public static MenuFragment newInstance() {
         return new MenuFragment();
     }
@@ -66,14 +67,14 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnItemClickLis
         sessionManager = new SessionManager(getActivity());
         user = sessionManager.getUserDetail();
         mApiService = ServerConfig.getAPIService();
-        menuList =(List<Menu>) getArguments().getSerializable("menu");
+        menuList = (List<Menu>) getArguments().getSerializable("menu");
         kategoriList = (List<Kategori>) getArguments().getSerializable("kategori");
         oprasional = getArguments().getInt("oprasinal");
         position = getArguments().getInt("position");
         mRecylerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
-        listener =this;
+        listener = this;
         setByKategori();
-        mAdapter = new MenuAdapter(getActivity(),menuListTemp,listener);
+        mAdapter = new MenuAdapter(getActivity(), menuListTemp, listener);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         mRecylerView.setLayoutManager(layoutManager);
         mRecylerView.setItemAnimator(new DefaultItemAnimator());
@@ -84,16 +85,13 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnItemClickLis
     }
 
 
+    public void setByKategori() {
 
 
-
-    public void setByKategori(){
-
-
-        for (int i = 0; i < kategoriList.size() ; i++) {
-            if(position == i){
+        for (int i = 0; i < kategoriList.size(); i++) {
+            if (position == i) {
                 for (int j = 0; j < menuList.size(); j++) {
-                    if (menuList.get(j).getIdKategori().toString().equals(kategoriList.get(i).getId().toString())){
+                    if (menuList.get(j).getIdKategori().toString().equals(kategoriList.get(i).getId().toString())) {
                         menuListTemp.add(menuList.get(j));
                     }
                 }
@@ -105,39 +103,38 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnItemClickLis
     public void onItemCliked(final View v, final int position, boolean isLongClick) {
         final Menu menuItem = menuListTemp.get(position);
         String id_konsumen = user.get(SessionManager.ID_USER).toString();
-        if(isLongClick){
-            if(menuItem.getMenuFavorit() > 0){
-                Toast.makeText(getActivity(),"Menu Sudah Jadi Favorit",Toast.LENGTH_SHORT).show();
-            }else {
+        if (isLongClick) {
+            if (menuItem.getMenuFavorit() > 0) {
+                Toast.makeText(getActivity(), "Menu Sudah Jadi Favorit", Toast.LENGTH_SHORT).show();
+            } else {
                 //set favorit
-            mApiService.setFavorit(id_konsumen,menuItem.getId().toString()).enqueue(new Callback<ResponseValue>() {
-                @Override
-                public void onResponse(Call<ResponseValue> call, Response<ResponseValue> response) {
-                    if(response.isSuccessful()){
-                        String value = response.body().getValue();
-                        String message = response.body().getMessage();
-                        if(value.equals("1")){
-                            mAdapter.favoritAt(v,position);
-                            menuItem.setMenuFavorit(1);
-                            ImageView heart = (ImageView) v.findViewById(R.id.imgLove);
-                            heart.setImageResource(R.drawable.f4);
-                            Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
-                        }else {
-                            Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
+                mApiService.setFavorit(id_konsumen, menuItem.getId().toString()).enqueue(new Callback<ResponseValue>() {
+                    @Override
+                    public void onResponse(Call<ResponseValue> call, Response<ResponseValue> response) {
+                        if (response.isSuccessful()) {
+                            String value = response.body().getValue();
+                            String message = response.body().getMessage();
+                            if (value.equals("1")) {
+                                mAdapter.favoritAt(v, position);
+                                menuItem.setMenuFavorit(1);
+                                ImageView heart = (ImageView) v.findViewById(R.id.imgLove);
+                                heart.setImageResource(R.drawable.f4);
+                                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
-                }
 
-                @Override
-                public void onFailure(Call<ResponseValue> call, Throwable t) {
-                        Toast.makeText(getActivity(),R.string.lostconnection,Toast.LENGTH_SHORT).show();
-                }
-            });
+                    @Override
+                    public void onFailure(Call<ResponseValue> call, Throwable t) {
+                        Toast.makeText(getActivity(), R.string.lostconnection, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
 
-
-        }else {
+        } else {
             Bundle argument = new Bundle();
             argument.putSerializable("selectedItem", menuItem);
             //oprasinal buka

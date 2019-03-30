@@ -30,7 +30,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class EditKonsumen extends AppCompatActivity{
+public class EditKonsumen extends AppCompatActivity {
 
     private Context mContext;
     private ProgressDialog progressDialog;
@@ -46,18 +46,19 @@ public class EditKonsumen extends AppCompatActivity{
     CoordinatorLayout coordinatorLayout;
 
     ApiService mApiSerivce;
-    String value,message;
+    String value, message;
     SessionManager sessionManager;
-    HashMap<String,String> user;
+    HashMap<String, String> user;
 
-    @OnClick(R.id.buttonSignUp) void ubah (){
+    @OnClick(R.id.buttonSignUp)
+    void ubah() {
         //hilangkan keyboard
         final User user1 = new User();
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(coordinatorLayout.getWindowToken(), 0);
 
         //create progres dialog
-        progressDialog = ProgressDialog.show(mContext,null,getString(R.string.memuat),true,false);
+        progressDialog = ProgressDialog.show(mContext, null, getString(R.string.memuat), true, false);
 
         //mengambil nilai inputan ke string
         String id = user.get(SessionManager.ID_USER);
@@ -70,74 +71,73 @@ public class EditKonsumen extends AppCompatActivity{
         user1.setKonsumenPhone(strPhone);
         user1.setKonsumenEmail(strEmail);
 
-        if(strNama.isEmpty()||strNama.equals(null)) {
+        if (strNama.isEmpty() || strNama.equals(null)) {
             progressDialog.dismiss();
             etNama.setError("Nama diperlukan");
             etNama.requestFocus();
             return;
-        }else if (strPhone.equals("62"))  {
+        } else if (strPhone.equals("62")) {
             progressDialog.dismiss();
             etPhone.setError("Nomor telepon diperlukan");
             etPhone.requestFocus();
             return;
-        }else if(strPhone.length()<12){
+        } else if (strPhone.length() < 12) {
             progressDialog.dismiss();
             etPhone.setError("Nomor telepon tidak valid");
             etPhone.requestFocus();
             return;
-        }else if(strPhone.isEmpty()||strPhone.equals(null)){
+        } else if (strPhone.isEmpty() || strPhone.equals(null)) {
             progressDialog.dismiss();
             etPhone.setError("Nomor telepon diperlukan");
             etPhone.requestFocus();
             return;
-        }else if(strEmail.isEmpty()||strEmail.equals(null)){
+        } else if (strEmail.isEmpty() || strEmail.equals(null)) {
             progressDialog.dismiss();
             etEmail.setError("Email diperlukan");
             etEmail.requestFocus();
             return;
-        }else if(!Patterns.EMAIL_ADDRESS.matcher(strEmail).matches()){
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(strEmail).matches()) {
             progressDialog.dismiss();
             etEmail.setError("Email tidak valid");
             etEmail.requestFocus();
             return;
-        }else if(token.isEmpty()||token.equals(null)){
+        } else if (token.isEmpty() || token.equals(null)) {
             progressDialog.dismiss();
             etEmail.setError("Email diperlukan");
             etEmail.requestFocus();
             return;
-        }else {
+        } else {
 
 
-
-            mApiSerivce.updateKonsumen(id,strNama,strPhone,strEmail,token).enqueue(new Callback<ResponseValue>() {
+            mApiSerivce.updateKonsumen(id, strNama, strPhone, strEmail, token).enqueue(new Callback<ResponseValue>() {
                 @Override
                 public void onResponse(Call<ResponseValue> call, Response<ResponseValue> response) {
                     progressDialog.dismiss();
-                    if(response.isSuccessful()){
+                    if (response.isSuccessful()) {
                         value = response.body().getValue();
                         message = response.body().getMessage();
-                        if(value.equals("1")){
+                        if (value.equals("1")) {
                             //snack bar success
-                            Snackbar.make(coordinatorLayout,message, Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG).show();
                             sessionManager.createLoginSession(user1);
 
 //                            Intent intent = new Intent(mContext,SigninActivity.class);
 //                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
 //                            startActivity(intent);
 
-                        }else {
-                            Snackbar.make(coordinatorLayout,message, Snackbar.LENGTH_LONG).show();
+                        } else {
+                            Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG).show();
                         }
-                    }else{
+                    } else {
                         Toast.makeText(mContext, "Gagal Registrasi", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ResponseValue> call, Throwable t) {
-                    Log.e(TAG, "onFailure: "+t.getLocalizedMessage() );
+                    Log.e(TAG, "onFailure: " + t.getLocalizedMessage());
                     progressDialog.dismiss();
-                    Snackbar.make(coordinatorLayout,R.string.lostconnection, Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(coordinatorLayout, R.string.lostconnection, Snackbar.LENGTH_LONG).show();
                 }
             });
         }
@@ -160,14 +160,14 @@ public class EditKonsumen extends AppCompatActivity{
 
     private void init() {
         etNama.setText(user.get(SessionManager.NAMA_LENGKAP));
-        etPhone.setText("+"+user.get(SessionManager.NO_HP).substring(2));
+        etPhone.setText("+" + user.get(SessionManager.NO_HP).substring(2));
         etEmail.setText(user.get(SessionManager.EMAIL));
     }
 
 
-    public String clearPhone (String phoneNumber){
-        String hp = phoneNumber.replaceAll("-","");
-        String clearPhone = hp.substring(1,hp.length());
+    public String clearPhone(String phoneNumber) {
+        String hp = phoneNumber.replaceAll("-", "");
+        String clearPhone = hp.substring(1, hp.length());
         return clearPhone;
     }
 }

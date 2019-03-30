@@ -59,7 +59,7 @@ public class SearchFragment extends Fragment {
     TabLayout tabLayout;
     ApiService mApiService;
     SessionManager sessionManager;
-    HashMap<String,String> locationSession;
+    HashMap<String, String> locationSession;
     ProgressDialog progressDialog;
     private List<Restoran> restoranList = new ArrayList<>();
     private List<Menu> menuList = new ArrayList<>();
@@ -69,20 +69,18 @@ public class SearchFragment extends Fragment {
 
     View message;
     ImageView icon_message;
-    TextView title_message,sub_title_message;
+    TextView title_message, sub_title_message;
     Button btnRecomend;
 
     ImageButton cart;
 
-    EditText mNamaRestoran,mAlamatRestoran,mPhoneRestoran;
-
-
+    EditText mNamaRestoran, mAlamatRestoran, mPhoneRestoran;
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_search,container,false);
+        View view = inflater.inflate(R.layout.fragment_search, container, false);
         mContext = getActivity();
         searchView = (SearchView) view.findViewById(R.id.serchview);
         sessionManager = new SessionManager(mContext);
@@ -94,9 +92,9 @@ public class SearchFragment extends Fragment {
 
         message = view.findViewById(R.id.error);
         icon_message = (ImageView) view.findViewById(R.id.img_msg);
-        title_message =  (TextView) view.findViewById(R.id.title_msg);
-        sub_title_message =  (TextView) view.findViewById(R.id.sub_title_msg);
-        btnRecomend =(Button) view.findViewById(R.id.btnLocation);
+        title_message = (TextView) view.findViewById(R.id.title_msg);
+        sub_title_message = (TextView) view.findViewById(R.id.sub_title_msg);
+        btnRecomend = (Button) view.findViewById(R.id.btnLocation);
 
         icon_message.setImageResource(R.drawable.msg_search_food);
         title_message.setText("Temukan Favorit di Sekitar Anda");
@@ -104,25 +102,22 @@ public class SearchFragment extends Fragment {
         btnRecomend.setText("Rekomendasi Restoran");
 
 
-
         mApiService = ServerConfig.getAPIService();
         TextView searchText = (TextView) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-        Typeface myCustomFont = Typeface.createFromAsset(getActivity().getAssets(),"fonts/MavenPro-Regular.ttf");
+        Typeface myCustomFont = Typeface.createFromAsset(getActivity().getAssets(), "fonts/MavenPro-Regular.ttf");
         searchText.setTypeface(myCustomFont);
         tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
         tabLayout.setSelectedTabIndicatorColor(Color.WHITE);
 
 
-
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(mContext,query,Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, query, Toast.LENGTH_SHORT).show();
                 //progress dialog
-                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(coordinatorLayout.getWindowToken(), 0);
-                progressDialog = ProgressDialog.show(mContext,null,getString(R.string.cari),true,false);
+                progressDialog = ProgressDialog.show(mContext, null, getString(R.string.cari), true, false);
                 cari(query);
                 return true;
             }
@@ -169,31 +164,31 @@ public class SearchFragment extends Fragment {
         return view;
     }
 
-    public void cari (String query){
+    public void cari(String query) {
         progressDialog.dismiss();
-        String lat =locationSession.get(SessionManager.LAT);
+        String lat = locationSession.get(SessionManager.LAT);
         String lang = locationSession.get(SessionManager.LANG);
-        mApiService.cari(lat,lang,query).enqueue(new Callback<ResponseSearch>() {
+        mApiService.cari(lat, lang, query).enqueue(new Callback<ResponseSearch>() {
             @Override
             public void onResponse(Call<ResponseSearch> call, Response<ResponseSearch> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     String value = response.body().getValue();
-                    if(value.equals("1")){
+                    if (value.equals("1")) {
                         message.setVisibility(View.GONE);
                         tabLayout.setVisibility(View.VISIBLE);
                         viewPager.setVisibility(View.VISIBLE);
                         restoranList = response.body().getRestoran();
                         menuList = response.body().getMenu();
 
-                        tabLayout.getTabAt(0).setText("Restoran ("+restoranList.size()+")");
-                        tabLayout.getTabAt(1).setText("Menu ("+menuList.size()+")");
+                        tabLayout.getTabAt(0).setText("Restoran (" + restoranList.size() + ")");
+                        tabLayout.getTabAt(1).setText("Menu (" + menuList.size() + ")");
 
 
-                        PagerAdapterTabSearch pagerAdapterTabSearch = new PagerAdapterTabSearch(getFragmentManager(),tabLayout.getTabCount(),menuList,restoranList);
+                        PagerAdapterTabSearch pagerAdapterTabSearch = new PagerAdapterTabSearch(getFragmentManager(), tabLayout.getTabCount(), menuList, restoranList);
                         viewPager.setAdapter(pagerAdapterTabSearch);
                         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-                    }else {
+                    } else {
                         viewPager.setVisibility(View.GONE);
                         tabLayout.setVisibility(View.GONE);
                         message.setVisibility(View.VISIBLE);
@@ -203,7 +198,7 @@ public class SearchFragment extends Fragment {
                         icon_message.setImageResource(R.drawable.msg_failure_search);
                         title_message.setText("Opps.. Maaf Kami Belum Menemukannya");
                         sub_title_message.setText("Kami akan terus mengembangkan \n jangkauan kami terhadap restoran anda \n");
-                        Toast.makeText(mContext,"Tidak ditmeukan",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "Tidak ditmeukan", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -227,19 +222,18 @@ public class SearchFragment extends Fragment {
     }
 
 
-
     //form rekomendasi restoran
     private void DialogRekomendasi() {
         dialog = new AlertDialog.Builder(mContext);
         LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_rekomendasi,null);
+        View dialogView = inflater.inflate(R.layout.dialog_rekomendasi, null);
         dialog.setView(dialogView);
         dialog.setCancelable(true);
         dialog.setTitle("Rekomendasi Restoran");
 
         mNamaRestoran = (EditText) dialogView.findViewById(R.id.etNamaRestoran);
         mAlamatRestoran = (EditText) dialogView.findViewById(R.id.etAlamatRestoran);
-        mPhoneRestoran= (EditText) dialogView.findViewById(R.id.etPhoneRestoran);
+        mPhoneRestoran = (EditText) dialogView.findViewById(R.id.etPhoneRestoran);
 
 
         dialog.setPositiveButton("Rekomendasi", new DialogInterface.OnClickListener() {
@@ -251,7 +245,7 @@ public class SearchFragment extends Fragment {
                 String alamat = mAlamatRestoran.getText().toString();
                 String phone = mPhoneRestoran.getText().toString();
 
-                    setRekomendasi(nama, alamat, phone);
+                setRekomendasi(nama, alamat, phone);
 
 
             }
@@ -271,21 +265,21 @@ public class SearchFragment extends Fragment {
 
     private void setRekomendasi(String nama, String alamat, String phone) {
 
-        mApiService.rekomendasi(nama,phone,alamat).enqueue(new Callback<ResponseValue>() {
+        mApiService.rekomendasi(nama, phone, alamat).enqueue(new Callback<ResponseValue>() {
             @Override
             public void onResponse(Call<ResponseValue> call, Response<ResponseValue> response) {
-                if(response.isSuccessful()){
-                    if(response.body().getValue().equals("1")){
-                        Toast.makeText(mContext,"Terimakasih atas rekomendasi Anda",Toast.LENGTH_SHORT).show();
-                    }else {
-                        Toast.makeText(mContext,"Gagal Rekomendasi",Toast.LENGTH_SHORT).show();
+                if (response.isSuccessful()) {
+                    if (response.body().getValue().equals("1")) {
+                        Toast.makeText(mContext, "Terimakasih atas rekomendasi Anda", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mContext, "Gagal Rekomendasi", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseValue> call, Throwable t) {
-                Toast.makeText(mContext,R.string.lostconnection,Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, R.string.lostconnection, Toast.LENGTH_SHORT).show();
             }
         });
     }

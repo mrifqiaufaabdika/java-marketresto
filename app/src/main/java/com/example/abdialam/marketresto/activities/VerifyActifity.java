@@ -45,13 +45,13 @@ public class VerifyActifity extends AppCompatActivity {
     @BindView(R.id.editTextCode)
     VerifyCodeView editTextCode;
     @BindView(R.id.buttonSignIn)
-    Button btnSigin ;
+    Button btnSigin;
     @BindView(R.id.textSendCode)
     TextView txtResend;
 
     PhoneAuthProvider.ForceResendingToken mResendToken;
 
-    ApiService mApiService ;
+    ApiService mApiService;
 
 
     Context mContext;
@@ -62,10 +62,6 @@ public class VerifyActifity extends AppCompatActivity {
     SessionManager sessionManager;
 
 
-
-
-
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,8 +69,8 @@ public class VerifyActifity extends AppCompatActivity {
         mContext = this;
         ButterKnife.bind(this);
         user = (User) getIntent().getSerializableExtra("user");
-        txtResend.setText("Masukan kode verifikasi yang dikirim melalui \n SMS pada nomor ponsel +"+user.getKonsumenPhone());
-        Typeface type = Typeface.createFromAsset(getAssets(),"fonts/MavenPro-Regular.ttf");
+        txtResend.setText("Masukan kode verifikasi yang dikirim melalui \n SMS pada nomor ponsel +" + user.getKonsumenPhone());
+        Typeface type = Typeface.createFromAsset(getAssets(), "fonts/MavenPro-Regular.ttf");
         btnSigin.setTypeface(type);
 
         mApiService = ServerConfig.getAPIService();
@@ -82,29 +78,27 @@ public class VerifyActifity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
 
-
-
-        Toast.makeText(mContext,user.getKonsumenPhone(),Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, user.getKonsumenPhone(), Toast.LENGTH_SHORT).show();
 //      Memanggil method untuk mengirim code
-       // sendVerificationCode(user.getKonsumenPhone());
+        // sendVerificationCode(user.getKonsumenPhone());
     }
 
 
-//    On click sign in button
-    @OnClick (R.id.buttonSignIn) void signin (){
-        progressDialog = ProgressDialog.show(mContext,null,getString(R.string.memuat),true,false);
+    //    On click sign in button
+    @OnClick(R.id.buttonSignIn)
+    void signin() {
+        progressDialog = ProgressDialog.show(mContext, null, getString(R.string.memuat), true, false);
 //        untuk melakukan verifikasi dari code OTP yang di inputkan
-       //verifySignInCode();
+        //verifySignInCode();
 //        jika menguji login tanpa menggunakan code OTP
-      SessionUser();
+        SessionUser();
 
 
     }
 
 
-
-    private void verifySignInCode(){
-        String code =  editTextCode.getText();
+    private void verifySignInCode() {
+        String code = editTextCode.getText();
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(codeSent, code);
         signInWithPhoneAuthCredential(credential);
     }
@@ -119,7 +113,7 @@ public class VerifyActifity extends AppCompatActivity {
                             //to sucses login
                             progressDialog.dismiss();
 
-                            Toast.makeText(getApplicationContext(),"login successfuli",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "login successfuli", Toast.LENGTH_LONG).show();
                             SessionUser();
 
                             // ...
@@ -129,7 +123,7 @@ public class VerifyActifity extends AppCompatActivity {
                             progressDialog.dismiss();
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 // The verification code entered was invalid
-                                Toast.makeText(getApplicationContext(),"Incorrect Verificarion Code",Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "Incorrect Verificarion Code", Toast.LENGTH_LONG).show();
                             }
 
                         }
@@ -138,7 +132,7 @@ public class VerifyActifity extends AppCompatActivity {
     }
 
 
-    private void sendVerificationCode(String phone){
+    private void sendVerificationCode(String phone) {
 
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 phone,        // Phone number to verify
@@ -154,12 +148,12 @@ public class VerifyActifity extends AppCompatActivity {
         @Override
         public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
 
-            Toast.makeText(mContext,"verification completed",Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "verification completed", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onVerificationFailed(FirebaseException e) {
-            Toast.makeText(mContext,"verification fialed",Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "verification fialed", Toast.LENGTH_SHORT).show();
             if (e instanceof FirebaseAuthInvalidCredentialsException) {
                 // Invalid request
                 // [START_EXCLUDE]
@@ -176,20 +170,21 @@ public class VerifyActifity extends AppCompatActivity {
         @Override
         public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);
-            Toast.makeText(mContext,"Code sent",Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "Code sent", Toast.LENGTH_SHORT).show();
             codeSent = s;
             mResendToken = forceResendingToken;
         }
     };
 
-    @OnClick (R.id.resendCode) void onResendCode(){
+    @OnClick(R.id.resendCode)
+    void onResendCode() {
         ResendCode(user.getKonsumenPhone());
     }
 
-    public void ResendCode(String phone){
+    public void ResendCode(String phone) {
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 phone,        // Phone number to verify
-                1  ,               // Timeout duration
+                1,               // Timeout duration
                 TimeUnit.MINUTES,   // Unit of timeout
                 this,               // Activity (for callback binding)
                 mCallbacks,         // OnVerificationStateChangedCallbacks
@@ -197,34 +192,32 @@ public class VerifyActifity extends AppCompatActivity {
     }
 
 
-
     //sessionLogin
-    private void  SessionUser(){
-                sessionManager.createLoginSession(user);
-                updateToken();
+    private void SessionUser() {
+        sessionManager.createLoginSession(user);
+        updateToken();
 
-                //Toast.makeText(mContext, "Berhasil Login", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(mContext, "Berhasil Login", Toast.LENGTH_SHORT).show();
 
 
     }
 
 
-
-    private void updateToken (){
+    private void updateToken() {
         String Token = SharedPrefManager.getInstance(this).getDeviceToken();
-        mApiService.updateToken(user.getId().toString(),Token).enqueue(new Callback<ResponseValue>() {
+        mApiService.updateToken(user.getId().toString(), Token).enqueue(new Callback<ResponseValue>() {
             @Override
             public void onResponse(Call<ResponseValue> call, Response<ResponseValue> response) {
                 progressDialog.dismiss();
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     String value = response.body().getValue();
-                    if(value.equals("1")) {
+                    if (value.equals("1")) {
                         Toast.makeText(mContext, "Update Token Berhasil", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(mContext, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
-                          VerifyActifity.this.finish();
-                    }else {
+                        VerifyActifity.this.finish();
+                    } else {
                         Toast.makeText(mContext, "Update Token Gagal", Toast.LENGTH_SHORT).show();
                     }
                 }

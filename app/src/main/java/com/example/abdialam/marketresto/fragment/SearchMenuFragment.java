@@ -35,7 +35,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SearchMenuFragment extends Fragment{
+public class SearchMenuFragment extends Fragment {
 
 
     AlertDialog.Builder dialog;
@@ -49,11 +49,11 @@ public class SearchMenuFragment extends Fragment{
 
     View message;
     ImageView icon_message;
-    TextView title_message,sub_title_message;
+    TextView title_message, sub_title_message;
 
     ApiService mApiService;
 
-    EditText mNamaRestoran,mAlamatRestoran,mPhoneRestoran;
+    EditText mNamaRestoran, mAlamatRestoran, mPhoneRestoran;
 
     public static SearchMenuFragment newInstance() {
         return new SearchMenuFragment();
@@ -78,13 +78,13 @@ public class SearchMenuFragment extends Fragment{
 
         message = view.findViewById(R.id.error);
         icon_message = (ImageView) view.findViewById(R.id.img_msg);
-        title_message =  (TextView) view.findViewById(R.id.title_msg);
-        sub_title_message =  (TextView) view.findViewById(R.id.sub_title_msg);
-        btnRecomend =(Button) view.findViewById(R.id.btnLocation);
+        title_message = (TextView) view.findViewById(R.id.title_msg);
+        sub_title_message = (TextView) view.findViewById(R.id.sub_title_msg);
+        btnRecomend = (Button) view.findViewById(R.id.btnLocation);
 
-        menuList =(List<Menu>) getArguments().getSerializable("menu");
+        menuList = (List<Menu>) getArguments().getSerializable("menu");
 
-        if(menuList.size() == 0 ){
+        if (menuList.size() == 0) {
             message.setVisibility(View.VISIBLE);
 
             icon_message.setImageResource(R.drawable.msg_failure_search);
@@ -92,7 +92,7 @@ public class SearchMenuFragment extends Fragment{
             sub_title_message.setText("Kami akan terus mengembangkan \n jangkauan kami terhadap restoran anda \n");
             btnRecomend.setVisibility(View.VISIBLE);
             btnRecomend.setText("Rekomendasi Restoran");
-        }else {
+        } else {
 
 
             recyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
@@ -115,14 +115,14 @@ public class SearchMenuFragment extends Fragment{
     private void DialogRekomendasi() {
         dialog = new AlertDialog.Builder(mContext);
         LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_rekomendasi,null);
+        View dialogView = inflater.inflate(R.layout.dialog_rekomendasi, null);
         dialog.setView(dialogView);
         dialog.setCancelable(true);
         dialog.setTitle("Rekomendasi Restoran");
 
         mNamaRestoran = (EditText) dialogView.findViewById(R.id.etNamaRestoran);
         mAlamatRestoran = (EditText) dialogView.findViewById(R.id.etAlamatRestoran);
-        mPhoneRestoran= (EditText) dialogView.findViewById(R.id.etPhoneRestoran);
+        mPhoneRestoran = (EditText) dialogView.findViewById(R.id.etPhoneRestoran);
 
 
         dialog.setPositiveButton("Rekomendasi", new DialogInterface.OnClickListener() {
@@ -154,21 +154,21 @@ public class SearchMenuFragment extends Fragment{
 
     private void setRekomendasi(String nama, String alamat, String phone) {
 
-        mApiService.rekomendasi(nama,phone,alamat).enqueue(new Callback<ResponseValue>() {
+        mApiService.rekomendasi(nama, phone, alamat).enqueue(new Callback<ResponseValue>() {
             @Override
             public void onResponse(Call<ResponseValue> call, Response<ResponseValue> response) {
-                if(response.isSuccessful()){
-                    if(response.body().getValue().equals("1")){
-                        Toast.makeText(mContext,"Terimakasih atas rekomendasi Anda",Toast.LENGTH_SHORT).show();
-                    }else {
-                        Toast.makeText(mContext,"Gagal Rekomendasi",Toast.LENGTH_SHORT).show();
+                if (response.isSuccessful()) {
+                    if (response.body().getValue().equals("1")) {
+                        Toast.makeText(mContext, "Terimakasih atas rekomendasi Anda", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mContext, "Gagal Rekomendasi", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseValue> call, Throwable t) {
-                Toast.makeText(mContext,R.string.lostconnection,Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, R.string.lostconnection, Toast.LENGTH_SHORT).show();
             }
         });
     }

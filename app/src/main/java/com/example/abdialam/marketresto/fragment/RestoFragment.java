@@ -59,28 +59,26 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RestoFragment extends Fragment  {
+public class RestoFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private RestorantAdapter adapter;
     private List<Restoran> data = new ArrayList<>();
     ApiService mApiService;
-    TextView textview,title_error,sub_title_error;
+    TextView textview, title_error, sub_title_error;
     ImageButton openmap;
     ImageView img_msg;
     Button btnLocation;
     Context mContext;
     GPSTracker gpsTracker;
-    String addressLine,lat,lang;
+    String addressLine, lat, lang;
 
-    View viewError ;
+    View viewError;
 
     SearchView searchView = null;
     SearchView.OnQueryTextListener queryTextListener;
 
     ProgressDialog progressDialog;
-
-
 
 
     @Override
@@ -93,11 +91,11 @@ public class RestoFragment extends Fragment  {
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_resto,container,false);
+        View view = inflater.inflate(R.layout.fragment_resto, container, false);
         mContext = getActivity();
-        Typeface type = Typeface.createFromAsset(getActivity().getAssets(),"fonts/MavenPro-Regular.ttf");
+        Typeface type = Typeface.createFromAsset(getActivity().getAssets(), "fonts/MavenPro-Regular.ttf");
 
-        textview = (TextView)view.findViewById(R.id.tvLokasiAnda);
+        textview = (TextView) view.findViewById(R.id.tvLokasiAnda);
         textview.setTypeface(type);
         mApiService = ServerConfig.getAPIService();
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
@@ -106,22 +104,21 @@ public class RestoFragment extends Fragment  {
 
         viewError = view.findViewById(R.id.error);
         img_msg = (ImageView) view.findViewById(R.id.img_msg);
-        title_error =  (TextView) view.findViewById(R.id.title_msg);
+        title_error = (TextView) view.findViewById(R.id.title_msg);
         sub_title_error = (TextView) view.findViewById(R.id.sub_title_msg);
 
 
-
-       // addData("0.47101406701336923", "101.40498843044043");
+        // addData("0.47101406701336923", "101.40498843044043");
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
 
         openmap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                    Intent intent = new Intent(mContext, MapsActivity.class);
-                    startActivity(intent);
+                Intent intent = new Intent(mContext, MapsActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -141,14 +138,14 @@ public class RestoFragment extends Fragment  {
     public void onResume() {
         super.onResume();
         SessionManager sessionManager = new SessionManager(mContext);
-        HashMap<String,String> locationSession;
+        HashMap<String, String> locationSession;
         locationSession = sessionManager.getLocation();
         textview.setText(locationSession.get(SessionManager.ALAMAT));
 
-        Toast.makeText(mContext,"onResume",Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, "onResume", Toast.LENGTH_SHORT).show();
         //progress dialog
-        progressDialog = ProgressDialog.show(mContext,null,getString(R.string.memuat),true,false);
-        addData(locationSession.get(SessionManager.LAT),locationSession.get(SessionManager.LANG));
+        progressDialog = ProgressDialog.show(mContext, null, getString(R.string.memuat), true, false);
+        addData(locationSession.get(SessionManager.LAT), locationSession.get(SessionManager.LANG));
     }
 
     //    @Override
@@ -190,12 +187,12 @@ public class RestoFragment extends Fragment  {
 
     private void addData(String lat, String lang) {
 
-        mApiService.getRestoran(lat,lang).enqueue(new Callback<ResponseRestoran>() {
+        mApiService.getRestoran(lat, lang).enqueue(new Callback<ResponseRestoran>() {
             @Override
             public void onResponse(Call<ResponseRestoran> call, Response<ResponseRestoran> response) {
 
                 String value = response.body().getValue();
-                if(response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     if (value.equals("1")) {
                         data = response.body().getData();
                         adapter = new RestorantAdapter(getActivity(), data);
@@ -228,14 +225,13 @@ public class RestoFragment extends Fragment  {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu,MenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        super.onCreateOptionsMenu(menu,inflater);
+        super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_location_cart, menu);
 //        MenuItem search = menu.findItem(R.id.search);
 //        SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
 //        search(searchView);
-
 
 
     }
@@ -258,7 +254,7 @@ public class RestoFragment extends Fragment  {
 //    }
 
 
-//    //Cart Menu
+    //    //Cart Menu
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -273,7 +269,7 @@ public class RestoFragment extends Fragment  {
                 break;
             case R.id.action_location:
                 //progress dialog
-                progressDialog = ProgressDialog.show(mContext,null,getString(R.string.memuat),true,false);
+                progressDialog = ProgressDialog.show(mContext, null, getString(R.string.memuat), true, false);
                 onLocation();
                 break;
         }
@@ -281,25 +277,25 @@ public class RestoFragment extends Fragment  {
     }
 
 
-    void onLocation(){
+    void onLocation() {
         gpsTracker = new GPSTracker(mContext);
-        if(gpsTracker.canGetLocation()) {
+        if (gpsTracker.canGetLocation()) {
             addressLine = gpsTracker.getAddressLine(mContext);
-            if(addressLine.equals("Lokasi Tidak Ditemukan")){
+            if (addressLine.equals("Lokasi Tidak Ditemukan")) {
                 progressDialog.dismiss();
-                Toast.makeText(mContext,addressLine,Toast.LENGTH_SHORT).show();
-            }else {
+                Toast.makeText(mContext, addressLine, Toast.LENGTH_SHORT).show();
+            } else {
                 SessionManager sessionManager = new SessionManager(mContext);
                 lat = String.valueOf(gpsTracker.getLatitude());
-                lang =  String.valueOf(gpsTracker.getLongitude());
-                Toast.makeText(mContext,addressLine+"\n"+lat+","+lang,Toast.LENGTH_SHORT).show();
-                sessionManager.setLocation(addressLine,lat,lang);
-                HashMap<String,String> locationSession;
+                lang = String.valueOf(gpsTracker.getLongitude());
+                Toast.makeText(mContext, addressLine + "\n" + lat + "," + lang, Toast.LENGTH_SHORT).show();
+                sessionManager.setLocation(addressLine, lat, lang);
+                HashMap<String, String> locationSession;
                 locationSession = sessionManager.getLocation();
                 textview.setText(locationSession.get(SessionManager.ALAMAT));
-                addData(locationSession.get(SessionManager.LAT),locationSession.get(SessionManager.LANG));
+                addData(locationSession.get(SessionManager.LAT), locationSession.get(SessionManager.LANG));
             }
-        }else {
+        } else {
             progressDialog.dismiss();
             gpsTracker.showSettingsAlert();
         }

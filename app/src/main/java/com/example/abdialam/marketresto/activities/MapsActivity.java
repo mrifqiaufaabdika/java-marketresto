@@ -117,7 +117,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
 
 
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -138,9 +137,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
 
-       // mMap.setMyLocationEnabled(true);
-
-
+        // mMap.setMyLocationEnabled(true);
 
 
         mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
@@ -148,7 +145,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onCameraIdle() {
                 midLatLng = mMap.getCameraPosition().target;
                 location = midLatLng;
-                alamat =getAddressLine(mContext).toString();
+                alamat = getAddressLine(mContext).toString();
                 mLocation.setText(alamat);
             }
         });
@@ -163,10 +160,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 if (!mgr.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                     showSettingsAlert();
-                }else {
+                } else {
                     Criteria criteria = new Criteria();
                     String provider = mgr.getBestProvider(criteria, false);
-                   // Location locationn = mgr.getLastKnownLocation(provider);
+                    // Location locationn = mgr.getLastKnownLocation(provider);
 
                     Location currentLoc = mMap.getMyLocation();
                     LatLng temp = new LatLng(currentLoc.getLatitude(), currentLoc.getLongitude());
@@ -185,37 +182,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-
-
-
-    public List<Address> getGeocoderAddress(Context context){
-        if(location != null){
+    public List<Address> getGeocoderAddress(Context context) {
+        if (location != null) {
             Geocoder geocoder = new Geocoder(context, Locale.ENGLISH);
 
             try {
-                List<Address> addresses = geocoder.getFromLocation(location.latitude,location.longitude,geocoderMaxResult);
+                List<Address> addresses = geocoder.getFromLocation(location.latitude, location.longitude, geocoderMaxResult);
                 return addresses;
-            }catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         return null;
     }
 
-    public String getAddressLine (Context context){
+    public String getAddressLine(Context context) {
         List<Address> addresses = getGeocoderAddress(context);
 
-        if(addresses != null && addresses.size() > 0){
+        if (addresses != null && addresses.size() > 0) {
             Address address = addresses.get(0);
             String addresLine = address.getAddressLine(0);
             return addresLine;
-        }else {
-            return "Alamat Tidak Ditemukan" ;
+        } else {
+            return "Alamat Tidak Ditemukan";
         }
     }
 
 
-    public void showSettingsAlert(){
+    public void showSettingsAlert() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
 
         // Setting Dialog Title
@@ -227,7 +221,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // On pressing Settings button
         alertDialog.setPositiveButton("Pengaturan", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog,int which) {
+            public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 mContext.startActivity(intent);
             }
@@ -245,13 +239,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         alert.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialogInterface) {
-                alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(mContext,R.color.colorPrimary));
-                alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(mContext,R.color.colorPrimary));
+                alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+                alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
             }
         });
         alert.show();
     }
-
 
 
 }

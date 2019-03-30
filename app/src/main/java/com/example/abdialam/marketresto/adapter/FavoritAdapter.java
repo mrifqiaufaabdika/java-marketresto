@@ -31,13 +31,13 @@ import butterknife.ButterKnife;
 
 public class FavoritAdapter extends RecyclerView.Adapter<FavoritAdapter.MyViewHolder> {
 
-    private List<Favorit> favoritList ;
+    private List<Favorit> favoritList;
     private Context mContext;
     private ClickListener clickListener;
     String path;
 
 
-    public FavoritAdapter (Context context, List<Favorit> favorits,ClickListener clickListener){
+    public FavoritAdapter(Context context, List<Favorit> favorits, ClickListener clickListener) {
         super();
         this.mContext = context;
         this.favoritList = favorits;
@@ -70,7 +70,7 @@ public class FavoritAdapter extends RecyclerView.Adapter<FavoritAdapter.MyViewHo
         holder.mHargaMenu.setText(menu.getMenuHarga());
 
         Picasso.get()
-                .load(path+menu.getMenuFoto())
+                .load(path + menu.getMenuFoto())
                 .resize(500, 500)
                 .centerCrop()
                 .into(holder.mImageMenu);
@@ -81,7 +81,7 @@ public class FavoritAdapter extends RecyclerView.Adapter<FavoritAdapter.MyViewHo
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(mContext);
                 View mView = LayoutInflater.from(mContext).inflate(R.layout.dialog_image_zoom, null);
                 PhotoView photoView = mView.findViewById(R.id.imageView);
-                Picasso.get().load(path+menu.getMenuFoto()).into(photoView);
+                Picasso.get().load(path + menu.getMenuFoto()).into(photoView);
                 //photoView.setImageResource(R.drawable.nature);
                 mBuilder.setView(mView);
                 AlertDialog mDialog = mBuilder.create();
@@ -91,22 +91,22 @@ public class FavoritAdapter extends RecyclerView.Adapter<FavoritAdapter.MyViewHo
 
 
         // harga dan discount
-        if(menu.getMenuDiscount().toString().isEmpty()||menu.getMenuDiscount() == 0||menu.getMenuDiscount() == null){
+        if (menu.getMenuDiscount().toString().isEmpty() || menu.getMenuDiscount() == 0 || menu.getMenuDiscount() == null) {
             //kondisi menu tidak discount
             holder.mHargaMenu.setText(kursIndonesia(Double.parseDouble(menu.getMenuHarga())));
-        }else {
+        } else {
             holder.layoutDiscount.setVisibility(View.VISIBLE);
-            holder.mDiscount.setText("-"+menu.getMenuDiscount()+"%");
+            holder.mDiscount.setText("-" + menu.getMenuDiscount() + "%");
             holder.mHargaCoret.setText(kursIndonesia(Double.parseDouble(menu.getMenuHarga())));
             holder.mHargaCoret.setPaintFlags(holder.mHargaCoret.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.mHargaMenu.setText(kursIndonesia(HitungDiscount(Double.parseDouble(menu.getMenuHarga()),menu.getMenuDiscount())));
+            holder.mHargaMenu.setText(kursIndonesia(HitungDiscount(Double.parseDouble(menu.getMenuHarga()), menu.getMenuDiscount())));
         }
 
         holder.mDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(clickListener != null){
-                    clickListener.itemDeleted(view,position);
+                if (clickListener != null) {
+                    clickListener.itemDeleted(view, position);
                 }
             }
         });
@@ -114,15 +114,15 @@ public class FavoritAdapter extends RecyclerView.Adapter<FavoritAdapter.MyViewHo
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(clickListener != null){
-                    clickListener.itemClick(view,position);
+                if (clickListener != null) {
+                    clickListener.itemClick(view, position);
                 }
             }
         });
 
-        oprasional(holder,restoran.getRestoranOprasional());
+        oprasional(holder, restoran.getRestoranOprasional());
 
-        ketersediaan(holder,menu.getMenuKetersediaan());
+        ketersediaan(holder, menu.getMenuKetersediaan());
 
     }
 
@@ -159,21 +159,21 @@ public class FavoritAdapter extends RecyclerView.Adapter<FavoritAdapter.MyViewHo
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 
-    public String kursIndonesia(double nominal){
-        Locale localeID = new Locale("in","ID");
+    public String kursIndonesia(double nominal) {
+        Locale localeID = new Locale("in", "ID");
         NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);
         String idnNominal = formatRupiah.format(nominal);
         return idnNominal;
     }
 
-    public Double HitungDiscount (Double Harga,Integer Discount){
-        int discount = Discount/100;
-        double harga_potongan = ((Discount/100.00)*Harga);
-        return Harga-harga_potongan;
+    public Double HitungDiscount(Double Harga, Integer Discount) {
+        int discount = Discount / 100;
+        double harga_potongan = ((Discount / 100.00) * Harga);
+        return Harga - harga_potongan;
     }
 
     public interface ClickListener {
@@ -184,9 +184,9 @@ public class FavoritAdapter extends RecyclerView.Adapter<FavoritAdapter.MyViewHo
         public void itemClick(View view, int position);
     }
 
-    public void oprasional (FavoritAdapter.MyViewHolder holder, Integer code){
+    public void oprasional(FavoritAdapter.MyViewHolder holder, Integer code) {
 
-        if (code == 1){
+        if (code == 1) {
             holder.mOperasional.setText("Buka");
             //holder.tvOptasional.setBackground(ContextCompat.getDrawable(mContext,R.drawable.rounded_corner_green));
             holder.mOperasional.setBackgroundResource(R.drawable.rounded_corner_green);
@@ -196,14 +196,14 @@ public class FavoritAdapter extends RecyclerView.Adapter<FavoritAdapter.MyViewHo
         }
     }
 
-    public void ketersediaan (MyViewHolder holder, Integer code){
+    public void ketersediaan(MyViewHolder holder, Integer code) {
 
-        if (code == 1){
+        if (code == 1) {
             holder.mKetersediaan.setText("Tersedia");
-            holder.mKetersediaan.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+            holder.mKetersediaan.setTextColor(ContextCompat.getColor(mContext, R.color.green));
         } else {
             holder.mKetersediaan.setText("Tidak Tersedia");
-            holder.mKetersediaan.setTextColor(ContextCompat.getColor(mContext,R.color.colorPrimary));
+            holder.mKetersediaan.setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
         }
     }
 }

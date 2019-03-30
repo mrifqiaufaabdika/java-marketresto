@@ -30,7 +30,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SignUpActivity extends AppCompatActivity{
+public class SignUpActivity extends AppCompatActivity {
 
     private Context mContext;
     private ProgressDialog progressDialog;
@@ -49,15 +49,14 @@ public class SignUpActivity extends AppCompatActivity{
     CoordinatorLayout coordinatorLayout;
 
 
-
-
-    @OnClick(R.id.buttonSignUp) void signup (){
+    @OnClick(R.id.buttonSignUp)
+    void signup() {
         //hilangkan keyboard
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(coordinatorLayout.getWindowToken(), 0);
 
         //create progres dialog
-        progressDialog = ProgressDialog.show(mContext,null,getString(R.string.memuat),true,false);
+        progressDialog = ProgressDialog.show(mContext, null, getString(R.string.memuat), true, false);
 
 
         //mengambil nilai inputan ke string
@@ -67,90 +66,86 @@ public class SignUpActivity extends AppCompatActivity{
         String token = SharedPrefManager.getInstance(mContext).getDeviceToken();
 
 
-         if(strNama.isEmpty()||strNama.equals(null)) {
-             progressDialog.dismiss();
-             etNama.setError("Nama diperlukan");
-             etNama.requestFocus();
-             return;
-         }else if (strPhone.equals("62"))  {
+        if (strNama.isEmpty() || strNama.equals(null)) {
+            progressDialog.dismiss();
+            etNama.setError("Nama diperlukan");
+            etNama.requestFocus();
+            return;
+        } else if (strPhone.equals("62")) {
             progressDialog.dismiss();
             etPhone.setError("Nomor telepon diperlukan");
             etPhone.requestFocus();
             return;
-         }else if(strPhone.length()<12){
+        } else if (strPhone.length() < 12) {
             progressDialog.dismiss();
             etPhone.setError("Nomor telepon tidak valid");
             etPhone.requestFocus();
             return;
-         }else if(strPhone.isEmpty()||strPhone.equals(null)){
-             progressDialog.dismiss();
-             etPhone.setError("Nomor telepon diperlukan");
-             etPhone.requestFocus();
-             return;
-         }else if(strEmail.isEmpty()||strEmail.equals(null)){
+        } else if (strPhone.isEmpty() || strPhone.equals(null)) {
+            progressDialog.dismiss();
+            etPhone.setError("Nomor telepon diperlukan");
+            etPhone.requestFocus();
+            return;
+        } else if (strEmail.isEmpty() || strEmail.equals(null)) {
             progressDialog.dismiss();
             etEmail.setError("Email diperlukan");
             etEmail.requestFocus();
             return;
-         }else if(!Patterns.EMAIL_ADDRESS.matcher(strEmail).matches()){
-             progressDialog.dismiss();
-             etEmail.setError("Email tidak valid");
-             etEmail.requestFocus();
-             return;
-         }else if(token.isEmpty()||token.equals(null)){
-             progressDialog.dismiss();
-             etEmail.setError("Email diperlukan");
-             etEmail.requestFocus();
-             return;
-         }else {
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(strEmail).matches()) {
+            progressDialog.dismiss();
+            etEmail.setError("Email tidak valid");
+            etEmail.requestFocus();
+            return;
+        } else if (token.isEmpty() || token.equals(null)) {
+            progressDialog.dismiss();
+            etEmail.setError("Email diperlukan");
+            etEmail.requestFocus();
+            return;
+        } else {
 
 
-
-            mApiSerivce.signupRequest(strNama,strPhone,strEmail,token).enqueue(new Callback<ResponseValue>() {
+            mApiSerivce.signupRequest(strNama, strPhone, strEmail, token).enqueue(new Callback<ResponseValue>() {
                 @Override
                 public void onResponse(Call<ResponseValue> call, Response<ResponseValue> response) {
                     progressDialog.dismiss();
-                    String value,message;
-                    if(response.isSuccessful()){
+                    String value, message;
+                    if (response.isSuccessful()) {
                         value = response.body().getValue();
                         message = response.body().getMessage();
-                        if(value.equals("1")){
+                        if (value.equals("1")) {
                             //snack bar success
-                            Snackbar.make(coordinatorLayout,message, Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG).show();
 
 //                            Intent intent = new Intent(mContext,SigninActivity.class);
 //                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
 //                            startActivity(intent);
 
-                        }else {
-                            Snackbar.make(coordinatorLayout,message, Snackbar.LENGTH_LONG).show();
+                        } else {
+                            Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG).show();
                         }
-                    }else{
+                    } else {
                         Toast.makeText(mContext, "Gagal Registrasi", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ResponseValue> call, Throwable t) {
-                    Log.e(TAG, "onFailure: "+t.getLocalizedMessage() );
+                    Log.e(TAG, "onFailure: " + t.getLocalizedMessage());
                     progressDialog.dismiss();
-                    Snackbar.make(coordinatorLayout,R.string.lostconnection, Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(coordinatorLayout, R.string.lostconnection, Snackbar.LENGTH_LONG).show();
                 }
             });
-         }
+        }
 
     }
 
 
-
-
-
-    @OnClick(R.id.textSignIn) void toSignUp (){
+    @OnClick(R.id.textSignIn)
+    void toSignUp() {
         Intent intent = new Intent(mContext, SigninActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK );
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
-
 
 
     @Override
@@ -160,20 +155,19 @@ public class SignUpActivity extends AppCompatActivity{
         mContext = this;
         mApiSerivce = ServerConfig.getAPIService();
         ButterKnife.bind(this);
-        Typeface type = Typeface.createFromAsset(getAssets(),"fonts/MavenPro-Regular.ttf");
+        Typeface type = Typeface.createFromAsset(getAssets(), "fonts/MavenPro-Regular.ttf");
         btnSignUp.setTypeface(type);
 
         //if get intent
-        if(getIntent().hasExtra("phone")){
+        if (getIntent().hasExtra("phone")) {
             etPhone.setText(getIntent().getStringExtra("phone").toString());
         }
     }
 
 
-
-    public String clearPhone (String phoneNumber){
-        String hp = phoneNumber.replaceAll("-","");
-        String clearPhone = hp.substring(1,hp.length());
+    public String clearPhone(String phoneNumber) {
+        String hp = phoneNumber.replaceAll("-", "");
+        String clearPhone = hp.substring(1, hp.length());
         return clearPhone;
     }
 

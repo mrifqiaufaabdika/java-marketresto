@@ -49,7 +49,7 @@ public class DetailOrderActivity extends AppCompatActivity {
     private DetailOrderAdapter orderAdapter;
     private Order pesan;
     ApiService mApiService;
-    Context mContext ;
+    Context mContext;
     ProgressDialog progressOrder;
 
 
@@ -79,7 +79,7 @@ public class DetailOrderActivity extends AppCompatActivity {
     LinearLayout layoutStatus;
 
     @BindView(R.id.tvStatusSelesai)
-     TextView statusSelesai;
+    TextView statusSelesai;
     @BindView(R.id.tvStatusBatal)
     TextView statusBatal;
     @BindView(R.id.tvStatusPengantaran)
@@ -87,16 +87,18 @@ public class DetailOrderActivity extends AppCompatActivity {
     @BindView(R.id.tvStatusProses)
     TextView statusProses;
 
-    @BindView(R.id.viewpb1) View viewpb1;
+    @BindView(R.id.viewpb1)
+    View viewpb1;
     @BindView(R.id.lyt_pb1)
     LinearLayout lyt_pb1;
-    @BindView(R.id.pajak_pb1) TextView pajak_pb1;
-    @BindView(R.id.tvPajakPB1) TextView tvPajakPB1;
+    @BindView(R.id.pajak_pb1)
+    TextView pajak_pb1;
+    @BindView(R.id.tvPajakPB1)
+    TextView tvPajakPB1;
 
     SessionManager sessionManager;
 
-    ProgressDialog progressDialog,progressSendEmail;
-
+    ProgressDialog progressDialog, progressSendEmail;
 
 
     @Override
@@ -109,17 +111,16 @@ public class DetailOrderActivity extends AppCompatActivity {
         mApiService = ServerConfig.getAPIService();
         setListViewHeightBasedOnChildren(list);
         getIncomingIntent();
-        orderAdapter = new DetailOrderAdapter(DetailOrderActivity.this,detailOrders);
+        orderAdapter = new DetailOrderAdapter(DetailOrderActivity.this, detailOrders);
         list.setAdapter(orderAdapter);
 
         setData();
 
 
-
         btnInvoice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressSendEmail = ProgressDialog.show(mContext,null,"Mengirim ke email...",true,false);
+                progressSendEmail = ProgressDialog.show(mContext, null, "Mengirim ke email...", true, false);
                 sendEmail(pesan.getId());
             }
         });
@@ -128,34 +129,33 @@ public class DetailOrderActivity extends AppCompatActivity {
     }
 
 
-
     private void setData() {
         String id_order = pesan.getId().toString();
         mNamaKonsumen.setText(pesan.getOrderKonsumen());
-        mPhoneKonsumen.setText("+"+pesan.getOrderKonsumenPhone());
+        mPhoneKonsumen.setText("+" + pesan.getOrderKonsumenPhone());
         mAlamat.setText(pesan.getOrderAlamat());
-         Double subtotal = 0.0;
-        for (int i = 0; i <  detailOrders.size(); i++) {
-            if(detailOrders.get(i).getMenuDiscount() == 0 ||detailOrders.get(i).getMenuDiscount().toString().isEmpty()) {
+        Double subtotal = 0.0;
+        for (int i = 0; i < detailOrders.size(); i++) {
+            if (detailOrders.get(i).getMenuDiscount() == 0 || detailOrders.get(i).getMenuDiscount().toString().isEmpty()) {
                 subtotal += Double.parseDouble(detailOrders.get(i).getPivot().getHarga()) * detailOrders.get(i).getPivot().getQty();
-            }else {
-                Double harga_discount = HitungDiscount(Double.parseDouble(detailOrders.get(i).getPivot().getHarga()),detailOrders.get(i).getPivot().getDiscount());
+            } else {
+                Double harga_discount = HitungDiscount(Double.parseDouble(detailOrders.get(i).getPivot().getHarga()), detailOrders.get(i).getPivot().getDiscount());
                 subtotal += harga_discount * detailOrders.get(i).getPivot().getQty();
             }
         }
         mSubTotal.setText(kursIndonesia(subtotal));
         mBiayaAntar.setText(kursIndonesia(Double.parseDouble(pesan.getOrderBiayaAnatar())));
-        double total = subtotal+ Double.parseDouble(pesan.getOrderBiayaAnatar());
+        double total = subtotal + Double.parseDouble(pesan.getOrderBiayaAnatar());
 
         //cek pajak
-        if (pesan.getOrder_pajak_pb_satu() == 0){
+        if (pesan.getOrder_pajak_pb_satu() == 0) {
             viewpb1.setVisibility(View.GONE);
             lyt_pb1.setVisibility(View.GONE);
-        }else{
+        } else {
             viewpb1.setVisibility(View.VISIBLE);
             lyt_pb1.setVisibility(View.VISIBLE);
-            pajak_pb1.setText("PB1 ("+pesan.getOrder_pajak_pb_satu()+"%)");
-            double pb1 = (pesan.getOrder_pajak_pb_satu()/100.0)*total;
+            pajak_pb1.setText("PB1 (" + pesan.getOrder_pajak_pb_satu() + "%)");
+            double pb1 = (pesan.getOrder_pajak_pb_satu() / 100.0) * total;
             tvPajakPB1.setText(kursIndonesia(pb1));
             total = total + pb1;
         }
@@ -163,32 +163,32 @@ public class DetailOrderActivity extends AppCompatActivity {
         mTotal.setText(kursIndonesia(total));
         mMetodeBayar.setText(pesan.getOrderMetodeBayar());
         //catatan
-        if(pesan.getOrderCatatan() != null){
+        if (pesan.getOrderCatatan() != null) {
             layoutCatatn.setVisibility(View.VISIBLE);
             mCatatan.setText(pesan.getOrderCatatan().toString());
 
         }
 
-        if(pesan.getOrderStatus().equalsIgnoreCase("selesai")){
+        if (pesan.getOrderStatus().equalsIgnoreCase("selesai")) {
             statusSelesai.setVisibility(View.VISIBLE);
             btnInvoice.setVisibility(View.VISIBLE);
-        }else if(pesan.getOrderStatus().equalsIgnoreCase("batal")){
+        } else if (pesan.getOrderStatus().equalsIgnoreCase("batal")) {
             statusBatal.setVisibility(View.VISIBLE);
             btnInvoice.setVisibility(View.GONE);
-        }else if(pesan.getOrderStatus().equalsIgnoreCase("pengantaran")){
+        } else if (pesan.getOrderStatus().equalsIgnoreCase("pengantaran")) {
             statusPengantaran.setVisibility(View.VISIBLE);
             btnInvoice.setVisibility(View.GONE);
-        }else if(pesan.getOrderStatus().equalsIgnoreCase("proses")){
+        } else if (pesan.getOrderStatus().equalsIgnoreCase("proses")) {
             statusProses.setVisibility(View.VISIBLE);
             btnInvoice.setVisibility(View.GONE);
         }
 
     }
 
-//get inten comming
-    private void getIncomingIntent (){
+    //get inten comming
+    private void getIncomingIntent() {
 
-        if(getIntent().hasExtra("pesan") ){
+        if (getIntent().hasExtra("pesan")) {
 
 
             pesan = (Order) getIntent().getSerializableExtra("pesan");
@@ -198,18 +198,7 @@ public class DetailOrderActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-//listview not scrolll
+    //listview not scrolll
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {
@@ -231,10 +220,9 @@ public class DetailOrderActivity extends AppCompatActivity {
     }
 
 
-
-//konfersi ke mata uang rupiah
-    public String kursIndonesia(double nominal){
-        Locale localeID = new Locale("in","ID");
+    //konfersi ke mata uang rupiah
+    public String kursIndonesia(double nominal) {
+        Locale localeID = new Locale("in", "ID");
         NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);
         String idnNominal = formatRupiah.format(nominal);
         return idnNominal;
@@ -242,19 +230,19 @@ public class DetailOrderActivity extends AppCompatActivity {
 
     }
 
-    public Double HitungDiscount (Double Harga, Integer Discount){
-        double harga_potongan = ((Discount/100.00)*Harga);
-        return Harga-harga_potongan;
+    public Double HitungDiscount(Double Harga, Integer Discount) {
+        double harga_potongan = ((Discount / 100.00) * Harga);
+        return Harga - harga_potongan;
     }
 
-    void sendEmail(Integer id_order){
+    void sendEmail(Integer id_order) {
         mApiService.sendEmail(id_order).enqueue(new Callback<ResponseValue>() {
             @Override
             public void onResponse(Call<ResponseValue> call, Response<ResponseValue> response) {
                 progressSendEmail.dismiss();
-                if(response.isSuccessful()){
-                    if(response.body().getValue().equals("1")){
-                        Toast.makeText(mContext,"Berhasil,Cek Email Anda",Toast.LENGTH_SHORT).show();
+                if (response.isSuccessful()) {
+                    if (response.body().getValue().equals("1")) {
+                        Toast.makeText(mContext, "Berhasil,Cek Email Anda", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -265,7 +253,6 @@ public class DetailOrderActivity extends AppCompatActivity {
             }
         });
     }
-
 
 
 }

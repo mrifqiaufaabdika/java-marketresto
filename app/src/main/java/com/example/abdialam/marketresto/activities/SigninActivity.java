@@ -32,17 +32,19 @@ import retrofit2.Response;
 
 public class SigninActivity extends AppCompatActivity {
 
-    @BindView(R.id.editTextPhone) EditText editTextPhone;
-    @BindView(R.id.buttonGetVerificationCode) Button btnGVC;
-    @BindView(R.id.textSignUp) TextView textSignUp;
+    @BindView(R.id.editTextPhone)
+    EditText editTextPhone;
+    @BindView(R.id.buttonGetVerificationCode)
+    Button btnGVC;
+    @BindView(R.id.textSignUp)
+    TextView textSignUp;
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
 
 
-
-    Context mContext ;
-    String value,message;
-    ApiService mApiService ;
+    Context mContext;
+    String value, message;
+    ApiService mApiService;
     ProgressDialog progressDialog;
     SessionManager sessionManager;
 
@@ -58,31 +60,32 @@ public class SigninActivity extends AppCompatActivity {
         sessionManager = new SessionManager(this);
         //Firebase Auth Instance
 
-        Typeface type = Typeface.createFromAsset(getAssets(),"fonts/MavenPro-Regular.ttf");
+        Typeface type = Typeface.createFromAsset(getAssets(), "fonts/MavenPro-Regular.ttf");
         editTextPhone.setTypeface(type);
         btnGVC.setTypeface(type);
 
     }
 
 
-    @OnClick(R.id.buttonGetVerificationCode) void getCode (){
+    @OnClick(R.id.buttonGetVerificationCode)
+    void getCode() {
         //hidden keyboard
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(coordinatorLayout.getWindowToken(), 0);
 
         //progress dialog
-        progressDialog = ProgressDialog.show(mContext,null,getString(R.string.memuat),true,false);
+        progressDialog = ProgressDialog.show(mContext, null, getString(R.string.memuat), true, false);
 
         final String phone = clearPhone(editTextPhone.getText().toString());
 
-        if(phone.equals("62")){
+        if (phone.equals("62")) {
             progressDialog.dismiss();
             editTextPhone.setError("Nomor telepon diperlukan");
             editTextPhone.requestFocus();
             return;
         }
 
-        if(phone.length() < 12){
+        if (phone.length() < 12) {
             progressDialog.dismiss();
             editTextPhone.setError("Nomor telepon tidak valid");
             editTextPhone.requestFocus();
@@ -93,42 +96,44 @@ public class SigninActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ResponseAuth> call, Response<ResponseAuth> response) {
                 progressDialog.dismiss();
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
 
                     value = response.body().getValue();
                     message = response.body().getMessage();
                     //phone terdaftar
-                    if(value.equals("1")){
+                    if (value.equals("1")) {
                         //Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
                         User user = response.body().getData();
                         Intent intent = new Intent(SigninActivity.this, VerifyActifity.class);
-                        intent.putExtra("user",user);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.putExtra("user", user);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
-                     //nomor phone tidak terdaftar
-                    }else {
-                        Snackbar.make(coordinatorLayout,message, Snackbar.LENGTH_INDEFINITE).setAction("Daftar", new View.OnClickListener() {
+                        //nomor phone tidak terdaftar
+                    } else {
+                        Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_INDEFINITE).setAction("Daftar", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                String hp =phone.substring(2,phone.length());
+                                String hp = phone.substring(2, phone.length());
                                 Intent intent = new Intent(mContext, SignUpActivity.class);
-                                intent.putExtra("phone",hp);
+                                intent.putExtra("phone", hp);
                                 startActivity(intent);
                             }
                         }).show();
                     }
                 }
             }
+
             @Override
             public void onFailure(Call<ResponseAuth> call, Throwable t) {
                 progressDialog.dismiss();
-                Snackbar.make(coordinatorLayout,R.string.lostconnection, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(coordinatorLayout, R.string.lostconnection, Snackbar.LENGTH_LONG).show();
             }
         });
     }
 
-    @OnClick(R.id.textSignUp) void toSignUp (){
+    @OnClick(R.id.textSignUp)
+    void toSignUp() {
         Intent intent = new Intent(mContext, SignUpActivity.class);
 
         startActivity(intent);
@@ -136,11 +141,10 @@ public class SigninActivity extends AppCompatActivity {
     }
 
 
-
     //untuk menggambil no hp
-    public String clearPhone (String phoneNumber){
-        String hp = phoneNumber.replaceAll("-","");
-        String clearPhone = hp.substring(1,hp.length());
+    public String clearPhone(String phoneNumber) {
+        String hp = phoneNumber.replaceAll("-", "");
+        String clearPhone = hp.substring(1, hp.length());
         return clearPhone;
     }
 

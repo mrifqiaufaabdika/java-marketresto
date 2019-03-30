@@ -39,12 +39,12 @@ public class FragmentListHistory extends Fragment {
     private HistoryAdapter adapter;
     private List<Order> pesanList;
     SessionManager sessionManager;
-    HashMap<String,String> user;
-    ApiService mApiService ;
+    HashMap<String, String> user;
+    ApiService mApiService;
 
     View message;
     ImageView icon_message;
-    TextView title_message,sub_title_message;
+    TextView title_message, sub_title_message;
 
     ProgressDialog progressDialog;
 
@@ -52,7 +52,7 @@ public class FragmentListHistory extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_list_history,container,false);
+        View view = inflater.inflate(R.layout.fragment_list_history, container, false);
         mContext = getActivity();
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         sessionManager = new SessionManager(mContext);
@@ -61,17 +61,13 @@ public class FragmentListHistory extends Fragment {
 
         message = view.findViewById(R.id.error);
         icon_message = (ImageView) view.findViewById(R.id.img_msg);
-        title_message =  (TextView) view.findViewById(R.id.title_msg);
-        sub_title_message =  (TextView) view.findViewById(R.id.sub_title_msg);
+        title_message = (TextView) view.findViewById(R.id.title_msg);
+        sub_title_message = (TextView) view.findViewById(R.id.sub_title_msg);
 
 
-
-        RecyclerView.LayoutManager layoutManager =new LinearLayoutManager(getContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-
-
 
 
         return view;
@@ -80,26 +76,26 @@ public class FragmentListHistory extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        progressDialog = ProgressDialog.show(mContext,null,getString(R.string.memuat),true,false);
+        progressDialog = ProgressDialog.show(mContext, null, getString(R.string.memuat), true, false);
         getPesan();
     }
 
-    public void getPesan(){
+    public void getPesan() {
         String id_konsumen = user.get(SessionManager.ID_USER);
         ArrayList<String> status = new ArrayList<String>();
         status.add("selesai");
         status.add("batal");
-        mApiService.getOrder(id_konsumen,status).enqueue(new Callback<ResponseOrder>() {
+        mApiService.getOrder(id_konsumen, status).enqueue(new Callback<ResponseOrder>() {
             @Override
             public void onResponse(Call<ResponseOrder> call, Response<ResponseOrder> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     String value = response.body().getValue();
-                    if(value.equals("1")){
+                    if (value.equals("1")) {
                         pesanList = response.body().getData();
-                        adapter = new HistoryAdapter(mContext,pesanList);
+                        adapter = new HistoryAdapter(mContext, pesanList);
                         recyclerView.setAdapter(adapter);
                         progressDialog.dismiss();
-                    }else {
+                    } else {
                         message.setVisibility(View.VISIBLE);
                         icon_message.setImageResource(R.drawable.msg_history);
                         title_message.setText("Anda Belum Merubah Sejarah");

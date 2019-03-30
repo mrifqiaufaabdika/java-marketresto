@@ -23,18 +23,18 @@ public class PagerAdapterTabSearch extends FragmentStatePagerAdapter {
     private List<Menu> menuList = new ArrayList<>();
     private List<Restoran> restoranList = new ArrayList<>();
 
-    public PagerAdapterTabSearch(FragmentManager fm, int number_tbas,List<Menu> menuList,List<Restoran> restoranList) {
+    public PagerAdapterTabSearch(FragmentManager fm, int number_tbas, List<Menu> menuList, List<Restoran> restoranList) {
         super(fm);
         this.number_tbas = number_tbas;
         this.menuList = menuList;
-        this.restoranList =restoranList;
+        this.restoranList = restoranList;
     }
 
     @Override
     public Fragment getItem(int position) {
         Bundle b = new Bundle();
         Fragment frag;
-        switch (position){
+        switch (position) {
             case 0:
                 b.putSerializable("restoran", (Serializable) restoranList);
                 frag = SearchRestoranFragment.newInstance();

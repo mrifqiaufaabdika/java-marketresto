@@ -43,12 +43,11 @@ public class PenilaianActivity extends AppCompatActivity {
     RadioGroup soal6;
 
     ApiService mApiServie;
-    SessionManager sessionManager ;
-    HashMap<String,String> user;
+    SessionManager sessionManager;
+    HashMap<String, String> user;
 
 
-    RadioButton jawaban1,jawaban2,jawaban3,jawaban4,jawaban5,jawaban6;
-
+    RadioButton jawaban1, jawaban2, jawaban3, jawaban4, jawaban5, jawaban6;
 
 
     @Override
@@ -61,69 +60,68 @@ public class PenilaianActivity extends AppCompatActivity {
         user = sessionManager.getUserDetail();
 
 
-
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 jawaban1 = (RadioButton) findViewById(R.id.soal1A);
-                jawaban2 = (RadioButton)findViewById(R.id.soal2A);
+                jawaban2 = (RadioButton) findViewById(R.id.soal2A);
                 jawaban3 = (RadioButton) findViewById(R.id.soal3A);
-                jawaban4= (RadioButton)findViewById(R.id.soal4A);
-                jawaban5= (RadioButton)findViewById(R.id.soal5A);
-                jawaban6= (RadioButton)findViewById(R.id.soal6A);
+                jawaban4 = (RadioButton) findViewById(R.id.soal4A);
+                jawaban5 = (RadioButton) findViewById(R.id.soal5A);
+                jawaban6 = (RadioButton) findViewById(R.id.soal6A);
 
                 if (soal1.getCheckedRadioButtonId() == -1 || soal2.getCheckedRadioButtonId() == -1 ||
                         soal3.getCheckedRadioButtonId() == -1 ||
                         soal4.getCheckedRadioButtonId() == -1 ||
                         soal5.getCheckedRadioButtonId() == -1 ||
-                        soal6.getCheckedRadioButtonId() == -1){
+                        soal6.getCheckedRadioButtonId() == -1) {
 
-                    if(soal1.getCheckedRadioButtonId() == -1) {
+                    if (soal1.getCheckedRadioButtonId() == -1) {
 
                         jawaban1.setError("Pilih Satu Jawaban");
                         jawaban1.setFocusable(true);
-                    }else {
+                    } else {
                         jawaban1.setError(null);
                     }
 
-                    if (soal2.getCheckedRadioButtonId() == -1){
+                    if (soal2.getCheckedRadioButtonId() == -1) {
 
                         jawaban2.setError("Pilih Satu Jawaban");
                         jawaban2.setFocusable(true);
-                    }else {
+                    } else {
                         jawaban2.setError(null);
                     }
 
-                    if ( soal3.getCheckedRadioButtonId() == -1) {
+                    if (soal3.getCheckedRadioButtonId() == -1) {
 
                         jawaban3.setError("Pilih Satu Jawaban");
                         jawaban3.setFocusable(true);
-                    }else {
+                    } else {
                         jawaban3.setError(null);
                     }
 
 
-                    if (soal4.getCheckedRadioButtonId() == -1){
+                    if (soal4.getCheckedRadioButtonId() == -1) {
 
                         jawaban4.setError("Pilih Satu Jawaban");
                         jawaban4.setFocusable(true);
-                    }else {
+                    } else {
                         jawaban4.setError(null);
                     }
 
 
-                    if (soal5.getCheckedRadioButtonId() == -1){
+                    if (soal5.getCheckedRadioButtonId() == -1) {
 
                         jawaban5.setError("Pilih Satu Jawaban");
                         jawaban5.setFocusable(true);
-                    }else {
+                    } else {
                         jawaban5.setError(null);
                     }
-                    if ( soal6.getCheckedRadioButtonId() == -1){
+                    if (soal6.getCheckedRadioButtonId() == -1) {
 
                         jawaban6.setError("Pilih Satu Jawaban");
                         jawaban6.setFocusable(true);
-                    }else {
+                    } else {
                         jawaban6.setError(null);
                     }
 
@@ -143,25 +141,24 @@ public class PenilaianActivity extends AppCompatActivity {
                     int int6 = soal6.getCheckedRadioButtonId();
 
                     jawaban1 = (RadioButton) findViewById(int1);
-                    jawaban2 = (RadioButton)findViewById(int2);
+                    jawaban2 = (RadioButton) findViewById(int2);
                     jawaban3 = (RadioButton) findViewById(int3);
-                    jawaban4= (RadioButton)findViewById(int4);
-                    jawaban5= (RadioButton)findViewById(int5);
-                    jawaban6= (RadioButton)findViewById(int6);
+                    jawaban4 = (RadioButton) findViewById(int4);
+                    jawaban5 = (RadioButton) findViewById(int5);
+                    jawaban6 = (RadioButton) findViewById(int6);
 
 
-                    String str1 =  jawaban1.getText().toString();
-                    String str2 =  jawaban2.getText().toString();
-                    String str3 =  jawaban3.getText().toString();
-                    String str4 =  jawaban4.getText().toString();
-                    String str5 =  jawaban5.getText().toString();
-                    String str6 =  jawaban6.getText().toString();
+                    String str1 = jawaban1.getText().toString();
+                    String str2 = jawaban2.getText().toString();
+                    String str3 = jawaban3.getText().toString();
+                    String str4 = jawaban4.getText().toString();
+                    String str5 = jawaban5.getText().toString();
+                    String str6 = jawaban6.getText().toString();
 
                     //Toast.makeText(PenilaianActivity.this,str1+","+str2+","+str3+","+str4+","+str5+","+str6,Toast.LENGTH_LONG).show();
 
-                    insert (str1,str2,str3,str4,str5,str6);
+                    insert(str1, str2, str3, str4, str5, str6);
                 }
-
 
 
             }
@@ -170,90 +167,90 @@ public class PenilaianActivity extends AppCompatActivity {
 
     private void insert(String str1, String str2, String str3, String str4, String str5, String str6) {
 
-        int nilai_1 = 0,nilai_2 =0 ,nilai_3=0,nilai_4=0,nilai_5=0, nilai_6 = 0;
+        int nilai_1 = 0, nilai_2 = 0, nilai_3 = 0, nilai_4 = 0, nilai_5 = 0, nilai_6 = 0;
 
-        if(str1.equalsIgnoreCase("Sangat Setuju")){
+        if (str1.equalsIgnoreCase("Sangat Setuju")) {
             nilai_1 = 5;
-        }else if (str1.equalsIgnoreCase("Setuju")){
+        } else if (str1.equalsIgnoreCase("Setuju")) {
             nilai_1 = 4;
-        }else if (str1.equalsIgnoreCase("Netral")){
+        } else if (str1.equalsIgnoreCase("Netral")) {
             nilai_1 = 3;
-        }else if (str1.equalsIgnoreCase("Tidak Setuju")){
+        } else if (str1.equalsIgnoreCase("Tidak Setuju")) {
             nilai_1 = 2;
-        }else if(str1.equalsIgnoreCase("Sangat Tidak Setuju")){
+        } else if (str1.equalsIgnoreCase("Sangat Tidak Setuju")) {
             nilai_1 = 1;
         }
 
-        if(str2.equalsIgnoreCase("Sangat Setuju")){
+        if (str2.equalsIgnoreCase("Sangat Setuju")) {
             nilai_2 = 5;
-        }else if (str2.equalsIgnoreCase("Setuju")){
+        } else if (str2.equalsIgnoreCase("Setuju")) {
             nilai_2 = 4;
-        }else if (str2.equalsIgnoreCase("Netral")){
+        } else if (str2.equalsIgnoreCase("Netral")) {
             nilai_2 = 3;
-        }else if (str2.equalsIgnoreCase("Tidak Setuju")){
+        } else if (str2.equalsIgnoreCase("Tidak Setuju")) {
             nilai_2 = 2;
-        }else if(str2.equalsIgnoreCase("Sangat Tidak Setuju")){
+        } else if (str2.equalsIgnoreCase("Sangat Tidak Setuju")) {
             nilai_2 = 1;
         }
 
-        if(str3.equalsIgnoreCase("Sangat Setuju")){
+        if (str3.equalsIgnoreCase("Sangat Setuju")) {
             nilai_3 = 5;
-        }else if (str3.equalsIgnoreCase("Setuju")){
+        } else if (str3.equalsIgnoreCase("Setuju")) {
             nilai_3 = 4;
-        }else if (str3.equalsIgnoreCase("Netral")){
+        } else if (str3.equalsIgnoreCase("Netral")) {
             nilai_3 = 3;
-        }else if (str3.equalsIgnoreCase("Tidak Setuju")){
+        } else if (str3.equalsIgnoreCase("Tidak Setuju")) {
             nilai_3 = 2;
-        }else if(str3.equalsIgnoreCase("Sangat Tidak Setuju")){
+        } else if (str3.equalsIgnoreCase("Sangat Tidak Setuju")) {
             nilai_3 = 1;
         }
 
-        if(str4.equalsIgnoreCase("Sangat Setuju")){
+        if (str4.equalsIgnoreCase("Sangat Setuju")) {
             nilai_4 = 5;
-        }else if (str4.equalsIgnoreCase("Setuju")){
+        } else if (str4.equalsIgnoreCase("Setuju")) {
             nilai_4 = 4;
-        }else if (str4.equalsIgnoreCase("Netral")){
+        } else if (str4.equalsIgnoreCase("Netral")) {
             nilai_4 = 3;
-        }else if (str4.equalsIgnoreCase("Tidak Setuju")){
+        } else if (str4.equalsIgnoreCase("Tidak Setuju")) {
             nilai_4 = 2;
-        }else if(str4.equalsIgnoreCase("Sangat Tidak Setuju")){
+        } else if (str4.equalsIgnoreCase("Sangat Tidak Setuju")) {
             nilai_4 = 1;
         }
 
-        if(str5.equalsIgnoreCase("Sangat Setuju")){
+        if (str5.equalsIgnoreCase("Sangat Setuju")) {
             nilai_5 = 5;
-        }else if (str5.equalsIgnoreCase("Setuju")){
+        } else if (str5.equalsIgnoreCase("Setuju")) {
             nilai_5 = 4;
-        }else if (str5.equalsIgnoreCase("Netral")){
+        } else if (str5.equalsIgnoreCase("Netral")) {
             nilai_5 = 3;
-        }else if (str5.equalsIgnoreCase("Tidak Setuju")){
+        } else if (str5.equalsIgnoreCase("Tidak Setuju")) {
             nilai_5 = 2;
-        }else if(str5.equalsIgnoreCase("Sangat Tidak Setuju")){
+        } else if (str5.equalsIgnoreCase("Sangat Tidak Setuju")) {
             nilai_5 = 1;
         }
 
 
-        if(str6.equalsIgnoreCase("Sangat Setuju")){
+        if (str6.equalsIgnoreCase("Sangat Setuju")) {
             nilai_6 = 5;
-        }else if (str6.equalsIgnoreCase("Setuju")){
+        } else if (str6.equalsIgnoreCase("Setuju")) {
             nilai_6 = 4;
-        }else if (str6.equalsIgnoreCase("Netral")){
+        } else if (str6.equalsIgnoreCase("Netral")) {
             nilai_6 = 3;
-        }else if (str6.equalsIgnoreCase("Tidak Setuju")){
+        } else if (str6.equalsIgnoreCase("Tidak Setuju")) {
             nilai_6 = 2;
-        }else if(str6.equalsIgnoreCase("Sangat Tidak Setuju")){
+        } else if (str6.equalsIgnoreCase("Sangat Tidak Setuju")) {
             nilai_6 = 1;
         }
 
 
         String id_kons = user.get(SessionManager.ID_USER).toString();
 
-        mApiServie.uat(id_kons,nilai_1,nilai_2,nilai_3,nilai_4,nilai_5,nilai_6).enqueue(new Callback<ResponseValue>() {
+        mApiServie.uat(id_kons, nilai_1, nilai_2, nilai_3, nilai_4, nilai_5, nilai_6).enqueue(new Callback<ResponseValue>() {
             @Override
             public void onResponse(Call<ResponseValue> call, Response<ResponseValue> response) {
-                if(response.isSuccessful()){
-                    if(response.body().getValue().equalsIgnoreCase("1")){
-                        Toast.makeText(PenilaianActivity.this,"Teriakasih Atas Penilaian Anda",Toast.LENGTH_SHORT).show();
+                if (response.isSuccessful()) {
+                    if (response.body().getValue().equalsIgnoreCase("1")) {
+                        Toast.makeText(PenilaianActivity.this, "Teriakasih Atas Penilaian Anda", Toast.LENGTH_SHORT).show();
                         soal1.clearCheck();
                         soal2.clearCheck();
                         soal3.clearCheck();
@@ -266,7 +263,7 @@ public class PenilaianActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResponseValue> call, Throwable t) {
-                Toast.makeText(PenilaianActivity.this,R.string.lostconnection,Toast.LENGTH_LONG).show();
+                Toast.makeText(PenilaianActivity.this, R.string.lostconnection, Toast.LENGTH_LONG).show();
             }
         });
     }

@@ -11,14 +11,14 @@ public class PagerAdapterTabFavorit extends FragmentStatePagerAdapter {
 
     private int number_tbas;
 
-    public PagerAdapterTabFavorit(FragmentManager fm,int number_tbas) {
+    public PagerAdapterTabFavorit(FragmentManager fm, int number_tbas) {
         super(fm);
         this.number_tbas = number_tbas;
     }
 
     @Override
     public Fragment getItem(int position) {
-        switch (position){
+        switch (position) {
             case 0:
                 return new FragmentListFavorit();
             case 1:

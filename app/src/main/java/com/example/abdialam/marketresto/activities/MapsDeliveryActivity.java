@@ -48,12 +48,10 @@ public class MapsDeliveryActivity extends FragmentActivity implements OnMapReady
         btnBack = (ImageView) findViewById(R.id.btnBack);
         getIncomingIntent();
 
-        tujuan= new LatLng(Double.parseDouble(pesan.getOrderLat().toString()), Double.parseDouble(pesan.getOrderLong().toString()));
+        tujuan = new LatLng(Double.parseDouble(pesan.getOrderLat().toString()), Double.parseDouble(pesan.getOrderLong().toString()));
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-
-
 
 
         //mengambil referensi ke firebase database
@@ -63,7 +61,7 @@ public class MapsDeliveryActivity extends FragmentActivity implements OnMapReady
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Delivery delivery = dataSnapshot.getValue(Delivery.class);
-                manDelivery = new LatLng(Double.parseDouble(delivery.getLat().toString()),Double.parseDouble(delivery.getLng().toString()));
+                manDelivery = new LatLng(Double.parseDouble(delivery.getLat().toString()), Double.parseDouble(delivery.getLng().toString()));
 
 
                 mapFragment.getMapAsync(MapsDeliveryActivity.this);
@@ -101,18 +99,17 @@ public class MapsDeliveryActivity extends FragmentActivity implements OnMapReady
 
         // Add a marker in Sydney and move the camera
 
-       // deliver = mMap.addMarker(new MarkerOptions().position(manDelivery).title("Marker in Sydney"));
-       // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(manDelivery,15));
+        // deliver = mMap.addMarker(new MarkerOptions().position(manDelivery).title("Marker in Sydney"));
+        // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(manDelivery,15));
 
         //LatLng pickUpLatLng = new LatLng(0.488606, 101.397568);
         //LatLng locationLatLng = new LatLng(0.487404, 101.396592);
 
 
-
         // Tambah Marker
-         mMap.addMarker(new MarkerOptions().position(tujuan).title("Lokasi Tujuan"));
+        mMap.addMarker(new MarkerOptions().position(tujuan).title("Lokasi Tujuan"));
 
-        if (deliverMarker != null){
+        if (deliverMarker != null) {
             deliverMarker.remove();
         }
 
@@ -126,8 +123,8 @@ public class MapsDeliveryActivity extends FragmentActivity implements OnMapReady
          */
 
         //ukuran marker
-        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.msg_order);
-        Bitmap b=bitmapdraw.getBitmap();
+        BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.msg_order);
+        Bitmap b = bitmapdraw.getBitmap();
         Bitmap smallMarker = Bitmap.createScaledBitmap(b, 65, 65, false);
 
         deliverMarker.setIcon(BitmapDescriptorFactory.fromBitmap(smallMarker));
@@ -147,14 +144,14 @@ public class MapsDeliveryActivity extends FragmentActivity implements OnMapReady
         mMap.animateCamera(cu);
     }
 
-    private void getIncomingIntent (){
+    private void getIncomingIntent() {
 
-        if(getIntent().hasExtra("pesan") ) {
+        if (getIntent().hasExtra("pesan")) {
 
 
             pesan = (Order) getIntent().getSerializableExtra("pesan");
-            }
         }
+    }
 
     @Override
     public void onBackPressed() {

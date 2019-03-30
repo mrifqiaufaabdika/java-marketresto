@@ -12,7 +12,7 @@ public class ServerConfig {
     //https://marketresto.000webhostapp.com/public/
     //https://topapp.id/marketresto/api/v1/
 
-    //private static final String BASE_URL_API = "http://192.168.100.5/marketresto/api/v1/";
+    //private static final String BASE_URL_API = "http://172.16.140.87/marketresto/api/v1/";
     private static final String BASE_URL_API = "https://topapp.id/marketresto/api/v1/";
     // Mendeklarasikan Interface BaseApiService
     public static ApiService getAPIService(){

@@ -28,13 +28,13 @@ import java.util.Locale;
 
 public class CartAdapter extends BaseAdapter {
 
-    Context mContext ;
+    Context mContext;
     List<CartList> dataList;
     DatabaseHelper myDb;
     private ClickListener clickListener;
     ViewHolder viewHolder = null;
 
-    public CartAdapter (Context mContext, List<CartList> data, ClickListener clickListener) {
+    public CartAdapter(Context mContext, List<CartList> data, ClickListener clickListener) {
         super();
         this.dataList = data;
         this.mContext = mContext;
@@ -67,62 +67,57 @@ public class CartAdapter extends BaseAdapter {
     public View getView(final int position, View view, ViewGroup viewGroup) {
 
 
-        if(view == null){
-            LayoutInflater layoutInflater = (LayoutInflater)mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-            view = layoutInflater.inflate(R.layout.single_row_cart_list,null);
+        if (view == null) {
+            LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+            view = layoutInflater.inflate(R.layout.single_row_cart_list, null);
 
             viewHolder = new ViewHolder();
 
             viewHolder.imageView = (ImageView) view.findViewById(R.id.image);
-            viewHolder.title = (TextView)view.findViewById(R.id.title);
-            viewHolder.harga = (TextView)view.findViewById(R.id.harga);
-            viewHolder.qty = (TextView)view.findViewById(R.id.qty);
+            viewHolder.title = (TextView) view.findViewById(R.id.title);
+            viewHolder.harga = (TextView) view.findViewById(R.id.harga);
+            viewHolder.qty = (TextView) view.findViewById(R.id.qty);
             viewHolder.min = (ImageView) view.findViewById(R.id.min);
             viewHolder.plus = (ImageView) view.findViewById(R.id.plus);
-            viewHolder.cross =(ImageView) view.findViewById(R.id.clear);
+            viewHolder.cross = (ImageView) view.findViewById(R.id.clear);
             viewHolder.layoutDiscount = (LinearLayout) view.findViewById(R.id.layoutDiscount);
-            viewHolder.mHargaCoret = (TextView)view.findViewById(R.id.tvHargaCoret);
-            viewHolder.mDiscount = (TextView)view.findViewById(R.id.tvDiscount);
+            viewHolder.mHargaCoret = (TextView) view.findViewById(R.id.tvHargaCoret);
+            viewHolder.mDiscount = (TextView) view.findViewById(R.id.tvDiscount);
             viewHolder.mCatatanMenu = (EditText) view.findViewById(R.id.catatanMenu);
             viewHolder.mKetersedian = (TextView) view.findViewById(R.id.tvMenuKetersedian);
 
 
-
-
-
             view.setTag(viewHolder);
 
-        }else {
+        } else {
             viewHolder = (ViewHolder) view.getTag();
         }
 
 
-         CartList cart = (CartList)dataList.get(position);
+        CartList cart = (CartList) dataList.get(position);
 
-        String path =view.getResources().getString(R.string.path)+cart.getMenu_foto();
+        String path = view.getResources().getString(R.string.path) + cart.getMenu_foto();
         Picasso.get()
                 .load(path)
                 .resize(500, 500)
                 .centerCrop()
                 .into(viewHolder.imageView);
 
-       // viewHolder.imageView.setImageResource(R.drawable.shoppy_logo);
+        // viewHolder.imageView.setImageResource(R.drawable.shoppy_logo);
         viewHolder.title.setText(cart.getNama_menu());
 
 
-
-
-        if(cart.getDiscount() > 0){
+        if (cart.getDiscount() > 0) {
             //kondisi menu tidak discount
             viewHolder.layoutDiscount.setVisibility(View.VISIBLE);
 
-            viewHolder.mDiscount.setText("-"+cart.getDiscount()+"%");
+            viewHolder.mDiscount.setText("-" + cart.getDiscount() + "%");
             viewHolder.mHargaCoret.setText(kursIndonesia(Double.parseDouble(cart.getHarga())));
             viewHolder.mHargaCoret.setPaintFlags(viewHolder.mHargaCoret.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            viewHolder.harga.setText(kursIndonesia(HitungDiscount(Double.parseDouble(cart.getHarga()),cart.getDiscount())));
+            viewHolder.harga.setText(kursIndonesia(HitungDiscount(Double.parseDouble(cart.getHarga()), cart.getDiscount())));
 
 
-        }else if (cart.getDiscount() == 0){
+        } else if (cart.getDiscount() == 0) {
             viewHolder.layoutDiscount.setVisibility(View.INVISIBLE);
             viewHolder.harga.setText(kursIndonesia(Double.parseDouble(cart.getHarga())));
         }
@@ -131,9 +126,9 @@ public class CartAdapter extends BaseAdapter {
         viewHolder.qty.setText(String.valueOf(cart.getQty()));
         viewHolder.mCatatanMenu.setText(cart.getCatatan().toString());
 
-        if(cart.getKetersediaan() == 0){
+        if (cart.getKetersediaan() == 0) {
             viewHolder.mKetersedian.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             viewHolder.mKetersedian.setVisibility(View.GONE);
         }
 
@@ -141,17 +136,17 @@ public class CartAdapter extends BaseAdapter {
         viewHolder.min.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(clickListener != null){
-                    clickListener.itemMin(view,position);
-                CartList cl =  dataList.get(position);
-                if(cl.getQty()>1) {
-                    cl.setQty(cl.getQty() - 1);
-                    dataList.set(position, cl);
-                    viewHolder.qty.setText(String.valueOf(cl.getQty()));
-                    CartAdapter.this.notifyDataSetChanged();
-                }else {
-                    Toast.makeText(mContext,"Opps, Pesanan sudah minimum",Toast.LENGTH_SHORT).show();
-                }
+                if (clickListener != null) {
+                    clickListener.itemMin(view, position);
+                    CartList cl = dataList.get(position);
+                    if (cl.getQty() > 1) {
+                        cl.setQty(cl.getQty() - 1);
+                        dataList.set(position, cl);
+                        viewHolder.qty.setText(String.valueOf(cl.getQty()));
+                        CartAdapter.this.notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(mContext, "Opps, Pesanan sudah minimum", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
             }
@@ -160,8 +155,8 @@ public class CartAdapter extends BaseAdapter {
         viewHolder.plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(clickListener != null) {
-                    clickListener.itemPlus(view,position);
+                if (clickListener != null) {
+                    clickListener.itemPlus(view, position);
                     CartList cl = dataList.get(position);
                     cl.setQty(cl.getQty() + 1); //incerment item
                     dataList.set(position, cl); //updeting the item list to that new item with incremend quality
@@ -174,19 +169,18 @@ public class CartAdapter extends BaseAdapter {
         viewHolder.cross.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               if(clickListener != null){
-                   clickListener.itemDeleted(view,position);
-               }
+                if (clickListener != null) {
+                    clickListener.itemDeleted(view, position);
+                }
             }
         });
 
         return view;
 
 
-
     }
 
-    private class ViewHolder{
+    private class ViewHolder {
         ImageView imageView;
         TextView title;
         TextView harga;
@@ -208,25 +202,23 @@ public class CartAdapter extends BaseAdapter {
 
         public void itemDeleted(View view, int position);
 
-        public void itemPlus(View view,int position);
+        public void itemPlus(View view, int position);
 
-        public void itemMin (View view,int position);
+        public void itemMin(View view, int position);
 
     }
 
-    public String kursIndonesia(double nominal){
-        Locale localeID = new Locale("in","ID");
+    public String kursIndonesia(double nominal) {
+        Locale localeID = new Locale("in", "ID");
         NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);
         String idnNominal = formatRupiah.format(nominal);
         return idnNominal;
     }
 
-    public Double HitungDiscount (Double Harga,Integer Discount){
-        double harga_potongan = ((Discount/100.00)*Harga);
-        return Harga-harga_potongan;
+    public Double HitungDiscount(Double Harga, Integer Discount) {
+        double harga_potongan = ((Discount / 100.00) * Harga);
+        return Harga - harga_potongan;
     }
-
-
 
 
 }

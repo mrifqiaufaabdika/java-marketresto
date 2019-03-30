@@ -22,12 +22,11 @@ import java.util.Locale;
 public class DetailOrderAdapter extends BaseAdapter {
 
     Context mContext;
-    List<Menu> detailOrders ;
+    List<Menu> detailOrders;
     ViewHolder viewHolder;
 
 
-
-    public DetailOrderAdapter(Context context, List<Menu> data){
+    public DetailOrderAdapter(Context context, List<Menu> data) {
         super();
         this.mContext = context;
         this.detailOrders = data;
@@ -36,16 +35,16 @@ public class DetailOrderAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
-        if(view == null){
-            LayoutInflater layoutInflater = (LayoutInflater)mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-            view = layoutInflater.inflate(R.layout.single_row_list_detail_order,null);
+        if (view == null) {
+            LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+            view = layoutInflater.inflate(R.layout.single_row_list_detail_order, null);
 
             viewHolder = new ViewHolder();
 
-            viewHolder.mNamaMenu = (TextView)view.findViewById(R.id.tvNamaMenu);
-            viewHolder.mQty = (TextView)view.findViewById(R.id.qty);
-            viewHolder.catatan =(TextView) view.findViewById(R.id.catatanMenu);
-            viewHolder.mHarga = (TextView)view.findViewById(R.id.tvHargaMenu);
+            viewHolder.mNamaMenu = (TextView) view.findViewById(R.id.tvNamaMenu);
+            viewHolder.mQty = (TextView) view.findViewById(R.id.qty);
+            viewHolder.catatan = (TextView) view.findViewById(R.id.catatanMenu);
+            viewHolder.mHarga = (TextView) view.findViewById(R.id.tvHargaMenu);
             viewHolder.mJml = (TextView) view.findViewById(R.id.tvHargaTotal);
             viewHolder.imageView = (ImageView) view.findViewById(R.id.image);
             viewHolder.layoutDiscount = (LinearLayout) view.findViewById(R.id.layoutDiscount);
@@ -54,7 +53,7 @@ public class DetailOrderAdapter extends BaseAdapter {
 
             view.setTag(viewHolder);
 
-        }else {
+        } else {
             viewHolder = (ViewHolder) view.getTag();
         }
 
@@ -64,33 +63,32 @@ public class DetailOrderAdapter extends BaseAdapter {
         viewHolder.mQty.setText(String.valueOf(order.getPivot().getQty()));
 //        viewHolder.qty.setText(String .valueOf(cart.getQty()));
         Double jml = null;
-        if(order.getPivot().getDiscount() == 0|| order.getPivot().getDiscount().toString().isEmpty()){
+        if (order.getPivot().getDiscount() == 0 || order.getPivot().getDiscount().toString().isEmpty()) {
             viewHolder.layoutDiscount.setVisibility(View.GONE);
-            viewHolder.mHarga.setText("@"+kursIndonesia(Double.parseDouble(order.getPivot().getHarga())));
+            viewHolder.mHarga.setText("@" + kursIndonesia(Double.parseDouble(order.getPivot().getHarga())));
             jml = order.getPivot().getQty() * Double.parseDouble(order.getPivot().getHarga());
-        }else {
+        } else {
             viewHolder.layoutDiscount.setVisibility(View.VISIBLE);
-            viewHolder.mDiscount.setText("-"+order.getPivot().getDiscount()+"%");
+            viewHolder.mDiscount.setText("-" + order.getPivot().getDiscount() + "%");
             viewHolder.mHargaCoret.setText(kursIndonesia(Double.parseDouble(order.getPivot().getHarga())));
             viewHolder.mHargaCoret.setPaintFlags(viewHolder.mHargaCoret.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
-            Double harga_discount = HitungDiscount(Double.parseDouble(order.getPivot().getHarga()),order.getPivot().getDiscount());
-            viewHolder.mHarga.setText("@"+kursIndonesia(harga_discount));
+            Double harga_discount = HitungDiscount(Double.parseDouble(order.getPivot().getHarga()), order.getPivot().getDiscount());
+            viewHolder.mHarga.setText("@" + kursIndonesia(harga_discount));
             jml = order.getPivot().getQty() * harga_discount;
         }
 
         viewHolder.mJml.setText(kursIndonesia(jml));
 
 
-
-        if(order.getPivot().getCatatan() == null){
+        if (order.getPivot().getCatatan() == null) {
             viewHolder.catatan.setVisibility(View.GONE);
-        }else {
+        } else {
             viewHolder.catatan.setVisibility(View.VISIBLE);
             viewHolder.catatan.setText(order.getPivot().getCatatan());
         }
 
-        String path =view.getResources().getString(R.string.path)+order.getMenuFoto();
+        String path = view.getResources().getString(R.string.path) + order.getMenuFoto();
         Picasso.get()
                 .load(path)
                 .resize(500, 500)
@@ -117,7 +115,7 @@ public class DetailOrderAdapter extends BaseAdapter {
     }
 
 
-    private class ViewHolder{
+    private class ViewHolder {
         ImageView imageView;
         TextView mNamaMenu;
         TextView mQty;
@@ -130,13 +128,13 @@ public class DetailOrderAdapter extends BaseAdapter {
 
     }
 
-    public Double HitungDiscount (Double Harga, Integer Discount){
-        double harga_potongan = ((Discount/100.00)*Harga);
-        return Harga-harga_potongan;
+    public Double HitungDiscount(Double Harga, Integer Discount) {
+        double harga_potongan = ((Discount / 100.00) * Harga);
+        return Harga - harga_potongan;
     }
 
-    public String kursIndonesia(double nominal){
-        Locale localeID = new Locale("in","ID");
+    public String kursIndonesia(double nominal) {
+        Locale localeID = new Locale("in", "ID");
         NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);
         String idnNominal = formatRupiah.format(nominal);
         return idnNominal;

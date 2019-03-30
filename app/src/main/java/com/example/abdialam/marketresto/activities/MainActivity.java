@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mContext =this;
+        mContext = this;
         sessionManager = new SessionManager(this);
         checkSessionLogin();
 
@@ -40,11 +40,8 @@ public class MainActivity extends AppCompatActivity {
 //        getSupportActionBar().setElevation(0);
 
 
-
-
         //loading the default fragment
         Fragment f = new RestoFragment();
-
 
 
         loadFragment(f);
@@ -57,19 +54,19 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.action_resto:
                         fragment = new RestoFragment();
-                 //       getSupportActionBar().setTitle("Market Resto");
+                        //       getSupportActionBar().setTitle("Market Resto");
                         break;
 
                     case R.id.action_order:
                         fragment = new OrderFragment();
-                  //      getSupportActionBar().setTitle("Pesanan");
+                        //      getSupportActionBar().setTitle("Pesanan");
                         break;
-                    case  R.id.action_search:
+                    case R.id.action_search:
                         fragment = new SearchFragment();
                         break;
 
                     case R.id.action_favorite:
-                //        getSupportActionBar().setTitle("Favorit");
+                        //        getSupportActionBar().setTitle("Favorit");
                         fragment = new FavoriteFragment();
                         break;
 
@@ -98,30 +95,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void setPhoneNumber(){
-        FirebaseUser user =FirebaseAuth.getInstance().getCurrentUser();
-        try{
-  //          tvPhoneNumber.setText(user.getPhoneNumber());
-        }catch (Exception e){
-            Toast.makeText(this,"Phone Number Not Found",Toast.LENGTH_SHORT).show();
+    private void setPhoneNumber() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        try {
+            //          tvPhoneNumber.setText(user.getPhoneNumber());
+        } catch (Exception e) {
+            Toast.makeText(this, "Phone Number Not Found", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void checkSessionLogin (){
-        if(!sessionManager.isLoggedIn()) {
-            Intent intent = new Intent(mContext ,SigninActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+    private void checkSessionLogin() {
+        if (!sessionManager.isLoggedIn()) {
+            Intent intent = new Intent(mContext, SigninActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             MainActivity.this.finish();
-        }else {
-            if(!sessionManager.isGetLocation()) {
-                Intent intent = new Intent(mContext ,MapsActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        } else {
+            if (!sessionManager.isGetLocation()) {
+                Intent intent = new Intent(mContext, MapsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 MainActivity.this.finish();
             }
         }
 
-        }
+    }
 
 }

@@ -45,17 +45,15 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     ApiService mApiService;
 
 
-    public HistoryAdapter(Context ctx, List<Order> pesanList){
+    public HistoryAdapter(Context ctx, List<Order> pesanList) {
         this.pesanList = pesanList;
         this.mContext = ctx;
     }
 
 
-
-
     @Override
     public HistoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_row_list_order,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_row_list_order, parent, false);
         HistoryAdapter.HistoryViewHolder holder = new HistoryAdapter.HistoryViewHolder(view);
         mApiService = ServerConfig.getAPIService();
         return holder;
@@ -64,33 +62,30 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     @Override
     public void onBindViewHolder(HistoryViewHolder holder, int position) {
         final Order pesan = pesanList.get(position);
-        holder.mNoOrder.setText("Order :"+" #"+pesan.getId());
+        holder.mNoOrder.setText("Order :" + " #" + pesan.getId());
         holder.mNamaResto.setText(pesan.getOrderRestoran());
         // String status = pesan.getPesanStatus().substring(0,1).toUpperCase() + pesan.getPesanStatus().substring(1).toLowerCase();
         holder.mStatus.setText(pesan.getOrderStatus());
-        holder.mTanggal.setText(pesan.getCreatedAt( ).substring(0,16));
+        holder.mTanggal.setText(pesan.getCreatedAt().substring(0, 16));
         detailpesanList = pesan.getDetailOrder();
         double total = 0;
-        for (int i = 0; i < detailpesanList.size() ; i++) {
+        for (int i = 0; i < detailpesanList.size(); i++) {
             total += Double.parseDouble(detailpesanList.get(i).getPivot().getHarga()) * detailpesanList.get(i).getPivot().getQty();
         }
 
-        holder.mTotal.setText(kursIndonesia(total+Double.parseDouble(pesan.getOrderBiayaAnatar())));
-
+        holder.mTotal.setText(kursIndonesia(total + Double.parseDouble(pesan.getOrderBiayaAnatar())));
 
 
         holder.mParentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(mContext,"Anda memilih "+pesan.getOrderKonsumen(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Anda memilih " + pesan.getOrderKonsumen(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(mContext, DetailOrderActivity.class);
                 intent.putExtra("pesan", (Serializable) pesan);
 
                 mContext.startActivity(intent);
             }
         });
-
-
 
 
     }
@@ -101,10 +96,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     }
 
 
-
-
     //convert time string to milis date
-    public long timeStringToMilis (String strDate ){
+    public long timeStringToMilis(String strDate) {
 
         SimpleDateFormat tgl = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         long milliseconds = 0;
@@ -118,8 +111,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         return milliseconds;
     }
 
-    public String kursIndonesia(double nominal){
-        Locale localeID = new Locale("in","ID");
+    public String kursIndonesia(double nominal) {
+        Locale localeID = new Locale("in", "ID");
         NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);
         String idnNominal = formatRupiah.format(nominal);
         return idnNominal;
@@ -141,10 +134,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         TextView mNoOrder;
 
 
-
         public HistoryViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
 
 
         }

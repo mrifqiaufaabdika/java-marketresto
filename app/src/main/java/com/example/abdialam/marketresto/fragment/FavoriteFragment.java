@@ -28,9 +28,8 @@ import com.example.abdialam.marketresto.adapter.PagerAdapterTabFavorit;
 public class FavoriteFragment extends Fragment {
 
 
-
-        Context mContext;
-        ImageButton cart;
+    Context mContext;
+    ImageButton cart;
 
     @Nullable
     @Override
@@ -42,10 +41,10 @@ public class FavoriteFragment extends Fragment {
         cart = (ImageButton) view.findViewById(R.id.cart);
         mContext = getActivity();
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
 
-        PagerAdapterTabFavorit pagerAdapterTabFavorit = new PagerAdapterTabFavorit(getFragmentManager(),tabLayout.getTabCount());
+        PagerAdapterTabFavorit pagerAdapterTabFavorit = new PagerAdapterTabFavorit(getFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(pagerAdapterTabFavorit);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 

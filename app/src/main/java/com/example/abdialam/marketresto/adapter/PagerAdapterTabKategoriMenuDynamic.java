@@ -20,12 +20,12 @@ public class PagerAdapterTabKategoriMenuDynamic extends FragmentStatePagerAdapte
     private List<Kategori> kategoriList = new ArrayList<>();
     private String oprasional;
 
-    public PagerAdapterTabKategoriMenuDynamic(FragmentManager fm, int NumOfTabs, List<Menu> menuList, List<Kategori> kategoriList, String operasional ) {
+    public PagerAdapterTabKategoriMenuDynamic(FragmentManager fm, int NumOfTabs, List<Menu> menuList, List<Kategori> kategoriList, String operasional) {
         super(fm);
         this.mNumOfTabs = NumOfTabs;
         this.menuList = menuList;
         this.kategoriList = kategoriList;
-        this.oprasional =operasional;
+        this.oprasional = operasional;
 
     }
 
@@ -36,7 +36,7 @@ public class PagerAdapterTabKategoriMenuDynamic extends FragmentStatePagerAdapte
         b.putInt("position", position);
         b.putSerializable("menu", (Serializable) menuList);
         b.putSerializable("kategori", (Serializable) kategoriList);
-        b.putInt("oprasinal",Integer.valueOf(oprasional));
+        b.putInt("oprasinal", Integer.valueOf(oprasional));
         Fragment frag = MenuFragment.newInstance();
         frag.setArguments(b);
         return frag;

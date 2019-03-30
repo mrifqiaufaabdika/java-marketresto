@@ -383,8 +383,6 @@
                 android:text="Saldo Anda Rp5000 Mencukupi"
                 android:textColor="@color/textSub"
                 android:textSize="12sp"/>
-
-
     </RadioGroup>
 
     <LinearLayout

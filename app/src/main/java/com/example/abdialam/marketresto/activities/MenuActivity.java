@@ -37,7 +37,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MenuActivity extends AppCompatActivity  {
+public class MenuActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
     private TabLayout mTabLayout;
@@ -48,23 +48,19 @@ public class MenuActivity extends AppCompatActivity  {
     ProgressDialog progressDialog;
     String oprasional;
     SessionManager sessionManager;
-    HashMap<String,String > user;
+    HashMap<String, String> user;
     CollapsingToolbarLayout collapsingToolbar;
     Toolbar toolbar;
 
 
-
     Context mContext;
-
-
-
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-        mContext= this;
+        mContext = this;
         mApiService = ServerConfig.getAPIService();
         sessionManager = new SessionManager(mContext);
         user = sessionManager.getUserDetail();
@@ -72,7 +68,7 @@ public class MenuActivity extends AppCompatActivity  {
         viewPager = findViewById(R.id.viewpager);
 
 
-        mTabLayout =  findViewById(R.id.tabs);
+        mTabLayout = findViewById(R.id.tabs);
         viewPager.setOffscreenPageLimit(5);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
         toolbar = (Toolbar) findViewById(R.id.htab_toolbar);
@@ -84,15 +80,15 @@ public class MenuActivity extends AppCompatActivity  {
         initViews();
 
         getIncomingIntent();
-        progressDialog = ProgressDialog.show(mContext,null,getString(R.string.memuat),true,false);
+        progressDialog = ProgressDialog.show(mContext, null, getString(R.string.memuat), true, false);
 
         //set alamat restoran
         mAlamat.setText(resto.getRestoranAlamat());
         //set operasional restoran
-        if(resto.getRestoranOprasional() ==  1){
+        if (resto.getRestoranOprasional() == 1) {
             mOperasional.setText("BUKA");
             mOperasional.setBackgroundResource(R.drawable.rounded_corner_green);
-        }else {
+        } else {
             mOperasional.setText("TUTUP");
             mOperasional.setBackgroundResource(R.drawable.rounded_corner_red);
         }
@@ -103,16 +99,12 @@ public class MenuActivity extends AppCompatActivity  {
 
         //set image background
         Picasso.get()
-                .load(getResources().getString(R.string.path_restoran)+resto.getRestoranFoto())
+                .load(getResources().getString(R.string.path_restoran) + resto.getRestoranFoto())
                 .into(imgResto);
 
 
         //get operasional restoran
         oprasional = resto.getRestoranOprasional().toString();
-
-
-
-
 
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -121,7 +113,7 @@ public class MenuActivity extends AppCompatActivity  {
             public void onClick(View view) {
 //                Snackbar.make(PagerAdapterTabFavoritview, "Here's a Snackbar", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-                Intent intent = new Intent(mContext,CartListActivity.class);
+                Intent intent = new Intent(mContext, CartListActivity.class);
 //                intent.putExtra("Resto", resto);
                 startActivity(intent);
             }
@@ -129,9 +121,7 @@ public class MenuActivity extends AppCompatActivity  {
     }
 
 
-
-
-    private void initViews(){
+    private void initViews() {
         mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -159,24 +149,24 @@ public class MenuActivity extends AppCompatActivity  {
 
         for (int i = 0; i < jmlKate; i++) {
 
-            mTabLayout.addTab(mTabLayout.newTab().setText(kategoriList.get(i).getKategoriNama()+" ("+kategoriList.get(i).getTotalMenu()+")"));
+            mTabLayout.addTab(mTabLayout.newTab().setText(kategoriList.get(i).getKategoriNama() + " (" + kategoriList.get(i).getTotalMenu() + ")"));
         }
 
 
-        PagerAdapterTabKategoriMenuDynamic mDynamicFragmentAdapter = new PagerAdapterTabKategoriMenuDynamic(getSupportFragmentManager(), mTabLayout.getTabCount(),menuList,kategoriList,oprasional);
+        PagerAdapterTabKategoriMenuDynamic mDynamicFragmentAdapter = new PagerAdapterTabKategoriMenuDynamic(getSupportFragmentManager(), mTabLayout.getTabCount(), menuList, kategoriList, oprasional);
         viewPager.setAdapter(mDynamicFragmentAdapter);
         viewPager.setCurrentItem(0);
     }
 
 
-    private void getIncomingIntent (){
+    private void getIncomingIntent() {
 
-        if(getIntent().hasExtra("Resto")){
+        if (getIntent().hasExtra("Resto")) {
 
-            resto = (Restoran)getIntent().getSerializableExtra("Resto");
+            resto = (Restoran) getIntent().getSerializableExtra("Resto");
             String id_restoran = resto.getId().toString();
             String id_konsuemn = user.get(SessionManager.ID_USER);
-            setValue(id_restoran,id_konsuemn);
+            setValue(id_restoran, id_konsuemn);
 
 //            Bundle bundle = new Bundle();
 //            String id_resto = resto.getIdRestoran().toString();
@@ -190,27 +180,27 @@ public class MenuActivity extends AppCompatActivity  {
     }
 
 
-    private void setValue(String id_restorant,String id_konsumen){
+    private void setValue(String id_restorant, String id_konsumen) {
 
-        mApiService.getRestoranMenu(id_restorant,id_konsumen).enqueue(new Callback<ResponseMenu>() {
+        mApiService.getRestoranMenu(id_restorant, id_konsumen).enqueue(new Callback<ResponseMenu>() {
             @Override
             public void onResponse(Call<ResponseMenu> call, Response<ResponseMenu> response) {
                 progressDialog.dismiss();
-                if(response.isSuccessful()){
-                String value = response.body().getValue();
-                String message = response.body().getMessage();
-                    if(value.equals("1")) {
+                if (response.isSuccessful()) {
+                    String value = response.body().getValue();
+                    String message = response.body().getMessage();
+                    if (value.equals("1")) {
                         menuList = response.body().getRestoranMenu();
                         kategoriList = response.body().getRestoranKategori();
                         initViews();
 //                    mAdapter = new MenuAdapter(getActivity(),data,listener);
 //                    mRecylerView.setAdapter(mAdapter);
 //                    Toast.makeText(getContext(),"ok",Toast.LENGTH_SHORT).show();
-                    }else {
-                        Toast.makeText(mContext,message,Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
                     }
-                }else {
-                    Toast.makeText(mContext,"gagal",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mContext, "gagal", Toast.LENGTH_SHORT).show();
                 }
             }
 

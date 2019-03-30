@@ -38,17 +38,12 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
     MyViewHolder holder2;
 
 
-
-
     public MenuAdapter(Context mContext, List<Menu> data, OnItemClickListener listener) {
         super();
         this.menuList = data;
         this.mContext = mContext;
         this.listener = listener;
     }
-
-
-
 
 
     @Override
@@ -67,7 +62,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
 
 
         Picasso.get()
-                .load(path+data.getMenuFoto())
+                .load(path + data.getMenuFoto())
                 .resize(500, 500)
                 .centerCrop()
                 .into(holder.mImageMenu);
@@ -78,7 +73,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(mContext);
                 View mView = LayoutInflater.from(mContext).inflate(R.layout.dialog_image_zoom, null);
                 PhotoView photoView = mView.findViewById(R.id.imageView);
-                Picasso.get().load(path+data.getMenuFoto()).into(photoView);
+                Picasso.get().load(path + data.getMenuFoto()).into(photoView);
                 //photoView.setImageResource(R.drawable.nature);
                 mBuilder.setView(mView);
                 AlertDialog mDialog = mBuilder.create();
@@ -87,25 +82,24 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
         });
 
 
-        jumlahFavorit(data.getMenuJumlahFavorit(),holder);
+        jumlahFavorit(data.getMenuJumlahFavorit(), holder);
 
 
-        if(data.getMenuFavorit() > 0) {
+        if (data.getMenuFavorit() > 0) {
             holder.mLove.setImageResource(R.drawable.f4);
-        }else {
+        } else {
             holder.mLove.setImageResource(R.drawable.f0);
         }
 
 
-        oprasional(holder,data.getMenuKetersediaan());
-
+        oprasional(holder, data.getMenuKetersediaan());
 
 
         holder.mParentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-     //           Toast.makeText(mContext,"you click "+ data.getMenuNama(),Toast.LENGTH_SHORT).show();
-                if(listener !=null) {
+                //           Toast.makeText(mContext,"you click "+ data.getMenuNama(),Toast.LENGTH_SHORT).show();
+                if (listener != null) {
                     //Menu Tersedia
                     if (data.getMenuKetersediaan() == 1) {
                         listener.onItemCliked(view, position, false);
@@ -118,15 +112,15 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
         });
 
         // harga dan discount
-        if(data.getMenuDiscount().toString().isEmpty()||data.getMenuDiscount() == 0||data.getMenuDiscount() == null){
+        if (data.getMenuDiscount().toString().isEmpty() || data.getMenuDiscount() == 0 || data.getMenuDiscount() == null) {
             //kondisi menu tidak discount
             holder.mHargaMenu.setText(kursIndonesia(Double.parseDouble(data.getMenuHarga())));
-        }else {
+        } else {
             holder.layoutDiscount.setVisibility(View.VISIBLE);
-            holder.mDiscount.setText("-"+data.getMenuDiscount()+"%");
+            holder.mDiscount.setText("-" + data.getMenuDiscount() + "%");
             holder.mHargaCoret.setText(kursIndonesia(Double.parseDouble(data.getMenuHarga())));
             holder.mHargaCoret.setPaintFlags(holder.mHargaCoret.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.mHargaMenu.setText(kursIndonesia(HitungDiscount(Double.parseDouble(data.getMenuHarga()),data.getMenuDiscount())));
+            holder.mHargaMenu.setText(kursIndonesia(HitungDiscount(Double.parseDouble(data.getMenuHarga()), data.getMenuDiscount())));
 
         }
 
@@ -134,8 +128,8 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
         holder.mParentLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                if(listener != null){
-                    listener.onItemCliked(view,position,true);
+                if (listener != null) {
+                    listener.onItemCliked(view, position, true);
 
                 }
 
@@ -145,9 +139,9 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
     }
 
     private void jumlahFavorit(Integer menuJumlahFavorit, MyViewHolder holder) {
-        if(menuJumlahFavorit > 0){
+        if (menuJumlahFavorit > 0) {
             holder.mJmlFavorit.setText(menuJumlahFavorit.toString());
-        }else {
+        } else {
             holder.mJmlFavorit.setVisibility(View.INVISIBLE);
             holder.mLoveBlack.setVisibility(View.INVISIBLE);
 
@@ -172,11 +166,16 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
         TextView mKetersediaan;
         @BindView(R.id.imgLove)
         ImageView mLove;
-        @BindView(R.id.imageMenu) ImageView mImageMenu;
-        @BindView(R.id.tvJmlFavorit) TextView mJmlFavorit;
-        @BindView(R.id.imgLoveBlack) ImageView mLoveBlack;
-        @BindView(R.id.tvHargaCoret) TextView mHargaCoret;
-        @BindView(R.id.tvDiscount) TextView mDiscount;
+        @BindView(R.id.imageMenu)
+        ImageView mImageMenu;
+        @BindView(R.id.tvJmlFavorit)
+        TextView mJmlFavorit;
+        @BindView(R.id.imgLoveBlack)
+        ImageView mLoveBlack;
+        @BindView(R.id.tvHargaCoret)
+        TextView mHargaCoret;
+        @BindView(R.id.tvDiscount)
+        TextView mDiscount;
         @BindView(R.id.layoutDiscount)
         LinearLayout layoutDiscount;
 
@@ -188,47 +187,47 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
     }
 
     public interface OnItemClickListener {
-        void onItemCliked(View v,int position,boolean isLongClick);
+        void onItemCliked(View v, int position, boolean isLongClick);
 
 
     }
 
-    public void oprasional (MyViewHolder holder, Integer code){
+    public void oprasional(MyViewHolder holder, Integer code) {
 
-        if (code == 1){
+        if (code == 1) {
             holder.mKetersediaan.setText("Tersedia");
-            holder.mKetersediaan.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+            holder.mKetersediaan.setTextColor(ContextCompat.getColor(mContext, R.color.green));
         } else {
             holder.mKetersediaan.setText("Tidak Tersedia");
-            holder.mKetersediaan.setTextColor(ContextCompat.getColor(mContext,R.color.colorPrimary));
+            holder.mKetersediaan.setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
         }
     }
 
-    public String kursIndonesia(double nominal){
-        Locale localeID = new Locale("in","ID");
+    public String kursIndonesia(double nominal) {
+        Locale localeID = new Locale("in", "ID");
         NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);
         String idnNominal = formatRupiah.format(nominal);
         return idnNominal;
     }
 
-    public Double HitungDiscount (Double Harga,Integer Discount){
-        int discount = Discount/100;
-        double harga_potongan = ((Discount/100.00)*Harga);
-        return Harga-harga_potongan;
+    public Double HitungDiscount(Double Harga, Integer Discount) {
+        int discount = Discount / 100;
+        double harga_potongan = ((Discount / 100.00) * Harga);
+        return Harga - harga_potongan;
     }
 
-    public void favoritAt(View view,int position) {
+    public void favoritAt(View view, int position) {
         MyViewHolder holder = new MyViewHolder(view);
         Menu menu = menuList.get(position);
-        if(menu.getMenuFavorit() == 0) {
-            Toast.makeText(mContext,"ok",Toast.LENGTH_SHORT).show();
+        if (menu.getMenuFavorit() == 0) {
+            Toast.makeText(mContext, "ok", Toast.LENGTH_SHORT).show();
             menu.setMenuJumlahFavorit(menu.getMenuJumlahFavorit() + 1);
             menu.setMenuFavorit(1);
             menuList.set(position, menu);
             holder.mLoveBlack.setVisibility(View.VISIBLE);
             holder.mJmlFavorit.setVisibility(View.VISIBLE);
             holder.mJmlFavorit.setText(menu.getMenuJumlahFavorit().toString());
-           // notifyDataSetChanged();
+            // notifyDataSetChanged();
         }
 
     }

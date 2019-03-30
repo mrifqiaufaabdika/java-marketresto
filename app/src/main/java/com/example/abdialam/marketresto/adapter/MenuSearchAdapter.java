@@ -43,12 +43,8 @@ public class MenuSearchAdapter extends RecyclerView.Adapter<MenuSearchAdapter.My
 
     private Context mContext;
     FragmentManager fragmentManager;
-    ApiService mApiService ;
+    ApiService mApiService;
     View view;
-
-
-
-
 
 
     public MenuSearchAdapter(Context mContext, List<Menu> data) {
@@ -77,7 +73,7 @@ public class MenuSearchAdapter extends RecyclerView.Adapter<MenuSearchAdapter.My
 
 
         Picasso.get()
-                .load(view.getResources().getString(R.string.path)+data.getMenuFoto())
+                .load(view.getResources().getString(R.string.path) + data.getMenuFoto())
                 .resize(500, 500)
                 .centerCrop()
                 .into(holder.mImageMenu);
@@ -88,7 +84,7 @@ public class MenuSearchAdapter extends RecyclerView.Adapter<MenuSearchAdapter.My
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(mContext);
                 View mView = LayoutInflater.from(mContext).inflate(R.layout.dialog_image_zoom, null);
                 PhotoView photoView = mView.findViewById(R.id.imageView);
-                Picasso.get().load(path+data.getMenuFoto()).into(photoView);
+                Picasso.get().load(path + data.getMenuFoto()).into(photoView);
                 //photoView.setImageResource(R.drawable.nature);
                 mBuilder.setView(mView);
                 AlertDialog mDialog = mBuilder.create();
@@ -97,27 +93,22 @@ public class MenuSearchAdapter extends RecyclerView.Adapter<MenuSearchAdapter.My
         });
 
 
-        jumlahFavorit(data.getMenuJumlahFavorit(),holder);
+        jumlahFavorit(data.getMenuJumlahFavorit(), holder);
 
 
-
-
-        oprasional(holder,data.getMenuKetersediaan());
-
-
-
+        oprasional(holder, data.getMenuKetersediaan());
 
 
         // harga dan discount
-        if(data.getMenuDiscount().toString().isEmpty()||data.getMenuDiscount() == 0||data.getMenuDiscount() == null){
+        if (data.getMenuDiscount().toString().isEmpty() || data.getMenuDiscount() == 0 || data.getMenuDiscount() == null) {
             //kondisi menu tidak discount
             holder.mHargaMenu.setText(kursIndonesia(Double.parseDouble(data.getMenuHarga())));
-        }else {
+        } else {
             holder.layoutDiscount.setVisibility(View.VISIBLE);
-            holder.mDiscount.setText("-"+data.getMenuDiscount()+"%");
+            holder.mDiscount.setText("-" + data.getMenuDiscount() + "%");
             holder.mHargaCoret.setText(kursIndonesia(Double.parseDouble(data.getMenuHarga())));
             holder.mHargaCoret.setPaintFlags(holder.mHargaCoret.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.mHargaMenu.setText(kursIndonesia(HitungDiscount(Double.parseDouble(data.getMenuHarga()),data.getMenuDiscount())));
+            holder.mHargaMenu.setText(kursIndonesia(HitungDiscount(Double.parseDouble(data.getMenuHarga()), data.getMenuDiscount())));
 
         }
 
@@ -126,15 +117,14 @@ public class MenuSearchAdapter extends RecyclerView.Adapter<MenuSearchAdapter.My
             public void onClick(View view) {
                 //           Toast.makeText(mContext,"you click "+ data.getMenuNama(),Toast.LENGTH_SHORT).show();
 
-                    if (data.getMenuKetersediaan() == 1) {
+                if (data.getMenuKetersediaan() == 1) {
 
-                            getResto(data.getIdRestoran().toString(),data.getId().toString());
+                    getResto(data.getIdRestoran().toString(), data.getId().toString());
 
 
-
-                    } else {
-                        Toast.makeText(mContext, data.getMenuNama() + " Tidak Tesedia", Toast.LENGTH_SHORT).show();
-                    }
+                } else {
+                    Toast.makeText(mContext, data.getMenuNama() + " Tidak Tesedia", Toast.LENGTH_SHORT).show();
+                }
 
 
             }
@@ -147,8 +137,8 @@ public class MenuSearchAdapter extends RecyclerView.Adapter<MenuSearchAdapter.My
         mApiService.getRestoranByID(id).enqueue(new Callback<ResponseOneRestoran>() {
             @Override
             public void onResponse(Call<ResponseOneRestoran> call, Response<ResponseOneRestoran> response) {
-                if(response.isSuccessful()){
-                    if (response.body().getValue().equalsIgnoreCase("1")){
+                if (response.isSuccessful()) {
+                    if (response.body().getValue().equalsIgnoreCase("1")) {
                         Restoran data = response.body().getData();
                         Intent intent = new Intent(mContext, MenuActivity.class);
                         intent.putExtra("Resto", data);
@@ -165,9 +155,9 @@ public class MenuSearchAdapter extends RecyclerView.Adapter<MenuSearchAdapter.My
     }
 
     private void jumlahFavorit(Integer menuJumlahFavorit, MyViewHolder holder) {
-        if(menuJumlahFavorit > 0){
+        if (menuJumlahFavorit > 0) {
             holder.mJmlFavorit.setText(menuJumlahFavorit.toString());
-        }else {
+        } else {
             holder.mJmlFavorit.setVisibility(View.INVISIBLE);
             holder.mLoveBlack.setVisibility(View.INVISIBLE);
         }
@@ -191,11 +181,16 @@ public class MenuSearchAdapter extends RecyclerView.Adapter<MenuSearchAdapter.My
         TextView mKetersediaan;
         @BindView(R.id.imgLove)
         ImageView mLove;
-        @BindView(R.id.imageMenu) ImageView mImageMenu;
-        @BindView(R.id.tvJmlFavorit) TextView mJmlFavorit;
-        @BindView(R.id.imgLoveBlack) ImageView mLoveBlack;
-        @BindView(R.id.tvHargaCoret) TextView mHargaCoret;
-        @BindView(R.id.tvDiscount) TextView mDiscount;
+        @BindView(R.id.imageMenu)
+        ImageView mImageMenu;
+        @BindView(R.id.tvJmlFavorit)
+        TextView mJmlFavorit;
+        @BindView(R.id.imgLoveBlack)
+        ImageView mLoveBlack;
+        @BindView(R.id.tvHargaCoret)
+        TextView mHargaCoret;
+        @BindView(R.id.tvDiscount)
+        TextView mDiscount;
         @BindView(R.id.layoutDiscount)
         LinearLayout layoutDiscount;
 
@@ -207,29 +202,28 @@ public class MenuSearchAdapter extends RecyclerView.Adapter<MenuSearchAdapter.My
     }
 
 
+    public void oprasional(MyViewHolder holder, Integer code) {
 
-    public void oprasional (MyViewHolder holder, Integer code){
-
-        if (code == 1){
+        if (code == 1) {
             holder.mKetersediaan.setText("Tersedia");
-            holder.mKetersediaan.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+            holder.mKetersediaan.setTextColor(ContextCompat.getColor(mContext, R.color.green));
         } else {
             holder.mKetersediaan.setText("Tidak Tersedia");
-            holder.mKetersediaan.setTextColor(ContextCompat.getColor(mContext,R.color.colorPrimary));
+            holder.mKetersediaan.setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
         }
     }
 
-    public String kursIndonesia(double nominal){
-        Locale localeID = new Locale("in","ID");
+    public String kursIndonesia(double nominal) {
+        Locale localeID = new Locale("in", "ID");
         NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);
         String idnNominal = formatRupiah.format(nominal);
         return idnNominal;
     }
 
-    public Double HitungDiscount (Double Harga,Integer Discount){
-        int discount = Discount/100;
-        double harga_potongan = ((Discount/100.00)*Harga);
-        return Harga-harga_potongan;
+    public Double HitungDiscount(Double Harga, Integer Discount) {
+        int discount = Discount / 100;
+        double harga_potongan = ((Discount / 100.00) * Harga);
+        return Harga - harga_potongan;
     }
 
 

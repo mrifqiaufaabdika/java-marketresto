@@ -16,8 +16,7 @@ import butterknife.OnClick;
 public class SettingActivity extends AppCompatActivity {
 
 
-
-    Context mContext ;
+    Context mContext;
     SessionManager sessionManager;
 
     @Override
@@ -25,11 +24,12 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_account);
         ButterKnife.bind(this);
-        mContext =this;
+        mContext = this;
         sessionManager = new SessionManager(mContext);
     }
 
-    @OnClick(R.id.btn_sign_out) void signOut (){
+    @OnClick(R.id.btn_sign_out)
+    void signOut() {
         FirebaseAuth.getInstance().signOut();
         sessionManager.logoutUser();
         Intent intent = new Intent(mContext, SigninActivity.class);

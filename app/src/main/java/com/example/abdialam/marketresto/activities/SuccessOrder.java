@@ -13,7 +13,6 @@ import com.example.abdialam.marketresto.R;
 public class SuccessOrder extends AppCompatActivity {
 
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,7 +20,7 @@ public class SuccessOrder extends AppCompatActivity {
         TextView idOrder = (TextView) findViewById(R.id.idorder);
         TextView btnSelesai = (TextView) findViewById(R.id.btnSelesai);
         String id = getIntent().getStringExtra("id");
-        idOrder.setText("Order number: #"+id);
+        idOrder.setText("Order number: #" + id);
         btnSelesai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -35,9 +34,9 @@ public class SuccessOrder extends AppCompatActivity {
         selesai();
     }
 
-    public void selesai(){
-        Intent intent = new Intent(SuccessOrder.this,MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+    public void selesai() {
+        Intent intent = new Intent(SuccessOrder.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 }

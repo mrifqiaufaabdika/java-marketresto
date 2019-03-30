@@ -12,23 +12,23 @@ public class CartList {
     private String harga;
     private Integer qty;
     private String catatan;
-    private Integer discount ;
+    private Integer discount;
     private String nama_menu;
     private String menu_foto;
     private int ketersediaan;
 
 
-    public CartList(int id, String id_resto, String id_menu,String harga,Integer qty, String catatan,String nama_menu,Integer discount,String menu_foto,int ketersediaan) {
-       this.id = id;
-       this.id_resto = id_resto;
-       this.id_menu = id_menu;
-       this.harga = harga;
-       this.qty = qty;
-       this.catatan = catatan;
-       this.nama_menu = nama_menu;
-       this.discount = discount;
-       this.menu_foto =menu_foto;
-       this.ketersediaan = ketersediaan;
+    public CartList(int id, String id_resto, String id_menu, String harga, Integer qty, String catatan, String nama_menu, Integer discount, String menu_foto, int ketersediaan) {
+        this.id = id;
+        this.id_resto = id_resto;
+        this.id_menu = id_menu;
+        this.harga = harga;
+        this.qty = qty;
+        this.catatan = catatan;
+        this.nama_menu = nama_menu;
+        this.discount = discount;
+        this.menu_foto = menu_foto;
+        this.ketersediaan = ketersediaan;
     }
 
 //    public int getImage() {
@@ -38,9 +38,6 @@ public class CartList {
 //    public void setImage(int image) {
 //        this.image = image;
 //    }
-
-
-
 
 
     public Integer getId() {

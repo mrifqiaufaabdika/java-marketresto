@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -27,7 +28,10 @@ import com.example.abdialam.marketresto.models.User;
 import com.example.abdialam.marketresto.responses.ResponseKonsumen;
 import com.example.abdialam.marketresto.rest.ApiService;
 import com.example.abdialam.marketresto.utils.SessionManager;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.text.NumberFormat;
 import java.util.HashMap;
@@ -39,27 +43,28 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.support.constraint.Constraints.TAG;
+
 public class AccountFragment extends Fragment {
 
-    Context mContext ;
+    Context mContext;
     SessionManager sessionManager;
-    TextView tvNamaUser, tvPhoneUser, tvEmailUser,tvBalance,btnBantuan,btnLayanan,btnPrivasi,btnPenialaian,signout;
+    TextView tvNamaUser, tvPhoneUser, tvEmailUser, tvBalance, btnBantuan, btnLayanan, btnPrivasi, btnPenialaian, signout;
     ImageButton edit;
-    HashMap<String,String> user;
+    HashMap<String, String> user;
     ApiService mApiService;
-    User user1 = new User() ;
+    User user1 = new User();
 
     ProgressDialog progressDialog;
-
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_account,container,false);
+        View view = inflater.inflate(R.layout.fragment_account, container, false);
 
 
-        mContext =getActivity();
+        mContext = getActivity();
         mApiService = ServerConfig.getAPIService();
         sessionManager = new SessionManager(mContext);
         user = sessionManager.getUserDetail();
@@ -92,12 +97,12 @@ public class AccountFragment extends Fragment {
             }
         });
 
-        return  view;
+        return view;
     }
 
     private void setValue() {
         tvNamaUser.setText(user.get(SessionManager.NAMA_LENGKAP));
-        tvPhoneUser.setText("+"+user.get(SessionManager.NO_HP));
+        tvPhoneUser.setText("+" + user.get(SessionManager.NO_HP));
         tvEmailUser.setText(user.get(SessionManager.EMAIL));
         tvBalance.setText("Rp.-");
 
@@ -106,7 +111,7 @@ public class AccountFragment extends Fragment {
     private void init(View view) {
         tvNamaUser = (TextView) view.findViewById(R.id.tvNamaUser);
         tvPhoneUser = (TextView) view.findViewById(R.id.tvPhoneUser);
-        tvEmailUser = (TextView)view.findViewById(R.id.tvEmailUser);
+        tvEmailUser = (TextView) view.findViewById(R.id.tvEmailUser);
         tvBalance = (TextView) view.findViewById(R.id.tvBalance);
         edit = (ImageButton) view.findViewById(R.id.edit);
         btnPenialaian = (TextView) view.findViewById(R.id.btnPenilaian);
@@ -121,16 +126,16 @@ public class AccountFragment extends Fragment {
 //        getActivity().finish();
 //    }
 
-    public void getKonsumen(){
+    public void getKonsumen() {
         mApiService.getKonsumen(user.get(SessionManager.ID_USER)).enqueue(new Callback<ResponseKonsumen>() {
             @Override
             public void onResponse(Call<ResponseKonsumen> call, Response<ResponseKonsumen> response) {
-                if(response.isSuccessful()){
-                    if(response.body().getValue().equals("1")){
+                if (response.isSuccessful()) {
+                    if (response.body().getValue().equals("1")) {
                         user1 = response.body().getData();
                         tvBalance.setText(kursIndonesia(Double.parseDouble(user1.getKonsumenBalance())));
                         progressDialog.dismiss();
-                    }else {
+                    } else {
                         user1.setKonsumenBalance("Opps..Priksa Konseksi Internet Anda");
                         tvBalance.setText(user1.getKonsumenBalance());
                         tvBalance.setTextSize(13);
@@ -148,8 +153,9 @@ public class AccountFragment extends Fragment {
             }
         });
     }
-    public String kursIndonesia(double nominal){
-        Locale localeID = new Locale("in","ID");
+
+    public String kursIndonesia(double nominal) {
+        Locale localeID = new Locale("in", "ID");
         NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);
         String idnNominal = formatRupiah.format(nominal);
         return idnNominal;
@@ -159,13 +165,13 @@ public class AccountFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        progressDialog = ProgressDialog.show(mContext,null,getString(R.string.memuat),true,false);
-        Toast.makeText(mContext,"onResume",Toast.LENGTH_SHORT).show();
+        progressDialog = ProgressDialog.show(mContext, null, getString(R.string.memuat), true, false);
+        Toast.makeText(mContext, "onResume", Toast.LENGTH_SHORT).show();
         setValue();
         getKonsumen();
     }
 
-    public void alertKonfirmasi(){
+    public void alertKonfirmasi() {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle("Apakah Anda Yakin Akan Keluar");
         builder.setCancelable(false);
@@ -174,7 +180,7 @@ public class AccountFragment extends Fragment {
             public void onClick(DialogInterface dialogInterface, int i) {
                 //send data to server
 
-                progressDialog = ProgressDialog.show(mContext,null,getString(R.string.memuat),true,false);
+                progressDialog = ProgressDialog.show(mContext, null, getString(R.string.memuat), true, false);
                 logout();
                 // intentSucess();
 
@@ -188,19 +194,29 @@ public class AccountFragment extends Fragment {
         });
 
 
-        final AlertDialog alert =builder.create();
+        final AlertDialog alert = builder.create();
         alert.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialogInterface) {
-                alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(mContext,R.color.colorPrimary));
-                alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(mContext,R.color.colorPrimary));
+                alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+                alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
             }
         });
         alert.show();
     }
 
-    void logout(){
+    void logout() {
         FirebaseAuth.getInstance().signOut();
+//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//        user.delete()
+//                .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Void> task) {
+//                        if (task.isSuccessful()) {
+//                            Toast.makeText(mContext, "User account deleted.",Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                });
         sessionManager.logoutUser();
         progressDialog.dismiss();
         Intent intent = new Intent(mContext, SigninActivity.class);

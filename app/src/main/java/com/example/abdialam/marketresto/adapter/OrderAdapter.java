@@ -36,7 +36,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     private List<Order> pesanList;
     private List<Menu> detailpesanList;
 
-    public OrderAdapter(Context ctx, List<Order> pesanList){
+    public OrderAdapter(Context ctx, List<Order> pesanList) {
         this.pesanList = pesanList;
         this.mContext = ctx;
     }
@@ -44,7 +44,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
     @Override
     public OrderViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_row_list_order,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_row_list_order, parent, false);
         OrderAdapter.OrderViewHolder holder = new OrderAdapter.OrderViewHolder(view);
         return holder;
     }
@@ -52,15 +52,15 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     @Override
     public void onBindViewHolder(OrderViewHolder holder, int position) {
         final Order pesan = pesanList.get(position);
-        holder.mNoOrder.setText("Order :"+" #"+pesan.getId());
+        holder.mNoOrder.setText("Order :" + " #" + pesan.getId());
         holder.mNamaResto.setText(pesan.getOrderRestoran());
-       // String status = pesan.getPesanStatus().substring(0,1).toUpperCase() + pesan.getPesanStatus().substring(1).toLowerCase();
+        // String status = pesan.getPesanStatus().substring(0,1).toUpperCase() + pesan.getPesanStatus().substring(1).toLowerCase();
         holder.mStatus.setText(pesan.getOrderStatus());
-        holder.mTanggal.setText(DateHelper.getGridDate(mContext,timeStringToMilis(pesan.getCreatedAt())));
+        holder.mTanggal.setText(DateHelper.getGridDate(mContext, timeStringToMilis(pesan.getCreatedAt())));
 
-        if (pesan.getOrderStatus().equalsIgnoreCase("proeses")){
+        if (pesan.getOrderStatus().equalsIgnoreCase("proeses")) {
             holder.mapDelivery.setVisibility(View.INVISIBLE);
-        }else if(pesan.getOrderStatus().equalsIgnoreCase("pengantaran")){
+        } else if (pesan.getOrderStatus().equalsIgnoreCase("pengantaran")) {
             holder.mapDelivery.setVisibility(View.VISIBLE);
             holder.mapDelivery.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -74,16 +74,16 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
         detailpesanList = pesan.getDetailOrder();
         double total = 0;
-        for (int i = 0; i < detailpesanList.size() ; i++) {
+        for (int i = 0; i < detailpesanList.size(); i++) {
             total += Double.parseDouble(detailpesanList.get(i).getPivot().getHarga()) * detailpesanList.get(i).getPivot().getQty();
         }
 
-        holder.mTotal.setText(kursIndonesia(total+Double.parseDouble(pesan.getOrderBiayaAnatar())));
+        holder.mTotal.setText(kursIndonesia(total + Double.parseDouble(pesan.getOrderBiayaAnatar())));
 
         holder.mParentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(mContext,"Anda memilih "+pesan.getOrderKonsumen(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Anda memilih " + pesan.getOrderKonsumen(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(mContext, DetailOrderActivity.class);
                 intent.putExtra("pesan", (Serializable) pesan);
 
@@ -101,30 +101,30 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
     public class OrderViewHolder extends RecyclerView.ViewHolder {
 
-       @BindView(R.id.tvNamaResto)
+        @BindView(R.id.tvNamaResto)
         TextView mNamaResto;
-       @BindView(R.id.tvStatus)
-       TextView mStatus;
-       @BindView(R.id.tvWaktu)
-       TextView mTanggal;
-       @BindView(R.id.parentLayout)
+        @BindView(R.id.tvStatus)
+        TextView mStatus;
+        @BindView(R.id.tvWaktu)
+        TextView mTanggal;
+        @BindView(R.id.parentLayout)
         LinearLayout mParentLayout;
-       @BindView(R.id.tvTotal)
-       TextView mTotal;
-       @BindView(R.id.tvNoOrder)
-       TextView mNoOrder;
-       @BindView(R.id.opendelivery)
+        @BindView(R.id.tvTotal)
+        TextView mTotal;
+        @BindView(R.id.tvNoOrder)
+        TextView mNoOrder;
+        @BindView(R.id.opendelivery)
         ImageView mapDelivery;
 
 
         public OrderViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 
     //convert time string to milis date
-    public long timeStringToMilis (String strDate ){
+    public long timeStringToMilis(String strDate) {
 
         SimpleDateFormat tgl = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         long milliseconds = 0;
@@ -138,8 +138,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         return milliseconds;
     }
 
-    public String kursIndonesia(double nominal){
-        Locale localeID = new Locale("in","ID");
+    public String kursIndonesia(double nominal) {
+        Locale localeID = new Locale("in", "ID");
         NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);
         String idnNominal = formatRupiah.format(nominal);
         return idnNominal;

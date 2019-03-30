@@ -35,7 +35,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FragmentListFavorit extends Fragment  implements FavoritAdapter.ClickListener{
+public class FragmentListFavorit extends Fragment implements FavoritAdapter.ClickListener {
 
     private RecyclerView recyclerView;
     private FavoritAdapter favoritAdapter;
@@ -43,32 +43,31 @@ public class FragmentListFavorit extends Fragment  implements FavoritAdapter.Cli
     ApiService mApiService;
     Context mContext;
     FavoritAdapter.ClickListener listener;
-    HashMap<String,String> user;
+    HashMap<String, String> user;
     SessionManager sessionManager;
     String id_konsumen;
 
     View message;
     ImageView icon_message;
-    TextView title_message,sub_title_message;
+    TextView title_message, sub_title_message;
 
     ProgressDialog progressDialog;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_list_favorite,container,false);
+        View view = inflater.inflate(R.layout.fragment_list_favorite, container, false);
         mApiService = ServerConfig.getAPIService();
         mContext = getActivity();
         sessionManager = new SessionManager(mContext);
-        user =sessionManager.getUserDetail();
-        listener =this;
+        user = sessionManager.getUserDetail();
+        listener = this;
         id_konsumen = user.get(SessionManager.ID_USER);
 
         message = view.findViewById(R.id.error);
         icon_message = (ImageView) view.findViewById(R.id.img_msg);
-        title_message =  (TextView) view.findViewById(R.id.title_msg);
-        sub_title_message =  (TextView) view.findViewById(R.id.sub_title_msg);
-
+        title_message = (TextView) view.findViewById(R.id.title_msg);
+        sub_title_message = (TextView) view.findViewById(R.id.sub_title_msg);
 
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
@@ -78,16 +77,13 @@ public class FragmentListFavorit extends Fragment  implements FavoritAdapter.Cli
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
 
-
-
-
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        progressDialog = ProgressDialog.show(mContext,null,getString(R.string.memuat),true,false);
+        progressDialog = ProgressDialog.show(mContext, null, getString(R.string.memuat), true, false);
         setValue(id_konsumen);
     }
 
@@ -95,14 +91,14 @@ public class FragmentListFavorit extends Fragment  implements FavoritAdapter.Cli
         mApiService.getFavorit(id_konsumen).enqueue(new Callback<ResponseFavorit>() {
             @Override
             public void onResponse(Call<ResponseFavorit> call, Response<ResponseFavorit> response) {
-                if(response.isSuccessful()){
-                    favoritList =response.body().getFavorit();
+                if (response.isSuccessful()) {
+                    favoritList = response.body().getFavorit();
                     String value = response.body().getValue();
-                    if(value.equals("1")){
-                        favoritAdapter = new FavoritAdapter(mContext,favoritList,listener);
+                    if (value.equals("1")) {
+                        favoritAdapter = new FavoritAdapter(mContext, favoritList, listener);
                         recyclerView.setAdapter(favoritAdapter);
                         progressDialog.dismiss();
-                    }else {
+                    } else {
                         message.setVisibility(View.VISIBLE);
                         icon_message.setImageResource(R.drawable.msg_favorite);
                         title_message.setText("Anda Belum Memiliki Favorit");
@@ -133,22 +129,23 @@ public class FragmentListFavorit extends Fragment  implements FavoritAdapter.Cli
         mApiService.deleteFavorit(favorit.getId()).enqueue(new Callback<ResponseValue>() {
             @Override
             public void onResponse(Call<ResponseValue> call, Response<ResponseValue> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     String value = response.body().getValue();
-                    if(value.equals("1")){
+                    if (value.equals("1")) {
                         favoritAdapter.removeAt(position);
                         //cartList.remove(position);
-                        Toast.makeText(mContext,"Item Berhasil Dihapus",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "Item Berhasil Dihapus", Toast.LENGTH_SHORT).show();
 
                         checFavorit();
-                    }else {
-                        Toast.makeText(mContext,"Item Gagal Dihapus",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mContext, "Item Gagal Dihapus", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
+
             @Override
             public void onFailure(Call<ResponseValue> call, Throwable t) {
-                Toast.makeText(mContext,R.string.lostconnection,Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, R.string.lostconnection, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -164,9 +161,9 @@ public class FragmentListFavorit extends Fragment  implements FavoritAdapter.Cli
         //oprasinal buka
         if (restoran.getRestoranOprasional() == 1) {
 
-            if(menuItem.getMenuKetersediaan() == 0){
+            if (menuItem.getMenuKetersediaan() == 0) {
                 Toast.makeText(getActivity(), "Item Sedang Tidak Tersedia", Toast.LENGTH_SHORT).show();
-            }else {
+            } else {
                 DialogPlaceOrderFragment placeOrderFragment = new DialogPlaceOrderFragment();
                 placeOrderFragment.setArguments(argument);
                 placeOrderFragment.show(getFragmentManager(), DialogPlaceOrderFragment.ARG_ITEM_ID);
@@ -180,19 +177,18 @@ public class FragmentListFavorit extends Fragment  implements FavoritAdapter.Cli
 
     private void checFavorit() {
 
-            //set error untuk melihat pesan kosong
+        //set error untuk melihat pesan kosong
 //                          emtyFavorites.setVisibility(View.VISIBLE);
-            if(favoritAdapter.getItemCount() ==0) {
-                Toast.makeText(mContext,"Item Kosong",Toast.LENGTH_SHORT).show();
-                message.setVisibility(View.VISIBLE);
-                icon_message.setImageResource(R.drawable.msg_favorite);
-                title_message.setText("Anda Belum Memiliki Favorit");
-                sub_title_message.setText("Simpan menu favorit anda dari restoran favorit anda");
-            }
+        if (favoritAdapter.getItemCount() == 0) {
+            Toast.makeText(mContext, "Item Kosong", Toast.LENGTH_SHORT).show();
+            message.setVisibility(View.VISIBLE);
+            icon_message.setImageResource(R.drawable.msg_favorite);
+            title_message.setText("Anda Belum Memiliki Favorit");
+            sub_title_message.setText("Simpan menu favorit anda dari restoran favorit anda");
+        }
 //                          imgEmptyCart.setVisibility(View.VISIBLE);
 //                           scCart.setVisibility(View.GONE);
     }
-
 
 
 }
