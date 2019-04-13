@@ -104,6 +104,8 @@ public class SignUpActivity extends AppCompatActivity {
         } else {
 
 
+
+
             mApiSerivce.signupRequest(strNama, strPhone, strEmail, token).enqueue(new Callback<ResponseValue>() {
                 @Override
                 public void onResponse(Call<ResponseValue> call, Response<ResponseValue> response) {

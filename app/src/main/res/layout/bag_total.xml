@@ -188,7 +188,7 @@
 </LinearLayout>
 
 
-    <!--Bag Alamat-->
+    <!--Bag Konsumen-->
     <LinearLayout
 
         android:id="@+id/linear2"
